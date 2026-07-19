@@ -82,6 +82,17 @@
                 </div>
 
                 <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 pl-1">Client Email Address</label>
+                    <div class="relative">
+                        <i data-lucide="mail"
+                            class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                        <input type="email" id="authEmail" required
+                            class="w-full glass-input rounded-xl py-3 pl-11 pr-4 text-white focus:outline-none text-sm"
+                            placeholder="Enter email (e.g., client@example.com)">
+                    </div>
+                </div>
+
+                <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 pl-1">Passcode
                         / Portal Key</label>
                     <div class="relative">
@@ -634,6 +645,69 @@
                 <div id="uploadLogContainer"
                     class="h-36 overflow-y-auto bg-black/40 border border-white/10 rounded-xl p-3.5 space-y-2 text-xs scrollbar-thin scroll-smooth text-left text-gray-300">
                     <!-- Logs dynamically appended here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PORTAL FETCHING / ASSETS ALLOCATION SCREEN -->
+    <!-- ========================================== -->
+    <div id="portalLoadingScreen"
+        class="fixed inset-0 z-[70] bg-black/95 backdrop-blur-xl hidden flex-col items-center justify-center p-4 select-none">
+        <div
+            class="glass-panel max-w-md w-full rounded-[2.5rem] p-8 md:p-10 border border-white/10 relative z-10 flex flex-col gap-6 animate-viewEnter text-center">
+            
+            <!-- Pulsing/scanning visual container -->
+            <div class="relative flex items-center justify-center mx-auto mb-2">
+                <div class="absolute w-20 h-20 rounded-full bg-[var(--theme-accent)]/10 animate-ping"></div>
+                <div class="absolute w-28 h-28 rounded-full bg-[var(--theme-accent)]/5 animate-pulse"></div>
+                <div
+                    class="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative shadow-lg">
+                    <i data-lucide="refresh-cw" class="w-8 h-8 text-[var(--theme-accent)] animate-spin-slow"></i>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-extrabold text-white tracking-wide">Syncing Portal Assets</h3>
+                <p class="text-xs text-gray-400 uppercase tracking-widest font-bold mt-1 text-[var(--theme-accent)]" id="portalLoadingStatus">
+                    Connecting to OBM Core Server</p>
+                <div class="mt-3 flex items-center justify-center gap-2 bg-white/5 border border-white/5 rounded-xl px-4 py-1.5 max-w-xs mx-auto">
+                    <i data-lucide="mail" class="w-3.5 h-3.5 text-gray-400"></i>
+                    <span id="portalLoadingEmail" class="text-xs font-mono text-gray-300 truncate">client@example.com</span>
+                </div>
+            </div>
+
+            <!-- Scanning load bar -->
+            <div class="space-y-1.5">
+                <div class="flex justify-between text-[10px] text-gray-400 px-1 font-bold uppercase tracking-wider">
+                    <span>Allocating Workspace Disk</span>
+                    <span id="portalProgressText">0%</span>
+                </div>
+                <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <div id="portalProgressBar"
+                        class="h-full bg-[var(--theme-accent)] rounded-full transition-all duration-300 ease-out"
+                        style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Dynamic status step log list -->
+            <div class="bg-black/30 border border-white/5 rounded-2xl p-4 text-left space-y-2.5 text-xs font-mono text-gray-400">
+                <div class="flex items-center gap-2" id="step-connect">
+                    <i data-lucide="circle-dot" class="w-3.5 h-3.5 text-gray-500 animate-pulse"></i>
+                    <span>Initialize studio handshake...</span>
+                </div>
+                <div class="flex items-center gap-2 opacity-50" id="step-query">
+                    <i data-lucide="circle" class="w-3.5 h-3.5 text-gray-500"></i>
+                    <span>Query allocations for user email...</span>
+                </div>
+                <div class="flex items-center gap-2 opacity-50" id="step-download">
+                    <i data-lucide="circle" class="w-3.5 h-3.5 text-gray-500"></i>
+                    <span>Retrieve metadata &amp; details...</span>
+                </div>
+                <div class="flex items-center gap-2 opacity-50" id="step-render">
+                    <i data-lucide="circle" class="w-3.5 h-3.5 text-gray-500"></i>
+                    <span>Build liquid interactive workspace...</span>
                 </div>
             </div>
         </div>

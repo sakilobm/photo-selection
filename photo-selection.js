@@ -56,13 +56,134 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Developer login bypass
 function bypassLoginForTesting() {
-    currentUser = localStorage.getItem('obm_client_name') || 'Sakil Dev';
-    document.getElementById('authView').classList.remove('active');
-    document.getElementById('galleryView').classList.add('active');
-    document.getElementById('clientNameDisplay').innerText = currentUser;
+    const email = localStorage.getItem('obm_client_email') || 'sowbhi@obmstudio.com';
+    const name = localStorage.getItem('obm_client_name') || 'Sakil Dev';
+    
+    // Auto-login bypassing form, but still show the gorgeous loading sequence!
+    loadClientWorkspace(email, name);
+}
 
-    refreshGallery();
-    showToast('success', 'Unlocked Portal Successfully', 'Auto-logged into selection workspace.');
+// Progressive asset allocation and workspace synchronization loader
+function loadClientWorkspace(email, username) {
+    currentUser = username;
+    localStorage.setItem('obm_client_name', currentUser);
+    localStorage.setItem('obm_client_email', email);
+
+    const loginView = document.getElementById('authView');
+    const galleryView = document.getElementById('galleryView');
+    const loadingScreen = document.getElementById('portalLoadingScreen');
+    const loadingEmail = document.getElementById('portalLoadingEmail');
+    const loadingStatus = document.getElementById('portalLoadingStatus');
+    const progressBar = document.getElementById('portalProgressBar');
+    const progressText = document.getElementById('portalProgressText');
+
+    // DOM Log Steps
+    const stepConnect = document.getElementById('step-connect');
+    const stepQuery = document.getElementById('step-query');
+    const stepDownload = document.getElementById('step-download');
+    const stepRender = document.getElementById('step-render');
+
+    // Setup initial text
+    if (loadingEmail) loadingEmail.innerText = email;
+    if (loginView) loginView.classList.remove('active');
+    if (loadingScreen) loadingScreen.style.display = 'flex';
+
+    // Reset log layout classes and icons
+    const resetStep = (el, defaultText) => {
+        if (!el) return;
+        el.className = "flex items-center gap-2 opacity-50";
+        el.innerHTML = `<i data-lucide="circle" class="w-3.5 h-3.5 text-gray-500"></i><span>${defaultText}</span>`;
+    };
+    resetStep(stepConnect, "Initialize studio handshake...");
+    resetStep(stepQuery, `Query allocations for user email...`);
+    resetStep(stepDownload, "Retrieve metadata & details...");
+    resetStep(stepRender, "Build liquid interactive workspace...");
+    lucide.createIcons();
+
+    // Step sequence timeline triggers
+    let progress = 0;
+    if (progressBar) progressBar.style.width = '0%';
+    if (progressText) progressText.innerText = '0%';
+
+    // Step 1: Handshake active
+    if (stepConnect) {
+        stepConnect.className = "flex items-center gap-2 text-white font-semibold";
+        stepConnect.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 text-[var(--theme-accent)] animate-spin"></i><span>Initialize studio handshake...</span>`;
+    }
+    lucide.createIcons();
+
+    const interval = setInterval(() => {
+        progress += 2;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (progressText) progressText.innerText = `${progress}%`;
+
+        // Step triggers
+        if (progress === 26) {
+            // Check Handshake
+            if (stepConnect) {
+                stepConnect.className = "flex items-center gap-2 text-emerald-400 font-semibold";
+                stepConnect.innerHTML = `<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500"></i><span class="text-gray-300">Studio handshake established</span>`;
+            }
+            
+            // Query allocations
+            if (stepQuery) {
+                stepQuery.className = "flex items-center gap-2 text-white font-semibold";
+                stepQuery.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 text-[var(--theme-accent)] animate-spin"></i><span>Allocating storage block for ${email}...</span>`;
+            }
+            if (loadingStatus) loadingStatus.innerText = "Querying allocated client assets";
+            lucide.createIcons();
+        } else if (progress === 50) {
+            // Check query
+            if (stepQuery) {
+                stepQuery.className = "flex items-center gap-2 text-emerald-400 font-semibold";
+                stepQuery.innerHTML = `<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500"></i><span class="text-gray-300">Resolved allocation block successfully</span>`;
+            }
+
+            // Download metadata
+            if (stepDownload) {
+                stepDownload.className = "flex items-center gap-2 text-white font-semibold";
+                stepDownload.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 text-[var(--theme-accent)] animate-spin"></i><span>Syncing image assets catalog...</span>`;
+            }
+            if (loadingStatus) loadingStatus.innerText = "Downloading assets metadata";
+            lucide.createIcons();
+        } else if (progress === 76) {
+            // Check download
+            if (stepDownload) {
+                stepDownload.className = "flex items-center gap-2 text-emerald-400 font-semibold";
+                stepDownload.innerHTML = `<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500"></i><span class="text-gray-300">Retrieved 8 high-res asset files</span>`;
+            }
+
+            // Render workspace
+            if (stepRender) {
+                stepRender.className = "flex items-center gap-2 text-white font-semibold";
+                stepRender.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 text-[var(--theme-accent)] animate-spin"></i><span>Compiling layout view parameters...</span>`;
+            }
+            if (loadingStatus) loadingStatus.innerText = "Rendering Client Workspace";
+            lucide.createIcons();
+        } else if (progress >= 100) {
+            clearInterval(interval);
+            
+            if (stepRender) {
+                stepRender.className = "flex items-center gap-2 text-emerald-400 font-semibold";
+                stepRender.innerHTML = `<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500"></i><span class="text-gray-300">Interactive workspace is ready</span>`;
+            }
+            lucide.createIcons();
+
+            setTimeout(() => {
+                // Fade out loader screen
+                if (loadingScreen) loadingScreen.style.display = 'none';
+                if (galleryView) {
+                    galleryView.classList.add('active');
+                }
+
+                // Render database logs
+                document.getElementById('clientNameDisplay').innerText = currentUser;
+                refreshGallery();
+                initCarousel();
+                showToast('success', 'Portal Connected', `Synchronized workspace allocations for ${email}.`);
+            }, 600);
+        }
+    }, 50); // ~2.5 seconds total load duration
 }
 
 // ==========================================
@@ -168,25 +289,21 @@ function switchAuthTab(mode) {
 
 function handleAuth(event) {
     event.preventDefault();
-    const nameInput = document.getElementById('authName').value;
+    const nameInput = document.getElementById('authName').value || 'Premium Client';
+    const emailInput = document.getElementById('authEmail').value || 'client@example.com';
     const codeInput = document.getElementById('authCode').value;
 
-    currentUser = currentAuthMode === 'signup' ? nameInput : 'Premium Client';
-    localStorage.setItem('obm_client_name', currentUser);
+    const username = currentAuthMode === 'signup' ? nameInput : (nameInput ? nameInput : 'Premium Client');
 
-    // Seamless transit to gallery
-    document.getElementById('authView').classList.remove('active');
-    document.getElementById('galleryView').classList.add('active');
-    document.getElementById('clientNameDisplay').innerText = currentUser;
-
-    refreshGallery();
-    showToast('success', 'Access Granted', `Welcome back, ${currentUser}.`);
+    // Smooth loading sequence instead of instant view swap
+    loadClientWorkspace(emailInput, username);
 }
 
 function logout() {
     currentUser = null;
     selectedPhotoIds.clear();
     localStorage.removeItem('obm_client_name');
+    localStorage.removeItem('obm_client_email');
     localStorage.removeItem('obm_selected_ids');
 
     document.getElementById('galleryView').classList.remove('active');
