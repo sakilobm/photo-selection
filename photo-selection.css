@@ -1,0 +1,304 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Theme: Sapphire Ice (Default) */
+    --theme-accent: #0ea5e9;
+    --theme-accent-rgb: 14, 165, 233;
+    --theme-glow: rgba(14, 165, 233, 0.2);
+    --blob-1: #3b82f6;
+    --blob-2: #06b6d4;
+    --blob-3: #6366f1;
+
+    --glass-bg: rgba(15, 23, 42, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-highlight: rgba(255, 255, 255, 0.03);
+
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Dynamic Theme Palette Mappings */
+.theme-amethyst {
+    --theme-accent: #a855f7;
+    --theme-accent-rgb: 168, 85, 247;
+    --theme-glow: rgba(168, 85, 247, 0.2);
+    --blob-1: #7c3aed;
+    --blob-2: #ec4899;
+    --blob-3: #4f46e5;
+}
+
+.theme-emerald {
+    --theme-accent: #10b981;
+    --theme-accent-rgb: 16, 185, 129;
+    --theme-glow: rgba(16, 185, 129, 0.2);
+    --blob-1: #059669;
+    --blob-2: #0d9488;
+    --blob-3: #3b82f6;
+}
+
+.theme-rose {
+    --theme-accent: #f43f5e;
+    --theme-accent-rgb: 244, 63, 94;
+    --theme-glow: rgba(244, 63, 94, 0.25);
+    --blob-1: #e11d48;
+    --blob-2: #d946ef;
+    --blob-3: #f97316;
+}
+
+.theme-amber {
+    --theme-accent: #f59e0b;
+    --theme-accent-rgb: 245, 158, 11;
+    --theme-glow: rgba(245, 158, 11, 0.2);
+    --blob-1: #ea580c;
+    --blob-2: #eab308;
+    --blob-3: #dc2626;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: #030712;
+    color: #f3f4f6;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-card {
+    background: rgba(17, 24, 39, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1.25rem;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+.glass-card.selected {
+    border-color: var(--theme-accent);
+    box-shadow: 0 0 25px rgba(var(--theme-accent-rgb), 0.25), 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    background: rgba(var(--theme-accent-rgb), 0.05);
+}
+
+/* Input Glassmorphism */
+.glass-input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+    border-color: var(--theme-accent);
+    box-shadow: 0 0 15px rgba(var(--theme-accent-rgb), 0.2);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* Interactive Liquid Blob Background */
+@keyframes blobFloat {
+    0% {
+        transform: translate(0px, 0px) scale(1) rotate(0deg);
+    }
+
+    33% {
+        transform: translate(30px, -50px) scale(1.1) rotate(120deg);
+    }
+
+    66% {
+        transform: translate(-20px, 20px) scale(0.95) rotate(240deg);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1) rotate(360deg);
+    }
+}
+
+@keyframes blobFloatReverse {
+    0% {
+        transform: translate(0px, 0px) scale(1.1) rotate(360deg);
+    }
+
+    50% {
+        transform: translate(-40px, 40px) scale(0.9) rotate(180deg);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1.1) rotate(0deg);
+    }
+}
+
+.liquid-blob-1 {
+    background-color: var(--blob-1);
+    animation: blobFloat 25s infinite alternate ease-in-out;
+}
+
+.liquid-blob-2 {
+    background-color: var(--blob-2);
+    animation: blobFloatReverse 30s infinite alternate ease-in-out;
+}
+
+.liquid-blob-3 {
+    background-color: var(--blob-3);
+    animation: blobFloat 28s infinite alternate-reverse ease-in-out;
+}
+
+/* Views management */
+.app-view {
+    display: none !important;
+    animation: viewEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.app-view.active {
+    display: flex !important;
+}
+
+@keyframes viewEnter {
+    from {
+        opacity: 0;
+        transform: scale(0.98) translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Swiper & Slider styles */
+.slider-wrapper {
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: pan-y;
+}
+
+.slider-img {
+    pointer-events: none;
+}
+
+.photo-zoom-trigger {
+    cursor: none !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(3, 7, 18, 0.8);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    border: 2px solid rgba(3, 7, 18, 0.8);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-accent);
+}
+
+/* Advanced Toast Notifications */
+#toastContainer {
+    perspective: 1000px;
+}
+
+.toast-card {
+    animation: toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transition: all 0.3s ease;
+}
+
+.toast-card.removing {
+    animation: toastOut 0.3s ease forwards;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes toastOut {
+    to {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.85);
+        margin-top: -64px;
+    }
+}
+
+/* Theme wave indicator */
+.theme-wave {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--theme-accent);
+    transform: scale(0);
+    opacity: 0.8;
+    pointer-events: none;
+    transition: transform 0.6s cubic-bezier(0.1, 0.8, 0.3, 1), opacity 0.6s ease;
+}
+
+.theme-wave.expand {
+    transform: scale(100);
+    opacity: 0;
+}
+
+/* Confetti particles */
+.confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    animation: confettiFall 3s ease-out infinite;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(80vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Dashboard Navigation Tabs */
+.dashboard-tab {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-tab.active {
+    color: black !important;
+    background-color: var(--theme-accent);
+    box-shadow: 0 4px 14px rgba(var(--theme-accent-rgb), 0.3);
+}
