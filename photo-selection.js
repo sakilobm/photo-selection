@@ -1311,39 +1311,85 @@ document.addEventListener('mousemove', (e) => {
 
 
 // ==========================================
-// MANAGEMENT DASHBOARD LOGIC
+// FULL-FLEDGED MANAGEMENT DASHBOARD ENGINE
 // ==========================================
-function refreshDashboard() {
-    // Summary count indicators
+
+// --- Client Management Data Store ---
+let clientDatabase = JSON.parse(localStorage.getItem('obm_client_db') || '[]');
+let activeDashTab = 'overview';
+let activeStatusFilter = 'all';
+let uploadedFilesQueue = [];
+
+// Seed with demo clients if empty
+if (clientDatabase.length === 0) {
+    clientDatabase = [
+        { id: 'c1', name: 'Priya Sharma', email: 'priya@example.com', status: 'completed', blocked: false, selectedIds: [1, 3, 5], totalAllocated: 8, sentAt: '2026-07-15T10:30:00', flagged: true },
+        { id: 'c2', name: 'Arun Kumar', email: 'arun@example.com', status: 'pending', blocked: false, selectedIds: [], totalAllocated: 8, sentAt: '2026-07-18T14:00:00', flagged: false },
+        { id: 'c3', name: 'Meera Nair', email: 'meera@example.com', status: 'pending', blocked: true, selectedIds: [2, 7], totalAllocated: 8, sentAt: '2026-07-10T09:00:00', flagged: false },
+    ];
+    saveClientDB();
+}
+
+function saveClientDB() {
+    localStorage.setItem('obm_client_db', JSON.stringify(clientDatabase));
+}
+
+function generateClientId() {
+    return 'c' + Date.now() + Math.random().toString(36).substr(2, 4);
+}
+
+// --- Dashboard Sub-Tab Switching ---
+function switchDashTab(tabId) {
+    activeDashTab = tabId;
+    const tabIds = ['overview', 'deleted', 'clients', 'upload', 'status'];
+
+    tabIds.forEach(id => {
+        const btn = document.getElementById(`dashTab-${id}`);
+        const panel = document.getElementById(`dashPanel-${id}`);
+        if (btn) {
+            btn.className = `shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 ${id === tabId ? 'bg-[var(--theme-accent)] text-black' : 'text-gray-400 hover:text-white'}`;
+        }
+        if (panel) {
+            panel.classList.toggle('hidden', id !== tabId);
+        }
+    });
+
+    // Refresh the active panel's data
+    if (tabId === 'overview') refreshOverviewPanel();
+    else if (tabId === 'deleted') refreshDeletedDetection();
+    else if (tabId === 'clients') refreshClientManager();
+    else if (tabId === 'upload') refreshUploadPanel();
+    else if (tabId === 'status') refreshSelectionStatus();
+
+    lucide.createIcons();
+}
+
+// --- TAB 1: OVERVIEW PANEL ---
+function refreshOverviewPanel() {
     const total = photoDatabase.length;
     const selected = selectedPhotoIds.size;
     const deleted = deletedPhotosHistory.length;
 
-    const dashTotal = document.getElementById('dashTotalPhotos');
-    const dashSelected = document.getElementById('dashSelectedPhotos');
-    const dashDeleted = document.getElementById('dashDeletedCount');
-    const dashRatio = document.getElementById('dashSelectionRatio');
-    const ratioBar = document.getElementById('dashRatioBar');
+    const el = (id) => document.getElementById(id);
 
-    if (dashTotal) dashTotal.innerText = total;
-    if (dashSelected) dashSelected.innerText = selected;
-    if (dashDeleted) dashDeleted.innerText = `${deleted} deleted`;
+    if (el('dashTotalPhotos')) el('dashTotalPhotos').innerText = total;
+    if (el('dashSelectedPhotos')) el('dashSelectedPhotos').innerText = selected;
+    if (el('dashDeletedPhotosCount')) el('dashDeletedPhotosCount').innerText = deleted;
+    if (el('dashClientCount')) el('dashClientCount').innerText = clientDatabase.length;
 
     const ratio = total > 0 ? Math.round((selected / total) * 100) : 0;
-    if (dashRatio) dashRatio.innerText = `${ratio}%`;
-    if (ratioBar) ratioBar.style.width = `${ratio}%`;
+    if (el('dashSelectionRatio')) el('dashSelectionRatio').innerText = `${ratio}%`;
+    if (el('dashRatioBar')) el('dashRatioBar').style.width = `${ratio}%`;
 
-    // Category breakdown bar generation
+    // Category breakdown
     const categories = ['candid', 'portrait', 'traditional', 'uploads'];
-    const breakdownContainer = document.getElementById('dashCategoryBreakdown');
-
+    const breakdownContainer = el('dashCategoryBreakdown');
     if (breakdownContainer) {
         breakdownContainer.innerHTML = categories.map(cat => {
-            const totalCatPhotos = photoDatabase.filter(p => p.category === cat).length;
-            const selectedCatPhotos = photoDatabase.filter(p => p.category === cat && selectedPhotoIds.has(p.id)).length;
-            const catRatio = totalCatPhotos > 0 ? Math.round((selectedCatPhotos / totalCatPhotos) * 100) : 0;
+            const totalCat = photoDatabase.filter(p => p.category === cat).length;
+            const selectedCat = photoDatabase.filter(p => p.category === cat && selectedPhotoIds.has(p.id)).length;
+            const catRatio = totalCat > 0 ? Math.round((selectedCat / totalCat) * 100) : 0;
 
-            // Color mappings
             let colorClass = 'bg-[var(--theme-accent)]';
             if (cat === 'candid') colorClass = 'bg-sky-500';
             else if (cat === 'portrait') colorClass = 'bg-purple-500';
@@ -1354,7 +1400,7 @@ function refreshDashboard() {
                 <div class="space-y-1">
                     <div class="flex justify-between text-[10px] text-gray-400 font-medium px-0.5">
                         <span class="capitalize">${cat === 'uploads' ? 'Custom Uploads' : cat}</span>
-                        <span>${selectedCatPhotos} / ${totalCatPhotos} selected (${catRatio}%)</span>
+                        <span>${selectedCat} / ${totalCat} (${catRatio}%)</span>
                     </div>
                     <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
                         <div class="h-full ${colorClass} rounded-full" style="width: ${catRatio}%;"></div>
@@ -1364,21 +1410,70 @@ function refreshDashboard() {
         }).join('');
     }
 
-    // JSON select output mapping
-    const jsonContainer = document.getElementById('dashSelectedIdsJson');
-    if (jsonContainer) {
-        jsonContainer.innerText = JSON.stringify(Array.from(selectedPhotoIds));
+    // JSON export
+    const jsonContainer = el('dashSelectedIdsJson');
+    if (jsonContainer) jsonContainer.innerText = JSON.stringify(Array.from(selectedPhotoIds));
+}
+
+// --- TAB 2: DELETED DETECTION ---
+function refreshDeletedDetection() {
+    const el = (id) => document.getElementById(id);
+
+    // Selected photos (approved)
+    const selectedPhotos = photoDatabase.filter(p => selectedPhotoIds.has(p.id));
+    const unselectedPhotos = photoDatabase.filter(p => !selectedPhotoIds.has(p.id));
+
+    if (el('detectSelectedCount')) el('detectSelectedCount').innerText = selectedPhotos.length;
+    if (el('detectDeletedCount')) el('detectDeletedCount').innerText = unselectedPhotos.length;
+
+    const selectedGrid = el('detectSelectedGrid');
+    if (selectedGrid) {
+        if (selectedPhotos.length === 0) {
+            selectedGrid.innerHTML = `<div class="text-center py-6 text-gray-500"><p class="text-[11px]">No photos selected yet.</p></div>`;
+        } else {
+            selectedGrid.innerHTML = selectedPhotos.map(photo => `
+                <div class="flex items-center gap-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-2.5 hover:bg-emerald-500/10 transition-colors">
+                    <img src="${photo.url}" class="w-9 h-10 rounded-lg object-cover border border-emerald-500/20 shrink-0">
+                    <div class="flex-grow min-w-0">
+                        <h6 class="text-[11px] font-bold text-gray-200 truncate">${photo.name}</h6>
+                        <span class="text-[8px] uppercase font-bold text-emerald-400">${photo.category}</span>
+                    </div>
+                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                </div>
+            `).join('');
+        }
     }
 
-    // Deleted registry builder
-    const registry = document.getElementById('dashDeletedRegistry');
+    const deletedGrid = el('detectDeletedGrid');
+    if (deletedGrid) {
+        if (unselectedPhotos.length === 0) {
+            deletedGrid.innerHTML = `<div class="text-center py-6 text-gray-500"><p class="text-[11px]">All photos are selected! 🎉</p></div>`;
+        } else {
+            deletedGrid.innerHTML = unselectedPhotos.map(photo => `
+                <div class="flex items-center gap-3 bg-red-500/5 border border-red-500/10 rounded-xl p-2.5 hover:bg-red-500/10 transition-colors">
+                    <img src="${photo.url}" class="w-9 h-10 rounded-lg object-cover border border-red-500/20 shrink-0">
+                    <div class="flex-grow min-w-0">
+                        <h6 class="text-[11px] font-bold text-gray-200 truncate">${photo.name}</h6>
+                        <span class="text-[8px] uppercase font-bold text-red-400">${photo.category}</span>
+                    </div>
+                    <i data-lucide="x-circle" class="w-4 h-4 text-red-400 shrink-0"></i>
+                </div>
+            `).join('');
+        }
+    }
+
+    // Permanently removed registry (from deletedPhotosHistory)
+    const deleted = deletedPhotosHistory.length;
+    if (el('dashDeletedCount')) el('dashDeletedCount').innerText = deleted;
+
+    const registry = el('dashDeletedRegistry');
     if (registry) {
         if (deleted === 0) {
             registry.innerHTML = `
                 <div class="text-center py-8 text-gray-500 flex flex-col items-center justify-center p-4">
                     <i data-lucide="check-circle" class="w-8 h-8 text-emerald-500/20 mb-2 border border-emerald-500/10 p-1.5 rounded-full bg-emerald-500/5"></i>
-                    <p class="text-xs font-semibold text-gray-300">Your workspace is fully intact</p>
-                    <p class="text-[10px] text-gray-500 mt-0.5">No deleted assets registry found.</p>
+                    <p class="text-xs font-semibold text-gray-300">Workspace fully intact</p>
+                    <p class="text-[10px] text-gray-500 mt-0.5">No permanently removed assets.</p>
                 </div>
             `;
         } else {
@@ -1402,9 +1497,418 @@ function refreshDashboard() {
             }).join('');
         }
     }
+}
+
+// --- TAB 3: CLIENT MANAGER ---
+function refreshClientManager() {
+    const container = document.getElementById('clientManagerList');
+    if (!container) return;
+
+    if (clientDatabase.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-12 text-gray-500 flex flex-col items-center">
+                <i data-lucide="user-x" class="w-10 h-10 text-gray-600 mb-3"></i>
+                <p class="text-sm font-semibold text-gray-300">No Clients Registered</p>
+                <p class="text-[11px] text-gray-500 mt-1">Use the form above to add your first client.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = clientDatabase.map((client, idx) => {
+        const statusColor = client.blocked ? 'red' : (client.status === 'completed' ? 'emerald' : 'amber');
+        const statusLabel = client.blocked ? 'BLOCKED' : (client.status === 'completed' ? 'COMPLETED' : 'PENDING');
+        const flagIcon = client.flagged ? 'flag' : 'flag-off';
+        const flagColor = client.flagged ? 'text-amber-400' : 'text-gray-500';
+        const selectedCount = client.selectedIds ? client.selectedIds.length : 0;
+        const sentDate = client.sentAt ? new Date(client.sentAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A';
+
+        return `
+            <div class="glass-panel rounded-2xl p-4 border border-white/10 hover:border-white/20 transition-all ${client.blocked ? 'opacity-60' : ''}">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <!-- Client Info -->
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/30 to-sky-500/30 border border-white/10 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                            ${client.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2">
+                                <h5 class="text-sm font-bold text-white truncate">${client.name}</h5>
+                                <span class="px-1.5 py-0.5 rounded text-[8px] uppercase font-bold bg-${statusColor}-500/10 text-${statusColor}-400 border border-${statusColor}-500/20">${statusLabel}</span>
+                                ${client.flagged ? '<span class="px-1.5 py-0.5 rounded text-[8px] uppercase font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">FLAGGED</span>' : ''}
+                            </div>
+                            <p class="text-[10px] text-gray-400 truncate">${client.email}</p>
+                            <div class="flex items-center gap-3 mt-1 text-[9px] text-gray-500">
+                                <span class="flex items-center gap-1"><i data-lucide="image" class="w-3 h-3"></i> ${client.totalAllocated} allocated</span>
+                                <span class="flex items-center gap-1"><i data-lucide="heart" class="w-3 h-3"></i> ${selectedCount} selected</span>
+                                <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> ${sentDate}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="toggleFlagClient(${idx})" title="${client.flagged ? 'Remove Flag' : 'Flag as Sent'}" class="p-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-all active:scale-90 ${flagColor}">
+                            <i data-lucide="${flagIcon}" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <button onclick="toggleBlockClient(${idx})" title="${client.blocked ? 'Unblock' : 'Block'}" class="p-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-all active:scale-90 ${client.blocked ? 'text-emerald-400' : 'text-red-400'}">
+                            <i data-lucide="${client.blocked ? 'shield-check' : 'shield-ban'}" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <button onclick="removeClient(${idx})" title="Remove Client" class="p-2 rounded-lg border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 transition-all active:scale-90 text-red-400">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                ${client.flagged ? `
+                    <div class="mt-3 px-3 py-2 bg-amber-500/5 border border-amber-500/10 rounded-xl text-[10px] text-amber-300 flex items-center gap-2">
+                        <i data-lucide="info" class="w-3.5 h-3.5 shrink-0"></i>
+                        This client has been flagged as already selected/sent. They will see a "Thank you" screen instead of gallery access.
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }).join('');
+
     lucide.createIcons();
 }
 
+function addClientManual() {
+    const nameInput = document.getElementById('addClientName');
+    const emailInput = document.getElementById('addClientEmail');
+    if (!nameInput || !emailInput) return;
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+
+    if (!name || !email) {
+        showToast('alert', 'Missing Fields', 'Please enter both name and email.');
+        return;
+    }
+
+    // Check duplicate email
+    if (clientDatabase.find(c => c.email.toLowerCase() === email.toLowerCase())) {
+        showToast('alert', 'Duplicate Client', 'A client with this email already exists.');
+        return;
+    }
+
+    clientDatabase.push({
+        id: generateClientId(),
+        name: name,
+        email: email,
+        status: 'pending',
+        blocked: false,
+        selectedIds: [],
+        totalAllocated: photoDatabase.length,
+        sentAt: new Date().toISOString(),
+        flagged: false
+    });
+
+    saveClientDB();
+    nameInput.value = '';
+    emailInput.value = '';
+    refreshClientManager();
+    refreshOverviewPanel();
+    showToast('success', 'Client Registered', `${name} has been added to the directory.`);
+}
+
+function toggleBlockClient(idx) {
+    if (idx < 0 || idx >= clientDatabase.length) return;
+    clientDatabase[idx].blocked = !clientDatabase[idx].blocked;
+    const isBlocked = clientDatabase[idx].blocked;
+    saveClientDB();
+    refreshClientManager();
+    showToast(isBlocked ? 'alert' : 'success', isBlocked ? 'Client Blocked' : 'Client Unblocked', `${clientDatabase[idx].name}'s portal access has been ${isBlocked ? 'revoked' : 'restored'}.`);
+}
+
+function toggleFlagClient(idx) {
+    if (idx < 0 || idx >= clientDatabase.length) return;
+    clientDatabase[idx].flagged = !clientDatabase[idx].flagged;
+    if (clientDatabase[idx].flagged) {
+        clientDatabase[idx].status = 'completed';
+    }
+    const isFlagged = clientDatabase[idx].flagged;
+    saveClientDB();
+    refreshClientManager();
+    showToast(isFlagged ? 'info' : 'success', isFlagged ? 'Client Flagged' : 'Flag Removed', `${clientDatabase[idx].name} ${isFlagged ? 'marked as sent/completed' : 'un-flagged'}.`);
+}
+
+function removeClient(idx) {
+    if (idx < 0 || idx >= clientDatabase.length) return;
+    const name = clientDatabase[idx].name;
+    clientDatabase.splice(idx, 1);
+    saveClientDB();
+    refreshClientManager();
+    refreshOverviewPanel();
+    showToast('alert', 'Client Removed', `${name} has been permanently removed.`);
+}
+
+// --- TAB 4: UPLOAD & SEND ---
+function refreshUploadPanel() {
+    // Populate client dropdown
+    const select = document.getElementById('uploadTargetClient');
+    if (select) {
+        const currentVal = select.value;
+        select.innerHTML = '<option value="">-- Select Client --</option>';
+        clientDatabase.filter(c => !c.blocked).forEach(client => {
+            const opt = document.createElement('option');
+            opt.value = client.email;
+            opt.textContent = `${client.name} (${client.email})`;
+            select.appendChild(opt);
+        });
+        select.value = currentVal;
+    }
+
+    // Setup upload zone events
+    const dropzone = document.getElementById('dashUploadDropzone');
+    const fileInput = document.getElementById('dashFileUploadInput');
+
+    if (dropzone && !dropzone.dataset.initialized) {
+        dropzone.dataset.initialized = 'true';
+
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-[var(--theme-accent)]', 'bg-[var(--theme-accent)]/10');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-[var(--theme-accent)]', 'bg-[var(--theme-accent)]/10');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-[var(--theme-accent)]', 'bg-[var(--theme-accent)]/10');
+            handleUploadFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleUploadFiles(e.target.files);
+        });
+    }
+}
+
+function handleUploadFiles(files) {
+    if (!files || files.length === 0) return;
+    if (files.length > 20) {
+        showToast('alert', 'Too Many Files', 'Maximum 20 files per upload.');
+        return;
+    }
+
+    uploadedFilesQueue = Array.from(files);
+    const queueContainer = document.getElementById('dashUploadQueue');
+    const queueList = document.getElementById('dashQueueList');
+    const queueCount = document.getElementById('dashQueueCount');
+
+    if (queueContainer) queueContainer.classList.remove('hidden');
+    if (queueCount) queueCount.innerText = `${uploadedFilesQueue.length} files`;
+
+    if (queueList) {
+        queueList.innerHTML = uploadedFilesQueue.map((file, i) => `
+            <div class="flex items-center gap-2 bg-white/5 border border-white/5 rounded-lg px-3 py-2 hover:bg-white/10 transition-colors">
+                <i data-lucide="image" class="w-3.5 h-3.5 text-[var(--theme-accent)] shrink-0"></i>
+                <span class="text-[11px] text-gray-300 truncate flex-grow">${file.name}</span>
+                <span class="text-[9px] text-gray-500 shrink-0">${(file.size / 1024).toFixed(0)} KB</span>
+                <button onclick="removeQueuedFile(${i})" class="text-red-400 hover:text-red-300 transition-colors">
+                    <i data-lucide="x" class="w-3 h-3"></i>
+                </button>
+            </div>
+        `).join('');
+    }
+
+    lucide.createIcons();
+}
+
+function removeQueuedFile(idx) {
+    uploadedFilesQueue.splice(idx, 1);
+    if (uploadedFilesQueue.length === 0) {
+        const queueContainer = document.getElementById('dashUploadQueue');
+        if (queueContainer) queueContainer.classList.add('hidden');
+    }
+    handleUploadFiles(uploadedFilesQueue);
+    // Re-trigger display with reduced queue
+    const queueList = document.getElementById('dashQueueList');
+    const queueCount = document.getElementById('dashQueueCount');
+    if (queueCount) queueCount.innerText = `${uploadedFilesQueue.length} files`;
+    if (uploadedFilesQueue.length === 0 && queueList) {
+        queueList.innerHTML = '';
+        document.getElementById('dashUploadQueue')?.classList.add('hidden');
+    }
+}
+
+function dispatchToClient() {
+    const targetEmail = document.getElementById('uploadTargetClient')?.value;
+
+    if (!targetEmail) {
+        showToast('alert', 'No Client Selected', 'Choose a target client before dispatching.');
+        return;
+    }
+
+    if (uploadedFilesQueue.length === 0) {
+        showToast('alert', 'No Files Queued', 'Upload at least one image to dispatch.');
+        return;
+    }
+
+    const client = clientDatabase.find(c => c.email === targetEmail);
+    if (!client) {
+        showToast('alert', 'Client Not Found', 'Invalid target client.');
+        return;
+    }
+
+    // Simulate adding photos to client's allocation
+    const newPhotoCount = uploadedFilesQueue.length;
+    uploadedFilesQueue.forEach((file, i) => {
+        const newId = Date.now() + i;
+        const objectUrl = URL.createObjectURL(file);
+        photoDatabase.push({
+            id: newId,
+            name: file.name,
+            category: 'uploads',
+            url: objectUrl
+        });
+    });
+
+    client.totalAllocated += newPhotoCount;
+    saveClientDB();
+
+    // Clear queue
+    uploadedFilesQueue = [];
+    const queueContainer = document.getElementById('dashUploadQueue');
+    if (queueContainer) queueContainer.classList.add('hidden');
+    document.getElementById('dashQueueList').innerHTML = '';
+
+    refreshGallery();
+    initCarousel();
+    showToast('success', 'Photos Dispatched!', `${newPhotoCount} images allocated to ${client.name}'s portal.`);
+}
+
+// --- TAB 5: SELECTION STATUS TRACKER ---
+function refreshSelectionStatus() {
+    const container = document.getElementById('selectionStatusGrid');
+    if (!container) return;
+
+    let filtered = clientDatabase;
+    if (activeStatusFilter === 'pending') filtered = clientDatabase.filter(c => c.status === 'pending' && !c.blocked);
+    else if (activeStatusFilter === 'completed') filtered = clientDatabase.filter(c => c.status === 'completed' || c.flagged);
+    else if (activeStatusFilter === 'blocked') filtered = clientDatabase.filter(c => c.blocked);
+
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-12 text-gray-500 flex flex-col items-center">
+                <i data-lucide="inbox" class="w-10 h-10 text-gray-600 mb-3"></i>
+                <p class="text-sm font-semibold text-gray-300">No Clients Match This Filter</p>
+                <p class="text-[11px] text-gray-500 mt-1">Try switching filter or add new clients.</p>
+            </div>
+        `;
+        lucide.createIcons();
+        return;
+    }
+
+    container.innerHTML = filtered.map((client) => {
+        const selectedCount = client.selectedIds ? client.selectedIds.length : 0;
+        const totalAllocated = client.totalAllocated || photoDatabase.length;
+        const selectRatio = totalAllocated > 0 ? Math.round((selectedCount / totalAllocated) * 100) : 0;
+
+        let statusBadge = '';
+        let borderColor = 'border-white/10';
+        let progressColor = 'bg-amber-500';
+
+        if (client.blocked) {
+            statusBadge = `<span class="px-2 py-0.5 rounded-full text-[8px] font-bold uppercase bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1"><i data-lucide="shield-ban" class="w-2.5 h-2.5"></i> Blocked</span>`;
+            borderColor = 'border-red-500/20';
+            progressColor = 'bg-red-500';
+        } else if (client.flagged || client.status === 'completed') {
+            statusBadge = `<span class="px-2 py-0.5 rounded-full text-[8px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1"><i data-lucide="check-circle-2" class="w-2.5 h-2.5"></i> Completed</span>`;
+            borderColor = 'border-emerald-500/20';
+            progressColor = 'bg-emerald-500';
+        } else {
+            statusBadge = `<span class="px-2 py-0.5 rounded-full text-[8px] font-bold uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-1"><i data-lucide="clock" class="w-2.5 h-2.5"></i> Pending</span>`;
+        }
+
+        // Show selected photo thumbnails (map IDs to photoDatabase)
+        const selectedThumbs = (client.selectedIds || []).slice(0, 6).map(pid => {
+            const photo = photoDatabase.find(p => p.id === pid);
+            if (!photo) return '';
+            return `<img src="${photo.url}" class="w-8 h-8 rounded-lg object-cover border border-white/10" title="${photo.name}">`;
+        }).filter(Boolean).join('');
+
+        const moreCount = selectedCount > 6 ? `<span class="w-8 h-8 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center text-[9px] font-bold text-gray-300">+${selectedCount - 6}</span>` : '';
+
+        return `
+            <div class="glass-panel rounded-2xl p-5 border ${borderColor} hover:border-white/20 transition-all space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500/30 to-sky-500/30 border border-white/10 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                            ${client.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-bold text-white">${client.name}</h5>
+                            <p class="text-[10px] text-gray-400">${client.email}</p>
+                        </div>
+                    </div>
+                    ${statusBadge}
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-[10px] text-gray-400 font-bold">
+                        <span>Selection Progress</span>
+                        <span>${selectedCount} / ${totalAllocated} photos (${selectRatio}%)</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full ${progressColor} rounded-full transition-all duration-500" style="width: ${selectRatio}%;"></div>
+                    </div>
+                </div>
+
+                ${selectedCount > 0 ? `
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="text-[9px] text-gray-500 font-bold uppercase tracking-wider mr-1">Selected:</span>
+                        ${selectedThumbs}
+                        ${moreCount}
+                    </div>
+                ` : `
+                    <div class="text-[10px] text-gray-500 italic flex items-center gap-1.5">
+                        <i data-lucide="image-off" class="w-3 h-3"></i> No selections made yet
+                    </div>
+                `}
+
+                ${client.flagged ? `
+                    <div class="px-3 py-2 bg-amber-500/5 border border-amber-500/10 rounded-xl text-[10px] text-amber-300 flex items-center gap-2">
+                        <i data-lucide="eye-off" class="w-3.5 h-3.5 shrink-0"></i>
+                        Client sees "Thank You" page instead of gallery — photos returned to studio.
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }).join('');
+
+    lucide.createIcons();
+}
+
+function filterStatusView(filter) {
+    activeStatusFilter = filter;
+    const filters = ['all', 'pending', 'completed', 'blocked'];
+    filters.forEach(f => {
+        const btn = document.getElementById(`statusFilter-${f}`);
+        if (btn) {
+            btn.className = `px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all active:scale-95 ${f === filter ? 'bg-[var(--theme-accent)] text-black' : 'bg-white/5 text-gray-400 border border-white/10 hover:text-white'}`;
+        }
+    });
+    refreshSelectionStatus();
+}
+
+// --- UNIFIED refreshDashboard (backward compat) ---
+function refreshDashboard() {
+    refreshOverviewPanel();
+    // Also refresh the active sub-tab
+    if (activeDashTab === 'deleted') refreshDeletedDetection();
+    else if (activeDashTab === 'clients') refreshClientManager();
+    else if (activeDashTab === 'upload') refreshUploadPanel();
+    else if (activeDashTab === 'status') refreshSelectionStatus();
+}
+
+// --- MAIN TAB SWITCH (Gallery ↔ Dashboard) ---
 function switchTab(tabId) {
     activeTab = tabId;
     const tabBtnGallery = document.getElementById('tabBtn-gallery');
@@ -1443,7 +1947,7 @@ function switchTab(tabId) {
         }
         if (dashboardSection) dashboardSection.classList.remove('hidden');
 
-        // Sync dashboard statistics
+        // Refresh all dashboard data
         refreshDashboard();
     }
     lucide.createIcons();
@@ -1452,15 +1956,12 @@ function switchTab(tabId) {
 function restoreFromDashboard(historyIndex) {
     if (historyIndex < 0 || historyIndex >= deletedPhotosHistory.length) return;
 
-    // Restore from registry array
     const restoredPayload = deletedPhotosHistory.splice(historyIndex, 1)[0];
     const photo = restoredPayload.photo;
     const originalIndex = restoredPayload.originalIndex;
 
-    // Splice back in photoDatabase at original index
     photoDatabase.splice(originalIndex, 0, photo);
 
-    // Re-select if it was selected prior to deletion
     if (restoredPayload.wasSelected) {
         selectedPhotoIds.add(photo.id);
         saveSelectionsToCache();
@@ -1468,7 +1969,7 @@ function restoreFromDashboard(historyIndex) {
 
     refreshGallery();
     initCarousel();
-    refreshDashboard(); // Refresh current dashboard view
+    refreshDashboard();
 
     showToast('success', 'Asset Restored', `Recovered: ${photo.name}`);
 }

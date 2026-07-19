@@ -309,106 +309,253 @@
             </section>
 
             <!-- ========================================== -->
-            <!-- 5. MANAGEMENT DASHBOARD VIEW               -->
+            <!-- 5. FULL-FLEDGED MANAGEMENT DASHBOARD       -->
             <!-- ========================================== -->
-            <section id="dashboardSection" class="hidden space-y-6 animate-viewEnter">
+            <section id="dashboardSection" class="hidden space-y-6">
                 <!-- Dashboard Header -->
-                <div class="flex items-center justify-between border-b border-white/5 pb-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/5 pb-4">
                     <div>
-                        <h3 class="text-lg font-bold text-white tracking-wide">Studio Management &amp; Analytics</h3>
-                        <p class="text-xs text-gray-400">Review selected photo breakdowns, restore deleted assets, and export logs.</p>
+                        <h3 class="text-lg font-bold text-white tracking-wide">Studio Command Center</h3>
+                        <p class="text-xs text-gray-400">Full-spectrum workspace analytics, client management, and asset operations.</p>
                     </div>
-                    <span class="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center gap-1.5 select-none">
+                    <span class="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center gap-1.5 select-none shrink-0">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         Live Session Sync
                     </span>
                 </div>
 
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Analytics card -->
-                    <div class="glass-panel rounded-2.5xl p-5 border border-white/10 flex flex-col justify-between gap-4">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2.5 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                                <i data-lucide="pie-chart" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider">Workspace Analytics</h4>
-                                <p class="text-[10px] text-gray-500">Selection ratio statistics</p>
-                            </div>
+                <!-- Dashboard Sub-Tabs -->
+                <div class="flex items-center gap-1.5 p-1.5 bg-white/5 border border-white/10 rounded-2xl overflow-x-auto scrollbar-thin">
+                    <button onclick="switchDashTab('overview')" id="dashTab-overview" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 bg-[var(--theme-accent)] text-black">
+                        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i> Overview
+                    </button>
+                    <button onclick="switchDashTab('deleted')" id="dashTab-deleted" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
+                        <i data-lucide="scan-search" class="w-3.5 h-3.5"></i> Deleted Detection
+                    </button>
+                    <button onclick="switchDashTab('clients')" id="dashTab-clients" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
+                        <i data-lucide="users" class="w-3.5 h-3.5"></i> Client Manager
+                    </button>
+                    <button onclick="switchDashTab('upload')" id="dashTab-upload" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
+                        <i data-lucide="send" class="w-3.5 h-3.5"></i> Upload & Send
+                    </button>
+                    <button onclick="switchDashTab('status')" id="dashTab-status" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
+                        <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i> Selection Status
+                    </button>
+                </div>
+
+                <!-- ====== TAB 1: OVERVIEW ====== -->
+                <div id="dashPanel-overview" class="space-y-6">
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="glass-panel rounded-2xl p-4 border border-white/10 text-center">
+                            <i data-lucide="image" class="w-5 h-5 text-sky-400 mx-auto mb-2"></i>
+                            <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Total Assets</span>
+                            <span id="dashTotalPhotos" class="text-2xl font-extrabold text-white">0</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-4 mt-2">
-                            <div>
-                                <span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold">Workspace Items</span>
-                                <span id="dashTotalPhotos" class="text-2xl font-extrabold text-white">0</span>
-                            </div>
-                            <div>
-                                <span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold">Selected Items</span>
-                                <span id="dashSelectedPhotos" class="text-2xl font-extrabold text-[var(--theme-accent)]">0</span>
-                            </div>
+                        <div class="glass-panel rounded-2xl p-4 border border-white/10 text-center">
+                            <i data-lucide="heart" class="w-5 h-5 text-[var(--theme-accent)] mx-auto mb-2"></i>
+                            <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Selected</span>
+                            <span id="dashSelectedPhotos" class="text-2xl font-extrabold text-[var(--theme-accent)]">0</span>
                         </div>
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-[10px] text-gray-400 font-bold px-0.5">
-                                <span>Selection Ratio</span>
-                                <span id="dashSelectionRatio">0%</span>
+                        <div class="glass-panel rounded-2xl p-4 border border-white/10 text-center">
+                            <i data-lucide="trash-2" class="w-5 h-5 text-red-400 mx-auto mb-2"></i>
+                            <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Deleted</span>
+                            <span id="dashDeletedPhotosCount" class="text-2xl font-extrabold text-red-400">0</span>
+                        </div>
+                        <div class="glass-panel rounded-2xl p-4 border border-white/10 text-center">
+                            <i data-lucide="users" class="w-5 h-5 text-purple-400 mx-auto mb-2"></i>
+                            <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Clients</span>
+                            <span id="dashClientCount" class="text-2xl font-extrabold text-purple-400">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Selection Ratio + Category Breakdown Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Ratio Card -->
+                        <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-3">
+                            <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                                <i data-lucide="pie-chart" class="w-4 h-4 text-sky-400"></i> Selection Ratio
+                            </h4>
+                            <div class="flex items-end gap-4">
+                                <span id="dashSelectionRatio" class="text-4xl font-extrabold text-white">0%</span>
+                                <span class="text-xs text-gray-400 pb-1">of workspace selected</span>
                             </div>
-                            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
                                 <div id="dashRatioBar" class="h-full bg-[var(--theme-accent)] rounded-full transition-all duration-500" style="width: 0%;"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Category Breakdown Card -->
-                    <div class="glass-panel rounded-2.5xl p-5 border border-white/10 flex flex-col justify-between gap-3">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                                <i data-lucide="tag" class="w-5 h-5"></i>
+                        <!-- Category Breakdown -->
+                        <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-3">
+                            <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                                <i data-lucide="tag" class="w-4 h-4 text-purple-400"></i> Category Breakdown
+                            </h4>
+                            <div class="space-y-2" id="dashCategoryBreakdown">
+                                <!-- Dynamic category bars -->
                             </div>
-                            <div>
-                                <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider">Selections by Category</h4>
-                                <p class="text-[10px] text-gray-500">Distribution of client targets</p>
-                            </div>
-                        </div>
-                        <div class="space-y-2 mt-1" id="dashCategoryBreakdown">
-                            <!-- Category bars injected dynamically -->
                         </div>
                     </div>
 
-                    <!-- Data Manager / Export card -->
-                    <div class="glass-panel rounded-2.5xl p-5 border border-white/10 flex flex-col justify-between gap-4">
+                    <!-- Export Card -->
+                    <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex items-center gap-3">
                             <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
                                 <i data-lucide="terminal" class="w-5 h-5"></i>
                             </div>
                             <div>
-                                <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider">Studio Data Export</h4>
-                                <p class="text-[10px] text-gray-500">Download lists or copy passcodes</p>
+                                <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider">Data Export</h4>
+                                <div class="text-[10px] font-mono text-gray-500 mt-0.5">selected_ids: <span id="dashSelectedIdsJson" class="text-sky-300">[]</span></div>
                             </div>
                         </div>
-                        <div class="text-xs space-y-1 bg-black/30 border border-white/5 rounded-xl p-3 text-left font-mono text-gray-400 max-h-24 overflow-y-auto scrollbar-thin">
-                            <div>portal_key: "<span class="text-amber-400">OBM-2026</span>"</div>
-                            <div>selected_ids: <span id="dashSelectedIdsJson" class="text-sky-300">[]</span></div>
-                        </div>
-                        <button onclick="copySelectionsList()" class="w-full py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-bold text-white rounded-lg flex items-center justify-center gap-1.5 transition-all custom-cursor-hide">
-                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                            Copy Selected Filenames
+                        <button onclick="copySelectionsList()" class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-bold text-white rounded-lg flex items-center gap-1.5 transition-all custom-cursor-hide shrink-0">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Filenames
                         </button>
                     </div>
                 </div>
 
-                <!-- Deleted Registry Registry Panel -->
-                <div class="glass-panel rounded-2.5xl p-6 border border-white/10 space-y-4">
-                    <div class="flex items-center justify-between border-b border-white/5 pb-3">
-                        <h4 class="text-sm font-bold text-white tracking-wide flex items-center gap-2">
-                            <i data-lucide="trash-2" class="w-4 h-4 text-red-400"></i>
-                            Deleted Workspace Assets
+                <!-- ====== TAB 2: DELETED DETECTION ====== -->
+                <div id="dashPanel-deleted" class="hidden space-y-6">
+                    <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-2">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i data-lucide="scan-search" class="w-4.5 h-4.5 text-[var(--theme-accent)]"></i> Compare & Detect Deleted Photos
                         </h4>
-                        <span id="dashDeletedCount" class="text-xs text-gray-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 font-bold">0 deleted</span>
+                        <p class="text-xs text-gray-400 leading-relaxed">Photos that exist in the workspace but were NOT selected by the client are considered <span class="text-red-400 font-bold">rejected/deleted</span>. Selected photos are marked <span class="text-emerald-400 font-bold">approved</span>.</p>
                     </div>
 
-                    <!-- List of deleted elements -->
-                    <div id="dashDeletedRegistry" class="max-h-64 overflow-y-auto space-y-3 pr-1 scrollbar-thin">
-                        <!-- Dynamic deleted items inject here -->
+                    <!-- Side-by-side: Selected vs Unselected -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Selected Images -->
+                        <div class="glass-panel rounded-2xl p-5 border border-emerald-500/20 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h5 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Approved / Selected
+                                </h5>
+                                <span id="detectSelectedCount" class="text-[10px] font-bold bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20">0</span>
+                            </div>
+                            <div id="detectSelectedGrid" class="max-h-80 overflow-y-auto space-y-2 pr-1 scrollbar-thin">
+                                <!-- Dynamically injected -->
+                            </div>
+                        </div>
+                        <!-- Unselected / Deleted -->
+                        <div class="glass-panel rounded-2xl p-5 border border-red-500/20 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h5 class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Rejected / Not Selected
+                                </h5>
+                                <span id="detectDeletedCount" class="text-[10px] font-bold bg-red-500/10 text-red-400 px-2 py-0.5 rounded-md border border-red-500/20">0</span>
+                            </div>
+                            <div id="detectDeletedGrid" class="max-h-80 overflow-y-auto space-y-2 pr-1 scrollbar-thin">
+                                <!-- Dynamically injected -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Permanently Removed Registry -->
+                    <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h5 class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="archive-x" class="w-3.5 h-3.5 text-red-400"></i> Permanently Removed from Workspace
+                            </h5>
+                            <span id="dashDeletedCount" class="text-[10px] font-bold bg-white/5 text-gray-400 px-2 py-0.5 rounded-md border border-white/10">0</span>
+                        </div>
+                        <div id="dashDeletedRegistry" class="max-h-64 overflow-y-auto space-y-3 pr-1 scrollbar-thin">
+                            <!-- Dynamic deleted items inject here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== TAB 3: CLIENT MANAGER ====== -->
+                <div id="dashPanel-clients" class="hidden space-y-6">
+                    <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-2">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i data-lucide="users" class="w-4.5 h-4.5 text-purple-400"></i> Client Directory
+                        </h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Manage all registered portal users. Block access, flag completed sessions, and track live selection states across all clients.</p>
+                    </div>
+
+                    <!-- Add New Client Quick Action -->
+                    <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col sm:flex-row items-stretch sm:items-end gap-4">
+                        <div class="flex-grow space-y-1">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Quick Register Client</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="addClientName" placeholder="Client Name" class="flex-grow glass-input rounded-lg py-2 px-3 text-white text-xs focus:outline-none">
+                                <input type="email" id="addClientEmail" placeholder="Email Address" class="flex-grow glass-input rounded-lg py-2 px-3 text-white text-xs focus:outline-none">
+                            </div>
+                        </div>
+                        <button onclick="addClientManual()" class="px-5 py-2.5 bg-[var(--theme-accent)] text-black text-xs font-bold rounded-xl hover:opacity-90 active:scale-95 transition-all flex items-center gap-1.5 shrink-0">
+                            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Add Client
+                        </button>
+                    </div>
+
+                    <!-- Client List -->
+                    <div id="clientManagerList" class="space-y-3">
+                        <!-- Dynamically injected client rows -->
+                    </div>
+                </div>
+
+                <!-- ====== TAB 4: UPLOAD & SEND ====== -->
+                <div id="dashPanel-upload" class="hidden space-y-6">
+                    <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-2">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i data-lucide="send" class="w-4.5 h-4.5 text-[var(--theme-accent)]"></i> Upload & Dispatch to Client
+                        </h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Upload images to allocate to a specific client's portal. They will see these photos when they log in with their email.</p>
+                    </div>
+
+                    <!-- Target Client Selector -->
+                    <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Target Client Email</label>
+                            <select id="uploadTargetClient" class="w-full glass-input rounded-xl py-2.5 px-4 text-white text-xs focus:outline-none appearance-none">
+                                <option value="">-- Select Client --</option>
+                            </select>
+                        </div>
+
+                        <!-- Upload Zone -->
+                        <div id="dashUploadDropzone" class="border-2 border-dashed border-white/15 hover:border-[var(--theme-accent)] bg-white/5 hover:bg-[var(--theme-accent)]/5 rounded-2xl px-6 py-8 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-300">
+                            <i data-lucide="cloud-upload" class="w-10 h-10 text-gray-400"></i>
+                            <div class="text-center">
+                                <p class="text-sm font-bold text-gray-200">Drag photos or click to browse</p>
+                                <p class="text-[10px] text-gray-400">Supports JPG, PNG, WEBP • Max 20 files</p>
+                            </div>
+                            <input type="file" id="dashFileUploadInput" multiple accept="image/*" class="hidden">
+                        </div>
+
+                        <!-- Queued files preview -->
+                        <div id="dashUploadQueue" class="hidden space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Queued Files</span>
+                                <span id="dashQueueCount" class="text-[10px] font-bold text-[var(--theme-accent)]">0 files</span>
+                            </div>
+                            <div id="dashQueueList" class="max-h-40 overflow-y-auto space-y-1.5 pr-1 scrollbar-thin">
+                            </div>
+                        </div>
+
+                        <button onclick="dispatchToClient()" class="w-full py-3 bg-[var(--theme-accent)] text-black text-xs font-bold rounded-xl hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="rocket" class="w-4 h-4"></i> Dispatch to Client Portal
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ====== TAB 5: SELECTION STATUS ====== -->
+                <div id="dashPanel-status" class="hidden space-y-6">
+                    <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-2">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i data-lucide="clipboard-check" class="w-4.5 h-4.5 text-emerald-400"></i> Client Selection Tracker
+                        </h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Track which clients have completed their selections, who is still pending, and review the specific photos each client has chosen.</p>
+                    </div>
+
+                    <!-- Status Filter Bar -->
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="filterStatusView('all')" id="statusFilter-all" class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-[var(--theme-accent)] text-black transition-all active:scale-95">All</button>
+                        <button onclick="filterStatusView('pending')" id="statusFilter-pending" class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-white/5 text-gray-400 border border-white/10 hover:text-white transition-all active:scale-95">Pending</button>
+                        <button onclick="filterStatusView('completed')" id="statusFilter-completed" class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-white/5 text-gray-400 border border-white/10 hover:text-white transition-all active:scale-95">Completed</button>
+                        <button onclick="filterStatusView('blocked')" id="statusFilter-blocked" class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-white/5 text-gray-400 border border-white/10 hover:text-white transition-all active:scale-95">Blocked</button>
+                    </div>
+
+                    <!-- Status Cards Grid -->
+                    <div id="selectionStatusGrid" class="space-y-4">
+                        <!-- Dynamically injected -->
                     </div>
                 </div>
             </section>
