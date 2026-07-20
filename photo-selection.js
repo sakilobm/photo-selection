@@ -1833,6 +1833,42 @@ function refreshDeletedDetection() {
         }
     }
 
+    // Permanently removed registry (from deletedPhotosHistory)
+    const deleted = deletedPhotosHistory.length;
+    if (el('dashDeletedCount')) el('dashDeletedCount').innerText = deleted;
+
+    const registry = el('dashDeletedRegistry');
+    if (registry) {
+        if (deleted === 0) {
+            registry.innerHTML = `
+                <div class="text-center py-8 text-gray-500 flex flex-col items-center justify-center p-4">
+                    <i data-lucide="check-circle" class="w-8 h-8 text-emerald-500/20 mb-2 border border-emerald-500/10 p-1.5 rounded-full bg-emerald-500/5"></i>
+                    <p class="text-xs font-semibold text-gray-300">Workspace fully intact</p>
+                    <p class="text-[10px] text-gray-500 mt-0.5">No permanently removed assets.</p>
+                </div>
+            `;
+        } else {
+            registry.innerHTML = deletedPhotosHistory.map((item, idx) => {
+                const photo = item.photo;
+                return `
+                    <div class="flex items-center justify-between bg-white/5 border border-white/5 rounded-xl p-3.5 hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <img src="${photo.url}" class="w-10 h-12 rounded-lg object-cover border border-white/10 shrink-0">
+                            <div class="text-left">
+                                <h5 class="text-xs font-bold text-gray-200 truncate max-w-[150px] sm:max-w-xs">${photo.name}</h5>
+                                <span class="px-1.5 py-0.5 rounded text-[8px] uppercase font-bold bg-white/5 border border-white/10 text-gray-400 capitalize">${photo.category}</span>
+                            </div>
+                        </div>
+                        <button onclick="restoreFromDashboard(${idx})" class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-[var(--theme-accent)] hover:opacity-90 active:scale-95 text-black flex items-center gap-1 transition-all custom-cursor-hide">
+                            <i data-lucide="rotate-ccw" class="w-3 h-3 text-black"></i>
+                            Restore
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+
     lucide.createIcons();
 }
 
@@ -1902,37 +1938,6 @@ async function finalizeDetectedClientSession() {
         refreshOverviewPanel();
 
         showToast('success', 'Client Finalized', `${client.name}'s session is now locked & marked completed.`);
-    }
-}
-    if (registry) {
-        if (deleted === 0) {
-            registry.innerHTML = `
-                <div class="text-center py-8 text-gray-500 flex flex-col items-center justify-center p-4">
-                    <i data-lucide="check-circle" class="w-8 h-8 text-emerald-500/20 mb-2 border border-emerald-500/10 p-1.5 rounded-full bg-emerald-500/5"></i>
-                    <p class="text-xs font-semibold text-gray-300">Workspace fully intact</p>
-                    <p class="text-[10px] text-gray-500 mt-0.5">No permanently removed assets.</p>
-                </div>
-            `;
-        } else {
-            registry.innerHTML = deletedPhotosHistory.map((item, idx) => {
-                const photo = item.photo;
-                return `
-                    <div class="flex items-center justify-between bg-white/5 border border-white/5 rounded-xl p-3.5 hover:bg-white/10 transition-colors">
-                        <div class="flex items-center gap-3">
-                            <img src="${photo.url}" class="w-10 h-12 rounded-lg object-cover border border-white/10 shrink-0">
-                            <div class="text-left">
-                                <h5 class="text-xs font-bold text-gray-200 truncate max-w-[150px] sm:max-w-xs">${photo.name}</h5>
-                                <span class="px-1.5 py-0.5 rounded text-[8px] uppercase font-bold bg-white/5 border border-white/10 text-gray-400 capitalize">${photo.category}</span>
-                            </div>
-                        </div>
-                        <button onclick="restoreFromDashboard(${idx})" class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-[var(--theme-accent)] hover:opacity-90 active:scale-95 text-black flex items-center gap-1 transition-all custom-cursor-hide">
-                            <i data-lucide="rotate-ccw" class="w-3 h-3 text-black"></i>
-                            Restore
-                        </button>
-                    </div>
-                `;
-            }).join('');
-        }
     }
 }
 
