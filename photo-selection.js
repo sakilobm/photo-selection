@@ -370,15 +370,23 @@ function setAppTheme(themeName, event, skipRipple = false) {
 }
 
 function createThemeRipple(e) {
-    const container = document.getElementById('themeWaveContainer');
+    let container = document.getElementById('themeWaveContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'themeWaveContainer';
+        container.className = 'fixed inset-0 pointer-events-none z-[150] overflow-hidden';
+        document.body.appendChild(container);
+    }
+
     const wave = document.createElement('div');
     wave.classList.add('theme-wave');
 
-    // Set spawn coordinates
-    const x = e.clientX;
-    const y = e.clientY;
-    wave.style.left = `${x - 5}px`;
-    wave.style.top = `${y - 5}px`;
+    // Set spawn coordinates safely
+    const x = (e && e.clientX !== undefined) ? e.clientX : (window.innerWidth / 2);
+    const y = (e && e.clientY !== undefined) ? e.clientY : (window.innerHeight / 2);
+
+    wave.style.left = `${x}px`;
+    wave.style.top = `${y}px`;
 
     container.appendChild(wave);
 
@@ -387,10 +395,10 @@ function createThemeRipple(e) {
         wave.classList.add('expand');
     });
 
-    // Cleanup
+    // Cleanup wave after expansion animation
     setTimeout(() => {
         wave.remove();
-    }, 600);
+    }, 700);
 }
 
 function updateThemeIndicators() {

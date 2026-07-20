@@ -1,5 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
+/* Registered CSS Properties for Cross-Browser Color Transitions (Firefox & Chrome) */
+@property --theme-accent {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #0ea5e9;
+}
+@property --blob-1 {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #3b82f6;
+}
+@property --blob-2 {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #06b6d4;
+}
+@property --blob-3 {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #6366f1;
+}
+
 :root {
     /* Theme: Sapphire Ice (Default) */
     --theme-accent: #0ea5e9;
