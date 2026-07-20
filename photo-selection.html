@@ -861,6 +861,40 @@
     </div>
 
     <!-- ========================================== -->
+    <!-- REUSABLE MODERN CONFIRMATION MODAL          -->
+    <!-- ========================================== -->
+    <div id="obmModal" class="obm-modal-overlay" aria-hidden="true">
+        <div class="obm-modal-backdrop"></div>
+        <div class="obm-modal-container">
+            <!-- Icon Circle -->
+            <div class="obm-modal-icon-ring" id="obmModalIconRing">
+                <div class="obm-modal-icon-glow"></div>
+                <div class="obm-modal-icon-circle">
+                    <i data-lucide="alert-triangle" id="obmModalIcon" class="w-7 h-7"></i>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="obm-modal-content">
+                <h3 id="obmModalTitle" class="obm-modal-title">Are you sure?</h3>
+                <p id="obmModalMessage" class="obm-modal-message">This action cannot be undone.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="obm-modal-actions">
+                <button id="obmModalCancel" class="obm-modal-btn obm-modal-btn-cancel" onclick="closeModal(false)">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                    <span id="obmModalCancelText">Cancel</span>
+                </button>
+                <button id="obmModalConfirm" class="obm-modal-btn obm-modal-btn-confirm" onclick="closeModal(true)">
+                    <i data-lucide="check" class="w-3.5 h-3.5" id="obmModalConfirmIcon"></i>
+                    <span id="obmModalConfirmText">Confirm</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
     <!-- ADVANCED TOAST NOTIFICATION CONTAINER      -->
     <!-- ========================================== -->
     <div id="toastContainer"

@@ -10,6 +10,168 @@ let activeTab = 'gallery';
 let deletedPhotosHistory = [];
 let selectionHistory = [];
 
+// --- Modal callback store ---
+let _modalResolve = null;
+
+// ==========================================
+// REUSABLE MODERN MODAL SYSTEM
+// ==========================================
+
+/**
+ * showConfirmModal — Reusable glassmorphic confirmation modal.
+ * Use this INSTEAD of native confirm() anywhere in the project.
+ *
+ * @param {Object} options
+ * @param {string} options.title       — Modal heading
+ * @param {string} options.message     — Description / body text
+ * @param {string} options.icon        — Lucide icon name (default: 'alert-triangle')
+ * @param {string} options.type        — Color preset: 'warning' | 'danger' | 'info' | 'success' (default: 'warning')
+ * @param {string} options.confirmText — Confirm button label (default: 'Confirm')
+ * @param {string} options.cancelText  — Cancel button label  (default: 'Cancel')
+ * @param {string} options.confirmIcon — Lucide icon for confirm btn (default: 'check')
+ * @param {boolean} options.dangerBtn  — If true, confirm button is red (default: false)
+ * @returns {Promise<boolean>} Resolves true if confirmed, false if cancelled
+ */
+function showConfirmModal({
+    title = 'Are you sure?',
+    message = 'This action cannot be undone.',
+    icon = 'alert-triangle',
+    type = 'warning',
+    confirmText = 'Confirm',
+    cancelText = 'Cancel',
+    confirmIcon = 'check',
+    dangerBtn = false
+} = {}) {
+    return new Promise((resolve) => {
+        _modalResolve = resolve;
+
+        const modal = document.getElementById('obmModal');
+        const iconRing = document.getElementById('obmModalIconRing');
+        const iconEl = document.getElementById('obmModalIcon');
+        const titleEl = document.getElementById('obmModalTitle');
+        const msgEl = document.getElementById('obmModalMessage');
+        const confirmBtnTextEl = document.getElementById('obmModalConfirmText');
+        const cancelBtnTextEl = document.getElementById('obmModalCancelText');
+        const confirmBtnEl = document.getElementById('obmModalConfirm');
+        const confirmIconEl = document.getElementById('obmModalConfirmIcon');
+        const cancelBtnEl = document.getElementById('obmModalCancel');
+
+        // Set content
+        titleEl.innerText = title;
+        msgEl.innerText = message;
+        confirmBtnTextEl.innerText = confirmText;
+        cancelBtnTextEl.innerText = cancelText;
+
+        // Set icon (re-render Lucide)
+        iconEl.setAttribute('data-lucide', icon);
+        confirmIconEl.setAttribute('data-lucide', confirmIcon);
+
+        // Set color preset
+        iconRing.className = 'obm-modal-icon-ring modal-' + type;
+
+        // Set danger button style
+        confirmBtnEl.classList.toggle('btn-danger', dangerBtn);
+
+        // Show cancel button (confirm modals always have it)
+        cancelBtnEl.style.display = '';
+
+        // Activate modal
+        modal.classList.remove('closing');
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+
+        lucide.createIcons();
+    });
+}
+
+/**
+ * showAlertModal — Info-only modal with just an OK button (no cancel).
+ * Use this INSTEAD of native alert() anywhere in the project.
+ */
+function showAlertModal({
+    title = 'Notice',
+    message = '',
+    icon = 'info',
+    type = 'info',
+    okText = 'Got It',
+    okIcon = 'check'
+} = {}) {
+    return new Promise((resolve) => {
+        _modalResolve = () => resolve(true);
+
+        const modal = document.getElementById('obmModal');
+        const iconRing = document.getElementById('obmModalIconRing');
+        const iconEl = document.getElementById('obmModalIcon');
+        const titleEl = document.getElementById('obmModalTitle');
+        const msgEl = document.getElementById('obmModalMessage');
+        const confirmBtnTextEl = document.getElementById('obmModalConfirmText');
+        const confirmBtnEl = document.getElementById('obmModalConfirm');
+        const confirmIconEl = document.getElementById('obmModalConfirmIcon');
+        const cancelBtnEl = document.getElementById('obmModalCancel');
+
+        titleEl.innerText = title;
+        msgEl.innerText = message;
+        confirmBtnTextEl.innerText = okText;
+
+        iconEl.setAttribute('data-lucide', icon);
+        confirmIconEl.setAttribute('data-lucide', okIcon);
+
+        iconRing.className = 'obm-modal-icon-ring modal-' + type;
+        confirmBtnEl.classList.remove('btn-danger');
+
+        // Hide cancel button for alert-style modals
+        cancelBtnEl.style.display = 'none';
+
+        modal.classList.remove('closing');
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+
+        lucide.createIcons();
+    });
+}
+
+/**
+ * closeModal — Resolves the modal promise and runs close animation.
+ * Called by the modal button onclick handlers.
+ */
+function closeModal(confirmed) {
+    const modal = document.getElementById('obmModal');
+
+    // Trigger closing animation
+    modal.classList.add('closing');
+
+    setTimeout(() => {
+        modal.classList.remove('active', 'closing');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+
+        if (_modalResolve) {
+            _modalResolve(confirmed);
+            _modalResolve = null;
+        }
+    }, 280);
+}
+
+// Close modal on backdrop click
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('obmModal');
+    if (modal && modal.classList.contains('active') && e.target.classList.contains('obm-modal-backdrop')) {
+        closeModal(false);
+    }
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('obmModal');
+        if (modal && modal.classList.contains('active')) {
+            closeModal(false);
+        }
+    }
+});
+
 // Dynamic Dummy Database (OBM Premium Portfolio)
 let photoDatabase = [
     { id: 1, name: 'OBM_Candid_Wedding_001.jpg', category: 'candid', url: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80' },
@@ -56,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Developer login bypass
 function bypassLoginForTesting() {
-    const email = localStorage.getItem('obm_client_email') || 'sowbhi@obmstudio.com';
+    const email = localStorage.getItem('obm_client_email') || 'sakil@obmstudio.com';
     const name = localStorage.getItem('obm_client_name') || 'Sakil Dev';
     
     // Auto-login bypassing form, but still show the gorgeous loading sequence!
@@ -719,34 +881,45 @@ function updateCounter() {
 }
 
 // Global Reset trigger
-function triggerResetGallery() {
-    if (confirm("Are you sure you want to reset all selections and restore deleted default photos?")) {
-        localStorage.removeItem('obm_selected_ids');
-        selectedPhotoIds.clear();
+async function triggerResetGallery() {
+    const confirmed = await showConfirmModal({
+        title: 'Reset Entire Workspace?',
+        message: 'All your selections will be cleared and deleted photos will be restored to their original state. This cannot be reversed.',
+        icon: 'rotate-ccw',
+        type: 'danger',
+        confirmText: 'Reset Workspace',
+        cancelText: 'Keep Current',
+        confirmIcon: 'rotate-ccw',
+        dangerBtn: true
+    });
 
-        // Reinitialize basic database
-        photoDatabase = [
-            { id: 1, name: 'OBM_Candid_Wedding_001.jpg', category: 'candid', url: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80' },
-            { id: 2, name: 'OBM_Portrait_Bridal_002.jpg', category: 'portrait', url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80' },
-            { id: 3, name: 'OBM_Traditional_Ritual_003.jpg', category: 'traditional', url: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=800&q=80' },
-            { id: 4, name: 'OBM_Candid_Laughter_004.jpg', category: 'candid', url: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=800&q=80' },
-            { id: 5, name: 'OBM_Portrait_Studio_005.jpg', category: 'portrait', url: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=800&q=80' },
-            { id: 6, name: 'OBM_Traditional_Temple_006.jpg', category: 'traditional', url: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?auto=format&fit=crop&w=800&q=80' },
-            { id: 7, name: 'OBM_Candid_Dance_007.jpg', category: 'candid', url: 'https://images.unsplash.com/photo-1549417229-aa67d3263c09?auto=format&fit=crop&w=800&q=80' },
-            { id: 8, name: 'OBM_Portrait_Outdoor_008.jpg', category: 'portrait', url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80' }
-        ];
+    if (!confirmed) return;
 
-        deletedPhotosHistory = [];
-        selectedCategory = 'all';
+    localStorage.removeItem('obm_selected_ids');
+    selectedPhotoIds.clear();
 
-        // Switch to gallery tab if on dashboard
-        switchTab('gallery');
+    // Reinitialize basic database
+    photoDatabase = [
+        { id: 1, name: 'OBM_Candid_Wedding_001.jpg', category: 'candid', url: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80' },
+        { id: 2, name: 'OBM_Portrait_Bridal_002.jpg', category: 'portrait', url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80' },
+        { id: 3, name: 'OBM_Traditional_Ritual_003.jpg', category: 'traditional', url: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=800&q=80' },
+        { id: 4, name: 'OBM_Candid_Laughter_004.jpg', category: 'candid', url: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=800&q=80' },
+        { id: 5, name: 'OBM_Portrait_Studio_005.jpg', category: 'portrait', url: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=800&q=80' },
+        { id: 6, name: 'OBM_Traditional_Temple_006.jpg', category: 'traditional', url: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?auto=format&fit=crop&w=800&q=80' },
+        { id: 7, name: 'OBM_Candid_Dance_007.jpg', category: 'candid', url: 'https://images.unsplash.com/photo-1549417229-aa67d3263c09?auto=format&fit=crop&w=800&q=80' },
+        { id: 8, name: 'OBM_Portrait_Outdoor_008.jpg', category: 'portrait', url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80' }
+    ];
 
-        refreshGallery();
-        initCarousel();
+    deletedPhotosHistory = [];
+    selectedCategory = 'all';
 
-        showToast('info', 'Workspace Restored', 'Seeding base dataset complete.');
-    }
+    // Switch to gallery tab if on dashboard
+    switchTab('gallery');
+
+    refreshGallery();
+    initCarousel();
+
+    showToast('info', 'Workspace Restored', 'Seeding base dataset complete.');
 }
 
 // ==========================================
