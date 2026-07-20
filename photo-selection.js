@@ -14,7 +14,7 @@ let selectionHistory = [];
 let _modalResolve = null;
 
 // ==========================================
-// REUSABLE MODERN MODAL SYSTEM
+// Featured Masterpieces
 // ==========================================
 
 /**
@@ -491,11 +491,11 @@ function initCarousel() {
     }
 
     track.innerHTML = sliderItems.map((photo, i) => `
-        <div class="min-w-full aspect-[21/9] md:aspect-[3/1] relative select-none rounded-2xl overflow-hidden slider-wrapper">
+        <div class="w-full shrink-0 aspect-[21/9] md:aspect-[3/1] relative select-none rounded-2xl overflow-hidden slider-wrapper">
             <img src="${photo.url}" alt="${photo.name}" class="w-full h-full object-cover slider-img">
             <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-6 md:p-8">
                 <div class="flex items-center gap-2 mb-1.5">
-                    <span class="px-2 py-0.5 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-[var(--theme-accent)] text-black">${photo.category}</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] uppercase font-extrabold tracking-wider bg-[var(--theme-accent)] text-black">${photo.category}</span>
                     <span class="text-xs text-gray-400 font-medium">OBM Highlight</span>
                 </div>
                 <h4 class="text-lg md:text-2xl font-extrabold text-white tracking-wide truncate">${photo.name}</h4>
