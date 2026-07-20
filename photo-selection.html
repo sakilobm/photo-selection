@@ -11,6 +11,9 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- External stylesheet -->
     <link rel="stylesheet" href="photo-selection.css">
+    <!-- JSZip & FileSaver for Client Selected Photos ZIP Download Engine -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <!-- External scripts deferred -->
     <script defer src="photo-selection.js"></script>
 </head>
@@ -316,83 +319,110 @@
             <section id="dashboardSection" class="hidden space-y-6">
                 <!-- Dashboard Header -->
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/5 pb-4">
-                    <div>
-                        <h3 class="text-lg font-bold text-white tracking-wide">Studio Command Center</h3>
-                        <p class="text-xs text-gray-400">Full-spectrum workspace analytics, client management, and asset operations.</p>
+                <div class="glass-panel rounded-3xl p-6 md:p-8 border border-white/10 space-y-4">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] uppercase font-extrabold tracking-widest bg-[var(--theme-accent)] text-black">Studio Command Center</span>
+                                <span class="text-xs text-gray-400 font-mono">v3.5 Live Sync</span>
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-wide">Workspace & Client Management</h2>
+                            <p class="text-xs text-gray-400 mt-1">Full-spectrum workspace analytics, deleted photo detection, client directory, and asset operations.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">LIVE SESSION SYNC</span>
+                        </div>
                     </div>
-                    <span class="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center gap-1.5 select-none shrink-0">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Live Session Sync
-                    </span>
-                </div>
 
-                <!-- Dashboard Sub-Tabs -->
-                <div class="flex items-center gap-1.5 p-1.5 bg-white/5 border border-white/10 rounded-2xl overflow-x-auto scrollbar-thin">
-                    <button onclick="switchDashTab('overview')" id="dashTab-overview" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 bg-[var(--theme-accent)] text-black">
-                        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i> Overview
-                    </button>
-                    <button onclick="switchDashTab('deleted')" id="dashTab-deleted" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
-                        <i data-lucide="scan-search" class="w-3.5 h-3.5"></i> Deleted Detection
-                    </button>
-                    <button onclick="switchDashTab('clients')" id="dashTab-clients" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
-                        <i data-lucide="users" class="w-3.5 h-3.5"></i> Client Manager
-                    </button>
-                    <button onclick="switchDashTab('upload')" id="dashTab-upload" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
-                        <i data-lucide="send" class="w-3.5 h-3.5"></i> Upload & Send
-                    </button>
-                    <button onclick="switchDashTab('status')" id="dashTab-status" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
-                        <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i> Selection Status
-                    </button>
+                    <!-- Dashboard Sub-Navigation Tabs -->
+                    <div class="flex items-center gap-1.5 p-1.5 bg-black/40 border border-white/10 rounded-2xl overflow-x-auto scrollbar-none">
+                        <button onclick="switchDashTab('overview')" id="dashTab-overview" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 bg-[var(--theme-accent)] text-black">
+                            <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
+                            <span>Overview</span>
+                        </button>
+                        <button onclick="switchDashTab('deleted')" id="dashTab-deleted" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
+                            <i data-lucide="scan-search" class="w-3.5 h-3.5"></i>
+                            <span>Deleted Detection</span>
+                        </button>
+                        <button onclick="switchDashTab('clients')" id="dashTab-clients" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
+                            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                            <span>Client Manager</span>
+                        </button>
+                        <button onclick="switchDashTab('upload')" id="dashTab-upload" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
+                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                            <span>Upload & Send</span>
+                        </button>
+                        <button onclick="switchDashTab('status')" id="dashTab-status" class="shrink-0 py-2 px-4 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 active:scale-95 text-gray-400 hover:text-white">
+                            <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>
+                            <span>Selection Status</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- ====== TAB 1: OVERVIEW ====== -->
                 <div id="dashPanel-overview" class="space-y-6">
-                    <!-- Stats Grid -->
+                    <!-- Stat Cards -->
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="glass-panel rounded-2xl p-4 border border-white/10 text-center">
-                            <i data-lucide="image" class="w-5 h-5 text-sky-400 mx-auto mb-2"></i>
-                            <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Total Assets</span>
-                            <span id="dashTotalPhotos" class="text-2xl font-extrabold text-white">0</span>
+                        <div class="glass-panel rounded-2xl p-4 border border-white/10 flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20 shrink-0">
+                                <i data-lucide="image" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-gray-400 uppercase font-bold tracking-wider">Total Assets</span>
+                                <span id="dashTotalPhotos" class="text-xl font-extrabold text-white">0</span>
+                            </div>
                         </div>
-                        <div class="glass-panel rounded-2xl p-4 border border-white/10 text-center">
-                            <i data-lucide="heart" class="w-5 h-5 text-[var(--theme-accent)] mx-auto mb-2"></i>
-                            <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Selected</span>
-                            <span id="dashSelectedPhotos" class="text-2xl font-extrabold text-[var(--theme-accent)]">0</span>
+                        <div class="glass-panel rounded-2xl p-4 border border-white/10 flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 shrink-0">
+                                <i data-lucide="heart" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-gray-400 uppercase font-bold tracking-wider">Selected</span>
+                                <span id="dashSelectedPhotos" class="text-xl font-extrabold text-white">0</span>
+                            </div>
                         </div>
-                        <div class="glass-panel rounded-2xl p-4 border border-white/10 text-center">
-                            <i data-lucide="trash-2" class="w-5 h-5 text-red-400 mx-auto mb-2"></i>
-                            <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Deleted</span>
-                            <span id="dashDeletedPhotosCount" class="text-2xl font-extrabold text-red-400">0</span>
+                        <div class="glass-panel rounded-2xl p-4 border border-white/10 flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 shrink-0">
+                                <i data-lucide="trash-2" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-gray-400 uppercase font-bold tracking-wider">Deleted</span>
+                                <span id="dashDeletedPhotosCount" class="text-xl font-extrabold text-white">0</span>
+                            </div>
                         </div>
-                        <div class="glass-panel rounded-2xl p-4 border border-white/10 text-center">
-                            <i data-lucide="users" class="w-5 h-5 text-purple-400 mx-auto mb-2"></i>
-                            <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Clients</span>
-                            <span id="dashClientCount" class="text-2xl font-extrabold text-purple-400">0</span>
+                        <div class="glass-panel rounded-2xl p-4 border border-white/10 flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
+                                <i data-lucide="users" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-gray-400 uppercase font-bold tracking-wider">Clients</span>
+                                <span id="dashClientCount" class="text-xl font-extrabold text-white">0</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Selection Ratio + Category Breakdown Row -->
+                    <!-- Progress Bar & Breakdown -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Ratio Card -->
                         <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-3">
                             <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider flex items-center gap-2">
-                                <i data-lucide="pie-chart" class="w-4 h-4 text-sky-400"></i> Selection Ratio
+                                <i data-lucide="pie-chart" class="w-4 h-4 text-[var(--theme-accent)]"></i> Selection Ratio
                             </h4>
-                            <div class="flex items-end gap-4">
-                                <span id="dashSelectionRatio" class="text-4xl font-extrabold text-white">0%</span>
-                                <span class="text-xs text-gray-400 pb-1">of workspace selected</span>
+                            <div class="flex items-baseline gap-2">
+                                <span id="dashSelectionRatio" class="text-3xl font-extrabold text-white">0%</span>
+                                <span class="text-xs text-gray-400">of workspace selected</span>
                             </div>
                             <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
                                 <div id="dashRatioBar" class="h-full bg-[var(--theme-accent)] rounded-full transition-all duration-500" style="width: 0%;"></div>
                             </div>
                         </div>
-                        <!-- Category Breakdown -->
+
                         <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-3">
                             <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider flex items-center gap-2">
-                                <i data-lucide="tag" class="w-4 h-4 text-purple-400"></i> Category Breakdown
+                                <i data-lucide="tag" class="w-4 h-4 text-[var(--theme-accent)]"></i> Category Breakdown
                             </h4>
-                            <div class="space-y-2" id="dashCategoryBreakdown">
-                                <!-- Dynamic category bars -->
+                            <div id="dashCategoryBreakdown" class="space-y-2">
+                                <!-- Injected dynamically -->
                             </div>
                         </div>
                     </div>
@@ -401,26 +431,47 @@
                     <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex items-center gap-3">
                             <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                                <i data-lucide="terminal" class="w-5 h-5"></i>
+                                <i data-lucide="download" class="w-5 h-5"></i>
                             </div>
                             <div>
-                                <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider">Data Export</h4>
+                                <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider">Data Export & Downloads</h4>
                                 <div class="text-[10px] font-mono text-gray-500 mt-0.5">selected_ids: <span id="dashSelectedIdsJson" class="text-sky-300">[]</span></div>
                             </div>
                         </div>
-                        <button onclick="copySelectionsList()" class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-bold text-white rounded-lg flex items-center gap-1.5 transition-all custom-cursor-hide shrink-0">
-                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Filenames
-                        </button>
+                        <div class="flex items-center gap-2 flex-wrap shrink-0">
+                            <button onclick="copySelectionsList()" class="px-3.5 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-bold text-white rounded-xl flex items-center gap-1.5 transition-all custom-cursor-hide">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Filenames
+                            </button>
+                            <button onclick="downloadCurrentWorkspaceZip()" class="px-4 py-2 bg-[var(--theme-accent)] text-black text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all hover:opacity-90 active:scale-95 shadow-lg">
+                                <i data-lucide="archive" class="w-3.5 h-3.5"></i> Download Selected ZIP
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- ====== TAB 2: DELETED DETECTION ====== -->
                 <div id="dashPanel-deleted" class="hidden space-y-6">
-                    <div class="glass-panel rounded-2xl p-5 border border-white/10 space-y-2">
-                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
-                            <i data-lucide="scan-search" class="w-4.5 h-4.5 text-[var(--theme-accent)]"></i> Compare & Detect Deleted Photos
-                        </h4>
-                        <p class="text-xs text-gray-400 leading-relaxed">Photos that exist in the workspace but were NOT selected by the client are considered <span class="text-red-400 font-bold">rejected/deleted</span>. Selected photos are marked <span class="text-emerald-400 font-bold">approved</span>.</p>
+                    <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="space-y-1">
+                            <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i data-lucide="scan-search" class="w-4.5 h-4.5 text-[var(--theme-accent)]"></i> Compare & Detect Deleted Photos
+                            </h4>
+                            <p class="text-xs text-gray-400 leading-relaxed">
+                                Inspect approved selections vs unselected/deleted photos per client. Download approved or rejected photo packages directly.
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0 flex-wrap">
+                            <div class="flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-1.5">
+                                <i data-lucide="user" class="w-3.5 h-3.5 text-gray-400"></i>
+                                <select id="detectClientSelect" onchange="refreshDeletedDetection()" class="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer">
+                                    <option value="current" class="bg-slate-900 text-white">Current Workspace Session</option>
+                                    <!-- Injected dynamically from clientDatabase -->
+                                </select>
+                            </div>
+                            <button id="detectFinalizeBtn" onclick="finalizeDetectedClientSession()" class="px-3.5 py-2 bg-emerald-500 text-black text-xs font-bold rounded-xl flex items-center gap-1.5 hover:opacity-90 active:scale-95 transition-all shadow-md">
+                                <i data-lucide="check-check" class="w-3.5 h-3.5 text-black"></i> Finalize Client
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Side-by-side: Selected vs Unselected -->
@@ -431,7 +482,12 @@
                                 <h5 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                                     <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Approved / Selected
                                 </h5>
-                                <span id="detectSelectedCount" class="text-[10px] font-bold bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20">0</span>
+                                <div class="flex items-center gap-2">
+                                    <span id="detectSelectedCount" class="text-[10px] font-bold bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20">0</span>
+                                    <button onclick="downloadDetectedSelectedPhotos()" title="Download Approved Photos ZIP" class="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 text-emerald-400 text-[10px] font-bold rounded-md flex items-center gap-1 transition-all">
+                                        <i data-lucide="download" class="w-3 h-3"></i> Download Approved
+                                    </button>
+                                </div>
                             </div>
                             <div id="detectSelectedGrid" class="max-h-80 overflow-y-auto space-y-2 pr-1 scrollbar-thin">
                                 <!-- Dynamically injected -->
@@ -443,7 +499,12 @@
                                 <h5 class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
                                     <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Rejected / Not Selected
                                 </h5>
-                                <span id="detectDeletedCount" class="text-[10px] font-bold bg-red-500/10 text-red-400 px-2 py-0.5 rounded-md border border-red-500/20">0</span>
+                                <div class="flex items-center gap-2">
+                                    <span id="detectDeletedCount" class="text-[10px] font-bold bg-red-500/10 text-red-400 px-2 py-0.5 rounded-md border border-red-500/20">0</span>
+                                    <button onclick="downloadDetectedRejectedPhotos()" title="Download Rejected Photos / List ZIP" class="px-2.5 py-1 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 text-[10px] font-bold rounded-md flex items-center gap-1 transition-all">
+                                        <i data-lucide="download" class="w-3 h-3"></i> Download Rejected
+                                    </button>
+                                </div>
                             </div>
                             <div id="detectDeletedGrid" class="max-h-80 overflow-y-auto space-y-2 pr-1 scrollbar-thin">
                                 <!-- Dynamically injected -->

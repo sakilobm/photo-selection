@@ -342,10 +342,160 @@ function loadClientWorkspace(email, username) {
                 document.getElementById('clientNameDisplay').innerText = currentUser;
                 refreshGallery();
                 initCarousel();
-                showToast('success', 'Portal Connected', `Synchronized workspace allocations for ${email}.`);
+
+                // Check if current user client is completed or flagged
+                const client = clientDatabase.find(c => c.email.toLowerCase() === email.toLowerCase());
+                if (client && (client.flagged || client.status === 'completed')) {
+                    showClientSubmittedView(email, currentUser);
+                    showToast('info', 'Selections Transmitted', `Welcome back, ${currentUser}. Your photo selections are locked & being processed by OBM Studio.`);
+                } else {
+                    showToast('success', 'Portal Connected', `Synchronized workspace allocations for ${email}.`);
+                }
             }, 600);
         }
     }, 50); // ~2.5 seconds total load duration
+}
+
+// ==========================================
+// CLIENT TAB SWITCHING & SUBMITTED SCREEN
+// ==========================================
+function switchTab(tabName) {
+    activeTab = tabName;
+    const galleryBtn = document.getElementById('tabBtn-gallery');
+    const dashboardBtn = document.getElementById('tabBtn-dashboard');
+    const carouselSection = document.getElementById('carouselSection');
+    const filtersSection = document.getElementById('filtersSection');
+    const gridSection = document.getElementById('gridSection');
+    const dashboardSection = document.getElementById('dashboardSection');
+    const submittedScreen = document.getElementById('clientSubmittedScreen');
+
+    const email = localStorage.getItem('obm_client_email') || 'priya@example.com';
+    const client = clientDatabase.find(c => c.email.toLowerCase() === email.toLowerCase());
+    const isSubmitted = client && (client.flagged || client.status === 'completed');
+
+    if (tabName === 'gallery') {
+        if (galleryBtn) galleryBtn.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 bg-[var(--theme-accent)] text-black shadow-lg";
+        if (dashboardBtn) dashboardBtn.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 text-gray-400 hover:text-white";
+
+        if (dashboardSection) dashboardSection.classList.add('hidden');
+
+        if (isSubmitted) {
+            showClientSubmittedView(email, currentUser);
+        } else {
+            if (submittedScreen) submittedScreen.classList.add('hidden');
+            if (carouselSection) carouselSection.classList.remove('hidden');
+            if (filtersSection) filtersSection.classList.remove('hidden');
+            if (gridSection) gridSection.classList.remove('hidden');
+        }
+        updateActionToolbar();
+    } else {
+        if (galleryBtn) galleryBtn.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 text-gray-400 hover:text-white";
+        if (dashboardBtn) dashboardBtn.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 bg-[var(--theme-accent)] text-black shadow-lg";
+
+        if (carouselSection) carouselSection.classList.add('hidden');
+        if (filtersSection) filtersSection.classList.add('hidden');
+        if (gridSection) gridSection.classList.add('hidden');
+        if (submittedScreen) submittedScreen.classList.add('hidden');
+
+        if (dashboardSection) dashboardSection.classList.remove('hidden');
+        refreshDashboard();
+    }
+
+    lucide.createIcons();
+}
+
+function refreshDashboard() {
+    switchDashTab(activeDashTab);
+}
+
+async function submitSelections() {
+    const selectedCount = selectedPhotoIds.size;
+    if (selectedCount === 0) {
+        showToast('alert', 'No Selections', 'Please select at least one photo before finalizing.');
+        return;
+    }
+
+    const confirmed = await showConfirmModal({
+        title: 'Finalize & Send Selections?',
+        message: `You have selected ${selectedCount} out of ${photoDatabase.length} photos. Once sent to OBM Studio, your selections will be locked for album editing.`,
+        icon: 'send',
+        type: 'success',
+        confirmText: 'Send to OBM Studio',
+        cancelText: 'Review More',
+        confirmIcon: 'check-check'
+    });
+
+    if (!confirmed) return;
+
+    // Update client record in clientDatabase if logged in
+    const email = localStorage.getItem('obm_client_email') || 'priya@example.com';
+    const client = clientDatabase.find(c => c.email.toLowerCase() === email.toLowerCase());
+
+    if (client) {
+        client.status = 'completed';
+        client.flagged = true;
+        client.selectedIds = Array.from(selectedPhotoIds);
+        saveClientDB();
+    }
+
+    triggerConfetti();
+
+    showToast('success', 'Selections Transmitted!', `Sent ${selectedCount} photo(s) to OBM Studio for layout & retouching.`);
+
+    showClientSubmittedView(email, currentUser);
+}
+
+function showClientSubmittedView(email, name) {
+    const carouselSection = document.getElementById('carouselSection');
+    const filtersSection = document.getElementById('filtersSection');
+    const actionToolbar = document.getElementById('actionToolbar');
+    const gridSection = document.getElementById('gridSection');
+    const submittedScreen = document.getElementById('clientSubmittedScreen');
+
+    if (!submittedScreen) return;
+
+    // Hide active gallery elements
+    if (carouselSection) carouselSection.classList.add('hidden');
+    if (filtersSection) filtersSection.classList.add('hidden');
+    if (actionToolbar) actionToolbar.classList.add('hidden');
+    if (gridSection) gridSection.classList.add('hidden');
+
+    // Show submitted screen
+    submittedScreen.classList.remove('hidden');
+    submittedScreen.classList.add('flex');
+
+    // Populate metadata
+    const nameEl = document.getElementById('submittedClientName');
+    const emailEl = document.getElementById('submittedClientEmail');
+    const countEl = document.getElementById('submittedCountDisplay');
+    const gridCountEl = document.getElementById('submittedGridCount');
+    const thumbsGrid = document.getElementById('submittedThumbsGrid');
+
+    if (nameEl) nameEl.innerText = name || currentUser || 'Valued Client';
+    if (emailEl) emailEl.innerText = email || localStorage.getItem('obm_client_email') || 'client@example.com';
+    
+    const count = selectedPhotoIds.size;
+    if (countEl) countEl.innerText = `${count} / ${photoDatabase.length} Photos`;
+    if (gridCountEl) gridCountEl.innerText = `${count} Items`;
+
+    // Render thumbnail grid
+    if (thumbsGrid) {
+        const selectedPhotos = photoDatabase.filter(p => selectedPhotoIds.has(p.id));
+        if (selectedPhotos.length === 0) {
+            thumbsGrid.innerHTML = `<p class="text-xs text-gray-500 col-span-full py-4 text-center">No thumbnail previews available.</p>`;
+        } else {
+            thumbsGrid.innerHTML = selectedPhotos.map(p => `
+                <div class="relative group aspect-square rounded-xl overflow-hidden border border-white/10 select-none">
+                    <img src="${p.url}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span class="text-[9px] text-white font-bold truncate px-1">${p.name}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    lucide.createIcons();
 }
 
 // ==========================================
@@ -1600,17 +1750,44 @@ function refreshOverviewPanel() {
 function refreshDeletedDetection() {
     const el = (id) => document.getElementById(id);
 
+    // Populate detectClientSelect dropdown dynamically
+    const select = el('detectClientSelect');
+    if (select) {
+        const currentVal = select.value || 'current';
+        let optionsHtml = `<option value="current" class="bg-slate-900 text-white">Current Workspace Session (${selectedPhotoIds.size} selected)</option>`;
+        clientDatabase.forEach(client => {
+            const count = client.selectedIds ? client.selectedIds.length : 0;
+            optionsHtml += `<option value="${client.id}" class="bg-slate-900 text-white">${client.name} (${client.email}) — ${count} selected</option>`;
+        });
+        select.innerHTML = optionsHtml;
+        select.value = currentVal;
+    }
+
+    const selectedClientId = select ? select.value : 'current';
+    let selectedPhotoSet = new Set();
+    let clientObj = null;
+
+    if (selectedClientId === 'current') {
+        selectedPhotoSet = selectedPhotoIds;
+    } else {
+        clientObj = clientDatabase.find(c => c.id === selectedClientId);
+        if (clientObj && clientObj.selectedIds) {
+            selectedPhotoSet = new Set(clientObj.selectedIds);
+        }
+    }
+
     // Selected photos (approved)
-    const selectedPhotos = photoDatabase.filter(p => selectedPhotoIds.has(p.id));
-    const unselectedPhotos = photoDatabase.filter(p => !selectedPhotoIds.has(p.id));
+    const selectedPhotos = photoDatabase.filter(p => selectedPhotoSet.has(p.id));
+    const unselectedPhotos = photoDatabase.filter(p => !selectedPhotoSet.has(p.id));
 
     if (el('detectSelectedCount')) el('detectSelectedCount').innerText = selectedPhotos.length;
     if (el('detectDeletedCount')) el('detectDeletedCount').innerText = unselectedPhotos.length;
 
+    // Render Approved Grid
     const selectedGrid = el('detectSelectedGrid');
     if (selectedGrid) {
         if (selectedPhotos.length === 0) {
-            selectedGrid.innerHTML = `<div class="text-center py-6 text-gray-500"><p class="text-[11px]">No photos selected yet.</p></div>`;
+            selectedGrid.innerHTML = `<div class="text-center py-6 text-gray-500"><p class="text-[11px]">No photos selected for this client.</p></div>`;
         } else {
             selectedGrid.innerHTML = selectedPhotos.map(photo => `
                 <div class="flex items-center gap-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-2.5 hover:bg-emerald-500/10 transition-colors">
@@ -1625,10 +1802,11 @@ function refreshDeletedDetection() {
         }
     }
 
+    // Render Rejected Grid
     const deletedGrid = el('detectDeletedGrid');
     if (deletedGrid) {
         if (unselectedPhotos.length === 0) {
-            deletedGrid.innerHTML = `<div class="text-center py-6 text-gray-500"><p class="text-[11px]">All photos are selected! 🎉</p></div>`;
+            deletedGrid.innerHTML = `<div class="text-center py-6 text-gray-500"><p class="text-[11px]">All photos were selected! 🎉</p></div>`;
         } else {
             deletedGrid.innerHTML = unselectedPhotos.map(photo => `
                 <div class="flex items-center gap-3 bg-red-500/5 border border-red-500/10 rounded-xl p-2.5 hover:bg-red-500/10 transition-colors">
@@ -1643,11 +1821,89 @@ function refreshDeletedDetection() {
         }
     }
 
-    // Permanently removed registry (from deletedPhotosHistory)
-    const deleted = deletedPhotosHistory.length;
-    if (el('dashDeletedCount')) el('dashDeletedCount').innerText = deleted;
+    // Update Finalize Button
+    const finalizeBtn = el('detectFinalizeBtn');
+    if (finalizeBtn) {
+        if (clientObj) {
+            finalizeBtn.innerHTML = clientObj.flagged
+                ? `<i data-lucide="check-check" class="w-3.5 h-3.5 text-black"></i> Finalized & Flagged`
+                : `<i data-lucide="lock" class="w-3.5 h-3.5 text-black"></i> Finalize ${clientObj.name.split(' ')[0]}`;
+        } else {
+            finalizeBtn.innerHTML = `<i data-lucide="check-check" class="w-3.5 h-3.5 text-black"></i> Finalize Workspace`;
+        }
+    }
 
-    const registry = el('dashDeletedRegistry');
+    lucide.createIcons();
+}
+
+function downloadDetectedSelectedPhotos() {
+    const select = document.getElementById('detectClientSelect');
+    const selectedVal = select ? select.value : 'current';
+    if (selectedVal === 'current') {
+        downloadCurrentWorkspaceZip('OBM_Approved_Photos');
+    } else {
+        downloadClientSelectionsZip(selectedVal);
+    }
+}
+
+function downloadDetectedRejectedPhotos() {
+    const select = document.getElementById('detectClientSelect');
+    const selectedVal = select ? select.value : 'current';
+
+    let unselectedPhotos = [];
+    let clientName = 'Workspace';
+
+    if (selectedVal === 'current') {
+        unselectedPhotos = photoDatabase.filter(p => !selectedPhotoIds.has(p.id));
+    } else {
+        const client = clientDatabase.find(c => c.id === selectedVal);
+        if (client) {
+            clientName = client.name.replace(/[^a-zA-Z0-9_]/g, '_');
+            const clientSet = new Set(client.selectedIds || []);
+            unselectedPhotos = photoDatabase.filter(p => !clientSet.has(p.id));
+        }
+    }
+
+    if (unselectedPhotos.length === 0) {
+        showToast('info', 'No Rejected Photos', 'All photos were selected for this client!');
+        return;
+    }
+
+    const unselectedIds = unselectedPhotos.map(p => p.id);
+    downloadSelectedPhotosZip(unselectedIds, `OBM_Rejected_Photos_${clientName}`);
+}
+
+async function finalizeDetectedClientSession() {
+    const select = document.getElementById('detectClientSelect');
+    const selectedVal = select ? select.value : 'current';
+
+    if (selectedVal === 'current') {
+        submitSelections();
+    } else {
+        const client = clientDatabase.find(c => c.id === selectedVal);
+        if (!client) return;
+
+        const confirmed = await showConfirmModal({
+            title: `Finalize Session for ${client.name}?`,
+            message: `This will flag ${client.name}'s session as complete and lock their gallery workspace with a Thank You confirmation screen.`,
+            icon: 'lock',
+            type: 'success',
+            confirmText: 'Finalize & Lock Session',
+            confirmIcon: 'check-check'
+        });
+
+        if (!confirmed) return;
+
+        client.status = 'completed';
+        client.flagged = true;
+        saveClientDB();
+        refreshDeletedDetection();
+        refreshClientManager();
+        refreshOverviewPanel();
+
+        showToast('success', 'Client Finalized', `${client.name}'s session is now locked & marked completed.`);
+    }
+}
     if (registry) {
         if (deleted === 0) {
             registry.innerHTML = `
@@ -1729,6 +1985,9 @@ function refreshClientManager() {
 
                     <!-- Actions -->
                     <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="downloadClientSelectionsZip('${client.id}')" title="Download Client Selections ZIP" class="p-2 rounded-lg border border-sky-500/20 bg-sky-500/5 hover:bg-sky-500/10 transition-all active:scale-90 text-sky-400">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        </button>
                         <button onclick="toggleFlagClient(${idx})" title="${client.flagged ? 'Remove Flag' : 'Flag as Sent'}" class="p-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-all active:scale-90 ${flagColor}">
                             <i data-lucide="${flagIcon}" class="w-3.5 h-3.5"></i>
                         </button>
@@ -2043,10 +2302,15 @@ function refreshSelectionStatus() {
                 </div>
 
                 ${selectedCount > 0 ? `
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                        <span class="text-[9px] text-gray-500 font-bold uppercase tracking-wider mr-1">Selected:</span>
-                        ${selectedThumbs}
-                        ${moreCount}
+                    <div class="flex items-center justify-between gap-2 flex-wrap pt-1">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="text-[9px] text-gray-500 font-bold uppercase tracking-wider mr-1">Selected:</span>
+                            ${selectedThumbs}
+                            ${moreCount}
+                        </div>
+                        <button onclick="downloadClientSelectionsZip('${client.id}')" class="px-3 py-1.5 bg-[var(--theme-accent)] text-black font-extrabold text-[10px] rounded-lg hover:opacity-90 active:scale-95 transition-all flex items-center gap-1 shrink-0 shadow-md">
+                            <i data-lucide="download" class="w-3 h-3 text-black"></i> Download Package
+                        </button>
                     </div>
                 ` : `
                     <div class="text-[10px] text-gray-500 italic flex items-center gap-1.5">
@@ -2168,5 +2432,131 @@ function copySelectionsList() {
     }).catch(err => {
         console.error("Clipboard copy error", err);
         showToast('alert', 'Copy Blocked', 'Could not access clipboard.');
+    });
+}
+
+// ==========================================
+// CLIENT SELECTION DOWNLOAD ENGINE (ZIP & MANIFEST)
+// ==========================================
+
+/**
+ * downloadSelectedPhotosZip — Package given photo IDs into a ZIP archive and trigger download.
+ *
+ * @param {Array<number|string>} photoIds - IDs of photos to download
+ * @param {string} customZipName - Custom filename for the .zip file
+ */
+async function downloadSelectedPhotosZip(photoIds, customZipName = 'OBM_Client_Selected_Photos') {
+    if (!photoIds || photoIds.length === 0) {
+        showToast('alert', 'No Photos Selected', 'Select at least one photo to download.');
+        return;
+    }
+
+    const selectedPhotos = photoDatabase.filter(p => photoIds.includes(p.id));
+    if (selectedPhotos.length === 0) {
+        showToast('alert', 'Photos Not Found', 'Could not locate selected photos in workspace.');
+        return;
+    }
+
+    showToast('info', 'Preparing Download', `Packaging ${selectedPhotos.length} selected photo(s) into ZIP archive...`);
+
+    // Check JSZip availability
+    if (typeof JSZip === 'undefined') {
+        fallbackSequentialDownload(selectedPhotos);
+        return;
+    }
+
+    try {
+        const zip = new JSZip();
+        const folder = zip.folder(customZipName);
+
+        // Build text manifest inside ZIP
+        let manifestText = `====================================================\n`;
+        manifestText += `OBM PHOTO STUDIO - CLIENT SELECTION MANIFEST DATA\n`;
+        manifestText += `====================================================\n`;
+        manifestText += `Export Timestamp : ${new Date().toLocaleString()}\n`;
+        manifestText += `Active Session   : ${currentUser || 'Studio Client'}\n`;
+        manifestText += `Total Selected   : ${selectedPhotos.length} Photo File(s)\n\n`;
+        manifestText += `SELECTED IMAGES CATALOG:\n`;
+        manifestText += `----------------------------------------------------\n`;
+
+        for (const photo of selectedPhotos) {
+            manifestText += `[${photo.id}] ${photo.name} | Category: ${photo.category.toUpperCase()}\n`;
+
+            try {
+                // Fetch image blob
+                const response = await fetch(photo.url);
+                const blob = await response.blob();
+                folder.file(photo.name, blob);
+            } catch (err) {
+                console.warn(`Fetch image blob failed for ${photo.name}, including URL reference.`, err);
+                folder.file(`${photo.name}.txt`, `Source Image URL: ${photo.url}`);
+            }
+        }
+
+        manifestText += `----------------------------------------------------\n`;
+        manifestText += `OBM Photo Studio © All Rights Reserved.\n`;
+
+        folder.file("SELECTION_MANIFEST.txt", manifestText);
+
+        const content = await zip.generateAsync({ type: "blob" });
+        const zipFileName = `${customZipName}.zip`;
+
+        if (typeof saveAs !== 'undefined') {
+            saveAs(content, zipFileName);
+        } else {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = zipFileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
+
+        showToast('success', 'Download Package Ready!', `Saved ${zipFileName} with ${selectedPhotos.length} image file(s).`);
+    } catch (error) {
+        console.error("ZIP Generation Error:", error);
+        showToast('alert', 'ZIP Packaging Exception', 'Falling back to individual image downloads.');
+        fallbackSequentialDownload(selectedPhotos);
+    }
+}
+
+function downloadCurrentWorkspaceZip(customZipName) {
+    const selectedIds = Array.from(selectedPhotoIds);
+    if (selectedIds.length === 0) {
+        showToast('alert', 'No Selections', 'You have not selected any photos in the gallery workspace yet.');
+        return;
+    }
+    downloadSelectedPhotosZip(selectedIds, customZipName || 'OBM_Workspace_Selected_Photos');
+}
+
+function downloadClientSelectionsZip(clientId) {
+    const client = clientDatabase.find(c => c.id === clientId);
+    if (!client) {
+        showToast('alert', 'Client Error', 'Client profile not found.');
+        return;
+    }
+
+    const selectedIds = client.selectedIds || [];
+    if (selectedIds.length === 0) {
+        showToast('alert', 'No Selections Available', `${client.name} has not selected any photos yet.`);
+        return;
+    }
+
+    const safeName = client.name.replace(/[^a-zA-Z0-9_]/g, '_');
+    downloadSelectedPhotosZip(selectedIds, `OBM_Selections_${safeName}`);
+}
+
+function fallbackSequentialDownload(photos) {
+    photos.forEach((photo, idx) => {
+        setTimeout(() => {
+            const link = document.createElement('a');
+            link.href = photo.url;
+            link.download = photo.name;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }, idx * 400);
     });
 }
