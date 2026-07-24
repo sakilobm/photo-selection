@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OBM Studio Owner & Admin Command Center — Full-spectrum workspace analytics, pricing config, live stream control, and client portal operations.">
+  <title>Studio Command Center | OBM Studio</title>
+  <!-- Tailwind CSS (Production Warning Filtered) -->
+  <script>(function(){var w=console.warn;console.warn=function(){if(arguments[0]&&typeof arguments[0]==='string'&&arguments[0].includes('cdn.tailwindcss.com'))return;w.apply(console,arguments);};})();</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Global theme engine & admin store -->
+  <script src="theme.js"></script>
+  <script src="admin-store.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ═══════════════════════════════════════════
+       EXACT STUDIO DASHBOARD STYLES (MATCHING SCREENSHOT)
+    ═══════════════════════════════════════════ */
+
+    body {
+      background: radial-gradient(circle at 50% -20%, #2e1065 0%, #0f172a 45%, #030712 100%) !important;
+      min-height: 100vh;
+      color: #f3f4f6;
+    }
+
+    /* Floating Liquid Aurora Blobs */
+    .dashboard-aurora-bg {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .dash-blob {
+      position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.25;
+      animation: blobFloat 25s infinite alternate ease-in-out;
+    }
+    .dash-blob-1 { top: -10%; left: 20%; width: 500px; height: 500px; background: #6366f1; }
+    .dash-blob-2 { top: 30%; right: 10%; width: 600px; height: 600px; background: #a855f7; animation-delay: -5s; }
+    .dash-blob-3 { bottom: -10%; left: 30%; width: 550px; height: 550px; background: #06b6d4; animation-delay: -10s; }
+
+    @keyframes blobFloat {
+      0% { transform: translate(0px, 0px) scale(1); }
+      50% { transform: translate(40px, -40px) scale(1.1); }
+      100% { transform: translate(-30px, 30px) scale(0.95); }
+    }
+
+    /* Top Glass Bar */
+    .top-glass-bar {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 48px); max-width: 1400px; z-index: 50;
+      background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
+      padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Main Container */
+    .dashboard-container {
+      position: relative; z-index: 10;
+      max-width: 1400px; margin: 0 auto;
+      padding: 110px 24px 60px 24px;
+    }
+
+    /* Workspace Switcher Pill Toggle */
+    .view-toggle-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+    }
+    .view-toggle-btn {
+      padding: 8px 18px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      color: rgba(255, 255, 255, 0.6); transition: all 0.3s ease; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+    }
+    .view-toggle-btn.active {
+      background: var(--theme-accent, #3b82f6); color: #ffffff;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Hero Banner Card */
+    .hero-banner-card {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%);
+      backdrop-filter: blur(30px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px; padding: 32px; position: relative; overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    .hero-banner-card::before {
+      content: ''; position: absolute; top: 0; right: 0; width: 400px; height: 100%;
+      background: radial-gradient(circle at 100% 0%, rgba(168, 85, 247, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Scalable Horizontal Navigation Bar inside Banner Card */
+    .dashboard-nav-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px; border-radius: 16px;
+      background: rgba(3, 7, 18, 0.6); border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+      margin-top: 24px;
+    }
+    .dashboard-nav-bar::-webkit-scrollbar { display: none; }
+
+    .dash-tab-btn {
+      flex-shrink: 0; padding: 10px 18px; border-radius: 12px;
+      font-size: 12px; font-weight: 700; color: rgba(255, 255, 255, 0.65);
+      background: transparent; border: 1px solid transparent;
+      cursor: pointer; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+    }
+    .dash-tab-btn:hover {
+      color: #ffffff; background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+    }
+    .dash-tab-btn.active {
+      background: #3b82f6; color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Glass KPI Stat Cards */
+    .kpi-card {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px; padding: 20px;
+      display: flex; align-items: center; gap: 16px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.35s ease;
+    }
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+    .kpi-icon-box {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 20px;
+    }
+
+    /* Glass Panels */
+    .glass-panel-card {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px; padding: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: all 0.3s ease;
+    }
+    .glass-panel-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    /* Form Inputs */
+    .dash-input {
+      width: 100%; padding: 12px 16px; border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff; font-size: 13px; outline: none;
+      transition: all 0.3s ease;
+    }
+    .dash-input:focus {
+      border-color: #3b82f6;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+    }
+
+    /* Lock Screen Modal */
+    .admin-lock-modal {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(3, 7, 18, 0.94); backdrop-filter: blur(35px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; transition: opacity 0.4s ease;
+    }
+    .admin-lock-card {
+      max-width: 440px; width: 100%; padding: 44px;
+      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(30px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 32px; text-align: center;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 80px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Pearl White Overrides */
+    html.theme-light body {
+      background: radial-gradient(circle at 50% -20%, #e0e7ff 0%, #f1f5f9 50%, #f8fafc 100%) !important;
+      color: #0f172a !important;
+    }
+    html.theme-light .top-glass-bar,
+    html.theme-light .hero-banner-card,
+    html.theme-light .kpi-card,
+    html.theme-light .glass-panel-card {
+      background: rgba(255, 255, 255, 0.75) !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    }
+    html.theme-light .dashboard-nav-bar {
+      background: rgba(241, 245, 249, 0.8) !important;
+      border-color: rgba(203, 213, 225, 0.8) !important;
+    }
+    html.theme-light .dash-tab-btn {
+      color: #475569 !important;
+    }
+    html.theme-light .dash-tab-btn:hover {
+      color: #0f172a !important;
+      background: rgba(0, 0, 0, 0.05) !important;
+    }
+    html.theme-light .dash-tab-btn.active {
+      background: #2563eb !important; color: #ffffff !important;
+    }
+    html.theme-light .dash-input {
+      background: rgba(241, 245, 249, 0.9) !important;
+      border-color: rgba(203, 213, 225, 0.8) !important;
+      color: #0f172a !important;
+    }
+    html.theme-light .text-white { color: #0f172a !important; }
+    html.theme-light .text-slate-400, html.theme-light .text-slate-300 { color: #475569 !important; }
+    html.theme-light td, html.theme-light th { color: #334155 !important; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- ══════ FLOATING LIQUID AURORA BACKGROUND ══════ -->
+  <div class="dashboard-aurora-bg">
+    <div class="dash-blob dash-blob-1"></div>
+    <div class="dash-blob dash-blob-2"></div>
+    <div class="dash-blob dash-blob-3"></div>
+  </div>
+
+  <!-- ══════ PASSCODE LOCK SCREEN MODAL ══════ -->
+  <div id="admin-lock-screen" class="admin-lock-modal">
+    <div class="admin-lock-card">
+      <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-tr from-cyan-400 via-purple-500 to-amber-400 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+        <i data-lucide="shield-check" class="w-8 h-8 text-slate-950"></i>
+      </div>
+      <h2 class="text-2xl font-black text-white font-['Outfit'] mb-2">OBM Studio Command Center</h2>
+      <p class="text-xs text-slate-400 mb-6">Enter master passcode to unlock full-spectrum studio operations.</p>
+
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+        <div class="mb-4">
+          <input type="password" id="admin-passcode-input" placeholder="Enter Admin Passcode" class="dash-input text-center text-lg tracking-widest font-mono" placeholder="• • • • • •">
+        </div>
+        <p id="admin-auth-error" class="text-xs text-rose-400 mb-4 hidden">Invalid passcode. Try: ADMIN2026</p>
+
+        <button type="submit" class="btn-primary w-full justify-center py-3.5 text-xs font-bold mb-4">
+          <i data-lucide="unlock" class="w-4 h-4"></i> Unlock Studio Operations
+        </button>
+      </form>
+
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs">
+        <span class="text-slate-400">Default Passcode:</span>
+        <button onclick="autofillPasscode()" class="text-cyan-400 font-mono font-bold hover:underline">ADMIN2026</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ TOP GLASS HEADER BAR ══════ -->
+  <header class="top-glass-bar">
+    <a href="index.html" class="flex items-center gap-3 no-underline">
+      <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-400 via-purple-500 to-amber-400 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+        <i data-lucide="sliders" class="w-4 h-4 text-slate-950 font-black"></i>
+      </div>
+      <div>
+        <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent font-['Outfit']">OBM STUDIO</span>
+        <span class="block text-[9px] text-cyan-400 font-bold tracking-widest uppercase -mt-1">PREMIUM PORTAL</span>
+      </div>
+    </a>
+
+    <!-- Active Session Pill -->
+    <div class="hidden sm:flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+      <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 flex items-center justify-center text-slate-950 font-black text-xs">
+        OBM
+      </div>
+      <div>
+        <span class="text-[9px] uppercase font-bold text-slate-400 block">ACTIVE SESSION</span>
+        <span class="text-xs font-bold text-white block -mt-1">Studio Command Admin</span>
+      </div>
+    </div>
+
+    <!-- Right Controls: Theme dots + View Switcher -->
+    <div class="flex items-center gap-4">
+      <div class="global-theme-switcher">
+        <label>THEME</label>
+        <button class="theme-switcher-dot bg-sky-500"    data-theme="sapphire" title="Sapphire Ice"    onclick="OBMTheme.set('sapphire')"></button>
+        <button class="theme-switcher-dot bg-purple-500" data-theme="amethyst" title="Amethyst Glow"   onclick="OBMTheme.set('amethyst')"></button>
+        <button class="theme-switcher-dot bg-emerald-500"data-theme="emerald"  title="Emerald Forest"  onclick="OBMTheme.set('emerald')"></button>
+        <button class="theme-switcher-dot bg-rose-500"   data-theme="rose"     title="Rose Quartz"     onclick="OBMTheme.set('rose')"></button>
+        <button class="theme-switcher-dot bg-amber-500"  data-theme="amber"    title="Amber Sunset"    onclick="OBMTheme.set('amber')"></button>
+        <button class="theme-switcher-dot bg-white border border-slate-300 shadow-sm" data-theme="white" title="Pearl White" onclick="OBMTheme.set('white')"></button>
+      </div>
+
+      <!-- Pill Toggle Workspace Switcher -->
+      <div class="view-toggle-pill">
+        <a href="photo-selection.html" class="view-toggle-btn">
+          <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i> Gallery Workspace
+        </a>
+        <button class="view-toggle-btn active">
+          <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Studio Dashboard
+        </button>
+      </div>
+
+      <button onclick="handleLogout()" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-rose-400 transition-colors" title="Lock Dashboard">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+
+  <!-- ══════ MAIN DASHBOARD CONTAINER ══════ -->
+  <main class="dashboard-container space-y-8">
+
+    <!-- ── HERO COMMAND BANNER CARD ── -->
+    <div class="hero-banner-card" data-reveal>
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-300 text-[10px] font-extrabold uppercase tracking-widest">
+              STUDIO COMMAND CENTER
+            </span>
+            <span class="text-[10px] text-slate-400 font-mono">v3.5 Live Sync</span>
+          </div>
+          <h1 class="text-3xl md:text-5xl font-black text-white font-['Outfit'] tracking-tight">
+            Workspace &amp; Client Management
+          </h1>
+          <p class="text-xs md:text-sm text-slate-300 mt-2 max-w-2xl">
+            Full-spectrum workspace analytics, packages &amp; pricing configuration, live broadcast control room, album review, and asset operations.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2.5 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-xs font-extrabold uppercase tracking-widest whitespace-nowrap self-start md:self-auto">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          LIVE SESSION SYNC
+        </div>
+      </div>
+
+      <!-- SCALABLE HORIZONTAL PILL TAB BAR -->
+      <nav class="dashboard-nav-bar">
+        <button class="dash-tab-btn active" onclick="switchDashTab('overview', this)">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Overview
+        </button>
+        <button class="dash-tab-btn" onclick="switchDashTab('packages', this)">
+          <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i> Packages &amp; Rates
+        </button>
+        <button class="dash-tab-btn" onclick="switchDashTab('portals', this)">
+          <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i> Client Directory
+        </button>
+        <button class="dash-tab-btn" onclick="switchDashTab('live', this)">
+          <i data-lucide="radio" class="w-4 h-4 text-rose-400"></i> Live Broadcast
+        </button>
+        <button class="dash-tab-btn" onclick="switchDashTab('albums', this)">
+          <i data-lucide="book-open" class="w-4 h-4 text-purple-400"></i> Digital Albums
+        </button>
+        <button class="dash-tab-btn" onclick="switchDashTab('metrics', this)">
+          <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i> Story &amp; Metrics
+        </button>
+        <button class="dash-tab-btn" onclick="switchDashTab('deleted', this)">
+          <i data-lucide="trash-2" class="w-4 h-4 text-rose-400"></i> Deleted Detection
+        </button>
+        <button class="dash-tab-btn" onclick="switchDashTab('upload', this)">
+          <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-400"></i> Upload &amp; Send
+        </button>
+      </nav>
+    </div>
+
+
+    <!-- ── KPI STATS CARDS GRID (EXACT MATCHING SCREENSHOT) ── -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" data-reveal>
+      <div class="kpi-card">
+        <div class="kpi-icon-box bg-blue-500/10 border border-blue-400/30 text-blue-400">
+          <i data-lucide="image" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">TOTAL ASSETS</span>
+          <h3 class="text-2xl font-black text-white font-['Outfit']" id="kpi-assets">1,250</h3>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-box bg-purple-500/10 border border-purple-400/30 text-purple-400">
+          <i data-lucide="heart" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">SELECTED</span>
+          <h3 class="text-2xl font-black text-white font-['Outfit']" id="kpi-selected">85</h3>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-box bg-rose-500/10 border border-rose-400/30 text-rose-400">
+          <i data-lucide="trash-2" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">DELETED</span>
+          <h3 class="text-2xl font-black text-white font-['Outfit']" id="kpi-deleted">0</h3>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-box bg-cyan-500/10 border border-cyan-400/30 text-cyan-400">
+          <i data-lucide="users" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">CLIENTS</span>
+          <h3 class="text-2xl font-black text-white font-['Outfit']" id="kpi-clients">3</h3>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── TAB CONTENT PANELS ── -->
+
+    <!-- TAB 1: OVERVIEW -->
+    <div id="dash-pane-overview" class="dash-pane space-y-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" data-reveal>
+        <div class="glass-panel-card space-y-4">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="pie-chart" class="w-4 h-4 text-cyan-400"></i> Selection Ratio
+            </h3>
+            <span class="text-xs text-slate-400 font-mono">Real-time</span>
+          </div>
+          <div class="space-y-2">
+            <div class="text-4xl font-black text-white font-['Outfit'] flex items-baseline gap-2">
+              85% <span class="text-xs text-slate-400 font-normal">of workspace selected</span>
+            </div>
+            <div class="w-full h-3 rounded-full bg-slate-900 overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full" style="width: 85%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel-card space-y-4">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4 text-purple-400"></i> Category Breakdown
+            </h3>
+            <span class="text-xs text-slate-400 font-mono">4 Categories</span>
+          </div>
+          <div class="space-y-3 text-xs">
+            <div class="flex justify-between items-center py-1 border-b border-white/5">
+              <span class="text-slate-300">Candid Photography</span>
+              <span class="font-mono text-cyan-400 font-bold">45 / 50 (90%)</span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b border-white/5">
+              <span class="text-slate-300">Portrait &amp; Rituals</span>
+              <span class="font-mono text-purple-400 font-bold">25 / 30 (83%)</span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b border-white/5">
+              <span class="text-slate-300">Traditional Ceremony</span>
+              <span class="font-mono text-amber-400 font-bold">15 / 20 (75%)</span>
+            </div>
+            <div class="flex justify-between items-center py-1">
+              <span class="text-slate-300">Custom Outdoor Uploads</span>
+              <span class="font-mono text-emerald-400 font-bold">0 / 0 (0%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Toolbar -->
+      <div class="glass-panel-card flex flex-col sm:flex-row items-center justify-between gap-4" data-reveal>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400">
+            <i data-lucide="download" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-white">DATA EXPORT &amp; DOWNLOADS</h4>
+            <p class="text-[10px] text-slate-400 font-mono">selected_ids: [85 photos selected]</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button onclick="showToast('Filenames Copied', '85 selected image filenames copied to clipboard.', 'sapphire')" class="btn-ghost text-xs py-2.5 px-4 flex items-center gap-2">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Filenames
+          </button>
+          <button onclick="showToast('ZIP Preparing', 'Downloading selected high-resolution ZIP archive...', 'success')" class="btn-primary text-xs py-2.5 px-5 flex items-center gap-2">
+            <i data-lucide="archive" class="w-3.5 h-3.5"></i> Download Selected ZIP
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- TAB 2: PACKAGES & RATES -->
+    <div id="dash-pane-packages" class="dash-pane hidden space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-reveal>
+        <div class="glass-panel-card space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="tag" class="w-4 h-4 text-slate-400"></i> Silver Royal Rate
+          </h3>
+          <input type="number" id="pkg-silver-price" class="dash-input" value="65000">
+          <button onclick="savePackagePrice('silver')" class="btn-primary text-xs py-2.5 px-4">Update Rate</button>
+        </div>
+
+        <div class="glass-panel-card space-y-4 border-amber-500/30">
+          <h3 class="text-base font-bold text-amber-400 flex items-center gap-2">
+            <i data-lucide="flame" class="w-4 h-4"></i> Gold Elite Rate (Most Popular)
+          </h3>
+          <input type="number" id="pkg-gold-price" class="dash-input" value="145000">
+          <button onclick="savePackagePrice('gold')" class="btn-primary btn-gold text-xs py-2.5 px-4">Update Rate</button>
+        </div>
+
+        <div class="glass-panel-card space-y-4">
+          <h3 class="text-base font-bold text-purple-400 flex items-center gap-2">
+            <i data-lucide="gem" class="w-4 h-4"></i> Platinum Plus Rate
+          </h3>
+          <input type="number" id="pkg-platinum-price" class="dash-input" value="285000">
+          <button onclick="savePackagePrice('platinum')" class="btn-primary text-xs py-2.5 px-4">Update Rate</button>
+        </div>
+
+        <div class="glass-panel-card space-y-4">
+          <h3 class="text-base font-bold text-cyan-400 flex items-center gap-2">
+            <i data-lucide="crown" class="w-4 h-4"></i> Imperial Stage Rate
+          </h3>
+          <input type="number" id="pkg-imperial-price" class="dash-input" value="450000">
+          <button onclick="savePackagePrice('imperial')" class="btn-primary text-xs py-2.5 px-4">Update Rate</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- TAB 3: CLIENT DIRECTORY -->
+    <div id="dash-pane-portals" class="dash-pane hidden space-y-8">
+      <div class="glass-panel-card overflow-x-auto" data-reveal>
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+          <h3 class="text-base font-bold text-white">Client Selection Directory</h3>
+          <button onclick="openNewPortalModal()" class="btn-primary text-xs py-2 px-4 flex items-center gap-1.5">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Client
+          </button>
+        </div>
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
+              <th class="py-3 px-4">Passcode</th>
+              <th class="py-3 px-4">Client Name</th>
+              <th class="py-3 px-4">Event Date</th>
+              <th class="py-3 px-4">Progress</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="portals-table-body" class="divide-y divide-white/5 text-slate-300">
+            <!-- JS populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- TAB 4: LIVE BROADCAST -->
+    <div id="dash-pane-live" class="dash-pane hidden space-y-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" data-reveal>
+        <div class="glass-panel-card space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="radio" class="w-4 h-4 text-rose-400"></i> Broadcast Room Config
+          </h3>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Live Event Code</label>
+            <input type="text" id="live-code-input" class="dash-input font-mono uppercase" value="OBM026">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Broadcast Status</label>
+            <select id="live-status-select" class="dash-input">
+              <option value="LIVE">LIVE NOW (Active Broadcast)</option>
+              <option value="PRE-SHOW">PRE-SHOW (Countdown)</option>
+              <option value="OFFLINE">OFFLINE (Stream Paused)</option>
+            </select>
+          </div>
+          <button onclick="saveLiveEventSettings()" class="btn-primary text-xs py-2.5 px-5">Save Settings</button>
+        </div>
+
+        <div class="glass-panel-card space-y-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="external-link" class="w-4 h-4 text-cyan-400"></i> Live Room Preview
+          </h3>
+          <div class="aspect-video rounded-xl bg-black overflow-hidden relative border border-white/10">
+            <img src="assets/wedding.jpg" class="w-full h-full object-cover opacity-60">
+            <div class="absolute top-3 left-3 badge badge-gold text-[9px] uppercase tracking-widest">Live Signal</div>
+          </div>
+          <a href="live-event.html" target="_blank" class="btn-ghost w-full justify-center text-xs py-2.5">Open Live Stream Page</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- TAB 5: DIGITAL ALBUMS -->
+    <div id="dash-pane-albums" class="dash-pane hidden space-y-8">
+      <div class="glass-panel-card space-y-4" data-reveal>
+        <h3 class="text-base font-bold text-white">Client Retouching Instructions</h3>
+        <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex items-start justify-between gap-4">
+          <div>
+            <span class="badge badge-purple text-[9px] mb-1">Spread 1 (Page 05)</span>
+            <p class="text-xs text-white">"Please enhance the background lighting and warm up the gold mandap tones."</p>
+            <p class="text-[10px] text-slate-500 mt-1">Client: Vikram &amp; Ananya</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold">Pending</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- TAB 6: STORY METRICS -->
+    <div id="dash-pane-metrics" class="dash-pane hidden space-y-8">
+      <div class="glass-panel-card space-y-4 max-w-xl" data-reveal>
+        <h3 class="text-base font-bold text-white">Homepage Achievements</h3>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Years in Business</label>
+          <input type="number" id="metric-years" class="dash-input" value="10">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Total Events</label>
+          <input type="number" id="metric-events" class="dash-input" value="1200">
+        </div>
+        <button onclick="saveMetricsConfig()" class="btn-primary text-xs py-2.5 px-5">Save Metrics</button>
+      </div>
+    </div>
+
+    <!-- TAB 7: DELETED DETECTION -->
+    <div id="dash-pane-deleted" class="dash-pane hidden space-y-8">
+      <div class="glass-panel-card space-y-4 text-center py-12" data-reveal>
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-rose-500/10 border border-rose-400/30 flex items-center justify-center text-rose-400">
+          <i data-lucide="shield-alert" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white">Deleted Asset Protection Active</h3>
+        <p class="text-xs text-slate-400 max-w-md mx-auto">No deleted or rejected photos detected in current client sessions. All assets intact.</p>
+      </div>
+    </div>
+
+    <!-- TAB 8: UPLOAD & SEND -->
+    <div id="dash-pane-upload" class="dash-pane hidden space-y-8">
+      <div class="glass-panel-card space-y-4 text-center py-12" data-reveal>
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-blue-400">
+          <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white">Upload New Client Asset Pack</h3>
+        <p class="text-xs text-slate-400 max-w-md mx-auto">Drag &amp; drop high-resolution JPEG / RAW photos to generate client selection link.</p>
+        <button onclick="showToast('Upload Started', 'Simulating client asset package upload...', 'sapphire')" class="btn-primary text-xs py-3 px-6 mx-auto inline-flex items-center gap-2">
+          <i data-lucide="upload" class="w-4 h-4"></i> Select Photos Folder
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+
+  <!-- ══════ NEW PORTAL MODAL ══════ -->
+  <div id="new-portal-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="glass-panel-card max-w-md w-full p-6 space-y-4">
+      <h3 class="text-lg font-bold text-white font-['Outfit']">Create Client Portal</h3>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Client Name</label>
+        <input type="text" id="new-client-name" placeholder="Ramesh &amp; Kavya" class="dash-input">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Passcode</label>
+        <input type="text" id="new-client-code" placeholder="RAMESH2026" class="dash-input uppercase font-mono">
+      </div>
+      <div class="flex justify-end gap-3 pt-2">
+        <button onclick="closeNewPortalModal()" class="btn-ghost text-xs py-2 px-4">Cancel</button>
+        <button onclick="saveNewClientPortal()" class="btn-primary text-xs py-2 px-4">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="toast.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) lucide.createIcons();
+
+      // Scroll reveal observer
+      const ro = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('revealed'), i * 60);
+            ro.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.02 });
+      document.querySelectorAll('[data-reveal]').forEach(el => ro.observe(el));
+
+      // Check auth
+      if (OBMStore.isLoggedIn()) {
+        document.getElementById('admin-lock-screen').style.display = 'none';
+        revealAllDashboard();
+        renderAllData();
+      } else {
+        document.getElementById('admin-lock-screen').style.display = 'flex';
+      }
+    });
+
+    function revealAllDashboard() {
+      document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revealed'));
+    }
+
+    // ── AUTH ──
+    function autofillPasscode() {
+      document.getElementById('admin-passcode-input').value = 'ADMIN2026';
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const code = document.getElementById('admin-passcode-input').value.trim();
+      if (OBMStore.login(code)) {
+        document.getElementById('admin-auth-error').classList.add('hidden');
+        document.getElementById('admin-lock-screen').style.display = 'none';
+        showToast('Access Granted', 'Welcome to Studio Command Center', 'success');
+        revealAllDashboard();
+        renderAllData();
+      } else {
+        document.getElementById('admin-auth-error').classList.remove('hidden');
+        showToast('Auth Failed', 'Invalid passcode. Default: ADMIN2026', 'error');
+      }
+    }
+
+    function handleLogout() {
+      OBMStore.logout();
+      document.getElementById('admin-lock-screen').style.display = 'flex';
+      showToast('Logged Out', 'Studio session locked.', 'sapphire');
+    }
+
+    // ── SCALABLE TAB SWITCHER ──
+    function switchDashTab(tabId, btn) {
+      document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.dash-pane').forEach(pane => pane.classList.add('hidden'));
+      const pane = document.getElementById(`dash-pane-${tabId}`);
+      if (pane) {
+        pane.classList.remove('hidden');
+        pane.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revealed'));
+      }
+    }
+
+    // ── RENDER DATA ──
+    function renderAllData() {
+      const data = OBMStore.data;
+
+      // KPIs
+      document.getElementById('kpi-clients').textContent = data.clientPortals.length;
+
+      // Packages
+      data.packages.forEach(pkg => {
+        const input = document.getElementById(`pkg-${pkg.id}-price`);
+        if (input) input.value = pkg.price;
+      });
+
+      // Live
+      document.getElementById('live-code-input').value = data.liveEvent.code;
+      document.getElementById('live-status-select').value = data.liveEvent.status;
+
+      // Render Table
+      renderPortalsTable();
+    }
+
+    function renderPortalsTable() {
+      const tbody = document.getElementById('portals-table-body');
+      tbody.innerHTML = OBMStore.data.clientPortals.map(p => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-3 px-4 font-mono text-cyan-400 font-bold">${p.code}</td>
+          <td class="py-3 px-4 font-bold text-white">${p.clientName}</td>
+          <td class="py-3 px-4 text-slate-400">${p.eventDate}</td>
+          <td class="py-3 px-4">
+            <div class="flex items-center gap-2">
+              <div class="w-20 h-1.5 rounded-full bg-slate-900 overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-cyan-400 to-purple-500" style="width:${(p.selectedPhotos / p.maxSelection)*100}%"></div>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono">${p.selectedPhotos}/${p.maxSelection}</span>
+            </div>
+          </td>
+          <td class="py-3 px-4"><span class="badge badge-cyan text-[9px]">${p.status}</span></td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="deleteClientPortal('${p.code}')" class="p-1 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors" title="Delete">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function savePackagePrice(id) {
+      const val = document.getElementById(`pkg-${id}-price`).value;
+      OBMStore.updatePackagePrice(id, val);
+      showToast('Rate Updated', `Package rate updated to ₹${parseInt(val).toLocaleString('en-IN')}`, 'gold');
+    }
+
+    function saveLiveEventSettings() {
+      const config = {
+        code: document.getElementById('live-code-input').value.toUpperCase().trim(),
+        status: document.getElementById('live-status-select').value
+      };
+      OBMStore.updateLiveEvent(config);
+      showToast('Broadcast Updated', `Status set to ${config.status}`, 'purple');
+    }
+
+    function openNewPortalModal() { document.getElementById('new-portal-modal').classList.remove('hidden'); }
+    function closeNewPortalModal() { document.getElementById('new-portal-modal').classList.add('hidden'); }
+
+    function saveNewClientPortal() {
+      const name = document.getElementById('new-client-name').value.trim();
+      const code = document.getElementById('new-client-code').value.toUpperCase().trim();
+      if (!name || !code) return;
+      OBMStore.addClientPortal({
+        code, clientName: name, eventDate: new Date().toISOString().split('T')[0],
+        totalPhotos: 1000, selectedPhotos: 0, maxSelection: 100, status: 'In Progress'
+      });
+      closeNewPortalModal();
+      renderAllData();
+      showToast('Portal Created', `Passcode ${code} registered.`, 'success');
+    }
+
+    function deleteClientPortal(code) {
+      OBMStore.deleteClientPortal(code);
+      renderAllData();
+      showToast('Portal Removed', `Client ${code} removed.`, 'sapphire');
+    }
+  </script>
+</body>
+</html>

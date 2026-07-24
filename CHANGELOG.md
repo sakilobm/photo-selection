@@ -9,14 +9,8 @@ All notable changes to the `obm-new-version` project will be documented in this 
   - Base background: `#f8fafc` (Light mode)
   - Toggles `.theme-light` on `document.documentElement`
   - Accent colors: Royal Blue (`#2563eb`) & Sky Blue (`#0284c7`)
-- **Advanced Digital Album Flipbook Overhaul (`digital-album.html`)** — Polished album showcase with a 3D perspective flipbook engine, double-page spreads, 3D page-turn transitions, interactive spread thumbnail strip, spread progress indicator dots, keyboard shortcuts (`←`/`→` arrows, `F` fullscreen, `S` favorite, `Esc` exit), high-resolution zoom, interactive retouching notes log, and real-time album production progress trackers.
-- **New Live Event Streaming Page (`live-event.html`)** — Launched dedicated client live stream portal:
-  - Security passcode gate supporting event passcodes (`OBM026`, `DEMO26`, `LIVE24`) with auto-fill helper.
-  - HD Live stream player with quality selection (1080p, 720p, 480p), Picture-in-Picture mode, and volume controls.
-  - Real-time interactive Live Chat with simulated guest messages, host badges, and automatic timestamping.
-  - Floating SVG live reactions (heart, fire, applause, party) with interactive counter updates.
-  - Live viewer counter & stream duration timer.
-- **Global Navigation Bar Sync** — Added `Live Event` navigation link across `index.html`, `packages.html`, `digital-album.html`, and `live-event.html`.
+- **Dashboard Scroll Reveal Visibility Fix (`admin.html`)** — Added `IntersectionObserver` scroll-reveal initialization and `revealAllDashboard()` helper execution on DOM load, passcode authentication, and tab switching. Fixes hidden `opacity: 0` states on `[data-reveal]` elements so the Hero Command Banner, KPI cards, and sub-tab panels render instantly with full visibility upon unlocking the dashboard.
+- **Exact Dashboard UI & Liquid Aurora Background Overhaul (`admin.html`)** — Transformed the Admin Command Center to adopt the exact glowing liquid aurora backdrop (`radial-gradient(circle at 50% -20%, #2e1065, #0f172a, #030712)`) with floating animated blobs. Added the top glass header bar (`PREMIUM PORTAL`), view switcher pill toggle (`[ 🖼️ Gallery Workspace ] [ ⚡ Studio Dashboard ]`), hero command banner card, and a scalable horizontal pill navigation bar (`[ 📊 Overview ] [ 💼 Packages & Rates ] [ 📸 Client Directory ] [ 📡 Live Broadcast ] [ 📖 Digital Albums ] [ 🎨 Story & Metrics ] [ 🔍 Deleted Detection ] [ 📁 Upload & Send ]`) engineered to scale comfortably as more pages and tools are added.
 - **Toast Notifications Light Mode Fix** — Added explicit `html.theme-light .toast-item` overrides in `styles.css` so toast popups render as clean white glass boxes (`rgba(255,255,255,0.96)`) with dark slate title (`#0f172a`) and message text (`#475569`) instead of pitch black boxes.
 - **Active Chapter & Tab Buttons Contrast Fix** — Updated `.chapter-btn-active` in `digital-album.html` and `styles.css` to enforce crisp white text (`#ffffff !important`) over blue gradient backgrounds. Inactive chapter buttons reset cleanly to white pills with slate borders.
 - **Pearl White Light Mode Overrides** — Fixed text & contrast across light mode:

@@ -9,8 +9,9 @@
   <script>(function(){var w=console.warn;console.warn=function(){if(arguments[0]&&typeof arguments[0]==='string'&&arguments[0].includes('cdn.tailwindcss.com'))return;w.apply(console,arguments);};})();</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Global theme engine -->
+  <!-- Global theme engine & admin store -->
   <script src="theme.js"></script>
+  <script src="admin-store.js"></script>
   <link rel="stylesheet" href="styles.css">
   <style>
     /* ═══ LIVE EVENT CUSTOM STYLES ═══ */
@@ -249,6 +250,7 @@
         <a href="packages.html" class="nav-link" style="color:#ffb703;font-weight:700">Packages ₹</a>
         <a href="digital-album.html" class="nav-link">Albums</a>
         <a href="live-event.html" class="nav-link active">Live Event</a>
+        <a href="admin.html" class="nav-link" style="color:#a78bfa;font-weight:700">Admin ⚙️</a>
         <a href="index.html#portfolio" class="nav-link">Portfolio</a>
       </div>
 
@@ -618,19 +620,31 @@
     }
 
     function fillDemoCode() {
-      const demo = 'OBM026';
+      const liveCode = (window.OBMStore && OBMStore.data.liveEvent.code) ? OBMStore.data.liveEvent.code : 'OBM026';
       const inputs = document.querySelectorAll('.code-char');
-      demo.split('').forEach((ch, i) => {
-        inputs[i].value = ch;
-        inputs[i].classList.add('filled');
+      liveCode.split('').forEach((ch, i) => {
+        if (inputs[i]) {
+          inputs[i].value = ch;
+          inputs[i].classList.add('filled');
+        }
       });
       checkCodeComplete();
-      showToast('Demo Code Filled', 'Press "Join Live Stream" to enter.', 'sapphire');
+      showToast('Live Code Filled', `Code ${liveCode} entered. Click Join Stream.`, 'sapphire');
     }
 
     function validateCode() {
       const code = getEnteredCode();
-      if (VALID_CODES.includes(code)) {
+      const storeCode = window.OBMStore ? OBMStore.data.liveEvent.code : 'OBM026';
+      const isMatch = (code === storeCode || VALID_CODES.includes(code));
+
+      if (isMatch) {
+        // Sync title and subtitle from OBMStore if present
+        if (window.OBMStore) {
+          const ev = OBMStore.data.liveEvent;
+          document.getElementById('event-title').textContent = ev.title;
+          document.getElementById('event-subtitle').textContent = ev.subtitle;
+        }
+
         // Success — transition to stream
         document.getElementById('code-error').classList.add('hidden');
         showToast('Access Granted!', 'Connecting to live stream...', 'success');
