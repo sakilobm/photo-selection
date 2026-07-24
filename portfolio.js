@@ -97,11 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter;
       filterBtns.forEach(b => {
-        b.classList.remove('active');
-        b.className = b.className.replace(/from-\S+\s+to-\S+|text-slate-950|text-white\s?/g, '').trim();
-        b.classList.add('bg-slate-800/60', 'text-slate-300', 'hover:bg-slate-700/80');
+        b.classList.remove('active', 'btn-primary');
+        b.classList.add('bg-slate-800/60', 'text-slate-300');
       });
-      btn.classList.remove('bg-slate-800/60','text-slate-300','hover:bg-slate-700/80');
+      btn.classList.remove('bg-slate-800/60', 'text-slate-300');
       btn.classList.add('active', 'btn-primary');
 
       galleryCards.forEach(card => {

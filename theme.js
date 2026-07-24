@@ -83,6 +83,19 @@
       blob4: 'rgba(167,139,250,0.07)',
       selectionBg: '#ffb703',
       bgBase: '#080500',
+    },
+    white: {
+      label: 'Pearl White',
+      accent: '#2563eb',
+      accent2: '#0284c7',
+      accentRGB: '37,99,235',
+      blob1: 'rgba(37,99,235,0.12)',
+      blob2: 'rgba(168,85,247,0.10)',
+      blob3: 'rgba(236,72,153,0.08)',
+      blob4: 'rgba(14,165,233,0.08)',
+      selectionBg: '#2563eb',
+      bgBase: '#f8fafc',
+      isLight: true,
     }
   };
 
@@ -90,6 +103,13 @@
   function apply(name) {
     const t = THEMES[name] || THEMES.sapphire;
     const root = document.documentElement;
+
+    // ── Light mode class toggle
+    if (t.isLight) {
+      root.classList.add('theme-light');
+    } else {
+      root.classList.remove('theme-light');
+    }
 
     // ── CSS custom properties
     root.style.setProperty('--theme-accent',    t.accent);
@@ -100,8 +120,12 @@
     root.style.setProperty('--grad-cyan',
       `linear-gradient(135deg, ${t.accent} 0%, ${t.accent2} 60%, #7f00ff 100%)`);
 
-    // ── Background base color
-    document.body.style.backgroundColor = t.bgBase;
+    root.style.setProperty('--bg-primary',      t.bgBase);
+
+    // ── Background base color (if body exists)
+    if (document.body) {
+      document.body.style.backgroundColor = t.bgBase;
+    }
 
     // ── Aurora blobs: update inline background styles if blobs exist
     const blobs = [

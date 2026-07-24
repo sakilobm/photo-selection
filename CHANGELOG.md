@@ -5,8 +5,19 @@ All notable changes to the `obm-new-version` project will be documented in this 
 ## [2.1.0] - 2026-07-24
 
 ### Added — Global Theme Engine & Full-Site Adoption
-- **theme.js** — New global theme persistence engine
-  - 5 themes: Sapphire Ice, Amethyst Glow, Emerald Forest, Rose Quartz, Amber Sunset
+- **theme.js** — Added **Pearl White** (`white`) theme option:
+  - Base background: `#f8fafc` (Light mode)
+  - Toggles `.theme-light` on `document.documentElement`
+  - Accent colors: Royal Blue (`#2563eb`) & Sky Blue (`#0284c7`)
+- **Toast Notifications Light Mode Fix** — Added explicit `html.theme-light .toast-item` overrides in `styles.css` so toast popups render as clean white glass boxes (`rgba(255,255,255,0.96)`) with dark slate title (`#0f172a`) and message text (`#475569`) instead of pitch black boxes.
+- **Active Chapter & Tab Buttons Contrast Fix** — Updated `.chapter-btn-active` in `digital-album.html` and `styles.css` to enforce crisp white text (`#ffffff !important`) over blue gradient backgrounds. Inactive chapter buttons reset cleanly to white pills with slate borders.
+- **Pearl White Light Mode Overrides** — Fixed text & contrast across light mode:
+  - Active filter & primary gradient buttons now strictly enforce `#ffffff !important` text contrast.
+  - Inactive filter buttons (`.filter-btn:not(.active)`) reset to clean `#f1f5f9` background with slate `#475569` text.
+  - Dark slate boxes (`[class*="bg-slate-900"]`, founder quote card, calculator option cards) adapt to soft white cards with dark slate typography.
+  - Custom investment bar & Gold Elite pricing card subtext adapt to warm amber `#92400e` / `#d97706` contrast.
+- **HTML Body Class Cleanup** — Removed hardcoded Tailwind `bg-[#020407]` and `text-slate-100` classes from `<body>` across `index.html`, `packages.html`, `digital-album.html` so `styles.css` and `theme.js` have 100% full control over background and text contrast.
+- **Nav & Theme Selectors** — Added ⚪ **Pearl White** button dot to all global theme switchers across `index.html`, `packages.html`, `digital-album.html`, and `photo-selection.html`
   - Persists selection via `localStorage` key `obm_theme` (shared with photo-selection.js)
   - Applies CSS custom properties: `--theme-accent`, `--theme-accent2`, `--theme-accentRGB`
   - Recolors aurora blobs (`.aurora-blob-1..4`) and liquid blobs on all pages dynamically
@@ -19,13 +30,15 @@ All notable changes to the `obm-new-version` project will be documented in this 
   - `.btn-primary`, `.nav-link.active`, `.badge-cyan`, `.grad-cyan` all follow `--theme-accent`
 
 ### Changed — All Pages Unified
-- **index.html** — Added `theme.js` before `styles.css`; replaced portfolio theme switcher in nav with global `OBMTheme.set()` theme switcher pill
+- **index.html** — Added `theme.js` before `styles.css`; replaced section-specific portfolio theme switcher with a sleek **Production Quality & Live Stats Pill** (`4K Cinema Mastered | 1,200+ Archived Shots`) since global theme selection is handled seamlessly in the floating nav bar across all pages.
 - **packages.html** — Full rewrite: unified aurora nav, global theme switcher in nav, aurora background blobs, consistent glass-card system, scroll-reveal, all buttons use CSS var accent
 - **digital-album.html** — Full rewrite: unified aurora nav, global theme switcher, chapter button active state follows `--theme-accent`, spread counter color follows theme, `obmthemechange` event listener
 - **photo-selection.html** — Added `theme.js` in head; `setAppTheme()` now also calls `OBMTheme.apply()` to sync CSS vars and blobs
 - **photo-selection.js** — `setAppTheme()` now calls `OBMTheme.apply(themeName)` after localStorage write
 
-### Result
+### Fixed
+- **theme.js** — Fixed `Uncaught TypeError: can't access property "style", document.body is null` error when loaded synchronously in `<head>` before `<body>` element is parsed by browser. Now sets `--bg-primary` on `document.documentElement` immediately and safely verifies `document.body` existence.
+
 - Changing theme on ANY page (index, packages, album, photo-selection) persists via localStorage
 - On next page load, `theme.js` auto-reads localStorage and applies theme before first paint (no flash)
 - Aurora background blob colors change dynamically per theme on all pages
