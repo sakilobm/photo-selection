@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OBM Studio Digital Album - Interactive Double-Page Spread Flipbook Showcase.">
+  <title>Digital Album Showcase | OBM Studio</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Digital Album Double-Page Spread Styling */
+    .album-spread-container {
+      perspective: 1500px;
+    }
+
+    .album-book {
+      display: flex;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 50px rgba(0, 210, 255, 0.15);
+      border-radius: 18px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: #0b0f19;
+      position: relative;
+    }
+
+    /* Book Spine Shadow Effect */
+    .album-book::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 30px;
+      transform: translateX(-50%);
+      background: linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.5) 100%);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .album-page {
+      flex: 1;
+      min-height: 480px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .album-page img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .album-page-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(7, 9, 14, 0.85) 0%, transparent 40%);
+    }
+
+    .page-turn-anim {
+      animation: pageTurn 0.5s ease-in-out forwards;
+    }
+
+    @keyframes pageTurn {
+      0% { opacity: 0.3; transform: scale(0.97); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-[#07090e] text-slate-100 antialiased selection:bg-cyan-500 selection:text-slate-950">
+
+  <!-- ==================== TOP NAVIGATION ==================== -->
+  <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-6 md:px-12 flex items-center justify-between glass-nav">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+          <i data-lucide="book-open" class="w-5 h-5 text-slate-950"></i>
+        </div>
+        <div>
+          <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent font-['Outfit']">
+            OBM STUDIO
+          </span>
+          <span class="block text-[10px] text-cyan-400 font-semibold tracking-widest uppercase">Digital Album Showcase</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+      <a href="index.html" class="hover:text-cyan-400 transition-colors">Home</a>
+      <a href="packages.html" class="hover:text-cyan-400 transition-colors">Packages</a>
+      <a href="digital-album.html" class="text-cyan-400 font-bold border-b-2 border-cyan-400 pb-1">Digital Album</a>
+      <a href="index.html#portfolio" class="hover:text-cyan-400 transition-colors">Portfolio</a>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <a href="photo-selection.html" class="btn-primary text-xs md:text-sm">
+        <i data-lucide="check-square" class="w-4 h-4"></i>
+        <span>Selection Workspace</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ==================== MAIN ALBUM VIEW ==================== -->
+  <section class="pt-32 pb-16 px-6 max-w-7xl mx-auto space-y-8">
+    
+    <!-- Title & Chapter Filters -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <span class="badge">Interactive Client Experience</span>
+        <h1 class="text-3xl md:text-5xl font-bold text-white mt-2 font-['Outfit']">
+          Digital Wedding <span class="gradient-text-cyan">Album Flipbook</span>
+        </h1>
+        <p class="text-xs md:text-sm text-slate-400 mt-1">
+          Client Event: <strong class="text-white">Vikram &amp; Ananya Wedding Spreads</strong> • Passcode: <span class="font-mono text-cyan-400">DEMO2026</span>
+        </p>
+      </div>
+
+      <!-- Chapter Tabs -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="switchChapter('wedding')" class="chapter-btn active bg-cyan-500 text-slate-950 font-bold py-2 px-4 rounded-full text-xs transition-all">
+          💍 Wedding Ceremony
+        </button>
+        <button onclick="switchChapter('prewedding')" class="chapter-btn bg-slate-800/80 text-slate-300 hover:bg-slate-700 py-2 px-4 rounded-full text-xs transition-all">
+          🌅 Pre-Wedding Beach
+        </button>
+        <button onclick="switchChapter('reception')" class="chapter-btn bg-slate-800/80 text-slate-300 hover:bg-slate-700 py-2 px-4 rounded-full text-xs transition-all">
+          ✨ LED Stage Reception
+        </button>
+      </div>
+    </div>
+
+    <!-- DOUBLE-PAGE ALBUM SPREAD VIEWER -->
+    <div class="album-spread-container relative">
+      
+      <div id="album-book-element" class="album-book page-turn-anim max-w-5xl mx-auto">
+        
+        <!-- LEFT PAGE SPREAD -->
+        <div class="album-page">
+          <img id="album-img-left" src="assets/wedding.jpg" alt="Album Spread Left Page">
+          <div class="album-page-overlay"></div>
+          <div class="absolute bottom-6 left-6 z-10 space-y-1">
+            <span id="page-num-left" class="badge badge-gold">Page 04</span>
+            <h3 id="page-title-left" class="text-lg font-bold text-white font-['Outfit']">Sacred Fire Rituals</h3>
+          </div>
+        </div>
+
+        <!-- RIGHT PAGE SPREAD -->
+        <div class="album-page">
+          <img id="album-img-right" src="assets/drone.jpg" alt="Album Spread Right Page">
+          <div class="album-page-overlay"></div>
+          <div class="absolute bottom-6 right-6 z-10 space-y-1 text-right">
+            <span id="page-num-right" class="badge">Page 05</span>
+            <h3 id="page-title-right" class="text-lg font-bold text-white font-['Outfit']">Aerial Venue View</h3>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ALBUM CONTROLS TOOLBAR -->
+      <div class="max-w-5xl mx-auto mt-6 glass-card p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        
+        <!-- Page Navigation Buttons -->
+        <div class="flex items-center gap-3">
+          <button onclick="prevSpread()" class="btn-outline py-2.5 px-5 text-xs">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            <span>Previous Spread</span>
+          </button>
+
+          <span id="spread-counter" class="text-xs font-mono text-cyan-400 font-bold px-3 py-1 bg-slate-900 rounded-lg border border-slate-800">
+            Spread 2 of 6
+          </span>
+
+          <button onclick="nextSpread()" class="btn-outline py-2.5 px-5 text-xs">
+            <span>Next Spread</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Action Tools -->
+        <div class="flex items-center gap-3">
+          <button onclick="toggleFavoriteSpread()" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-400 transition-colors" title="Favorite Spread">
+            <i data-lucide="star" class="w-4 h-4"></i>
+          </button>
+
+          <button onclick="addRetouchNote()" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-cyan-400 transition-colors" title="Add Print Note">
+            <i data-lucide="message-square-plus" class="w-4 h-4"></i>
+          </button>
+
+          <button onclick="downloadSpread()" class="btn-primary py-2.5 px-5 text-xs">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>Download Spread</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CLIENT FEEDBACK & NOTES DRAWER -->
+    <div class="max-w-5xl mx-auto glass-card p-6 md:p-8 space-y-4 border-slate-800">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <h4 class="font-bold text-white text-base">Album Print &amp; Retouching Instructions</h4>
+        </div>
+        <span class="text-xs text-slate-400 font-mono">Auto-saved to OBM Studio Cloud</span>
+      </div>
+
+      <div class="flex gap-3">
+        <input type="text" id="retouch-note-input" placeholder="e.g. Please enhance the background lighting on Page 05..." class="flex-grow px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs placeholder-slate-500 focus:outline-none focus:border-cyan-400">
+        <button onclick="saveNote()" class="btn-primary text-xs py-3 px-6">
+          Save Note
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-12 px-6 border-t border-slate-800/80 bg-slate-950 text-slate-400 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+        </div>
+        <span class="font-bold text-sm text-white">OBM DIGITAL ALBUM</span>
+      </div>
+      <p>© 2026 OBM Studio. High-Resolution 300 DPI Print Preview Engine.</p>
+    </div>
+  </footer>
+
+  <!-- Toast & Digital Album Script -->
+  <script src="toast.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) lucide.createIcons();
+    });
+
+    const spreads = [
+      {
+        left: 'assets/wedding.jpg', leftTitle: 'Sacred Fire Rituals', leftNum: 'Page 04',
+        right: 'assets/drone.jpg', rightTitle: 'Aerial Venue View', rightNum: 'Page 05'
+      },
+      {
+        left: 'assets/pre_wedding.jpg', leftTitle: 'Golden Hour Romance', leftNum: 'Page 06',
+        right: 'assets/led_wall.jpg', rightTitle: 'Stage LED Grand Entrance', rightNum: 'Page 07'
+      },
+      {
+        left: 'assets/hero_bg.jpg', leftTitle: 'Cinema Studio Production', leftNum: 'Page 08',
+        right: 'assets/wedding.jpg', rightTitle: 'Candid Joyful Moments', rightNum: 'Page 09'
+      }
+    ];
+
+    let currentSpreadIndex = 0;
+
+    function renderSpread() {
+      const sp = spreads[currentSpreadIndex];
+      const bookEl = document.getElementById('album-book-element');
+
+      bookEl.classList.remove('page-turn-anim');
+      void bookEl.offsetWidth; // Trigger reflow
+      bookEl.classList.add('page-turn-anim');
+
+      document.getElementById('album-img-left').src = sp.left;
+      document.getElementById('page-title-left').textContent = sp.leftTitle;
+      document.getElementById('page-num-left').textContent = sp.leftNum;
+
+      document.getElementById('album-img-right').src = sp.right;
+      document.getElementById('page-title-right').textContent = sp.rightTitle;
+      document.getElementById('page-num-right').textContent = sp.rightNum;
+
+      document.getElementById('spread-counter').textContent = `Spread ${currentSpreadIndex + 1} of ${spreads.length}`;
+    }
+
+    function nextSpread() {
+      if (currentSpreadIndex < spreads.length - 1) {
+        currentSpreadIndex++;
+        renderSpread();
+        showToast('Page Turned', `Navigated to Spread ${currentSpreadIndex + 1}`, 'sapphire', { duration: 2500 });
+      } else {
+        showToast('End of Album', 'You have reached the final spread of this chapter.', 'warning');
+      }
+    }
+
+    function prevSpread() {
+      if (currentSpreadIndex > 0) {
+        currentSpreadIndex--;
+        renderSpread();
+        showToast('Page Turned', `Navigated to Spread ${currentSpreadIndex + 1}`, 'sapphire', { duration: 2500 });
+      } else {
+        showToast('First Page', 'You are at the start of the album.', 'info');
+      }
+    }
+
+    function switchChapter(chapter) {
+      document.querySelectorAll('.chapter-btn').forEach(btn => {
+        btn.classList.remove('bg-cyan-500', 'text-slate-950', 'font-bold');
+        btn.classList.add('bg-slate-800/80', 'text-slate-300');
+      });
+      event.target.classList.add('bg-cyan-500', 'text-slate-950', 'font-bold');
+      currentSpreadIndex = 0;
+      renderSpread();
+      showToast('Chapter Loaded', `Switched album chapter to ${chapter.toUpperCase()}`, 'gold');
+    }
+
+    function toggleFavoriteSpread() {
+      showToast('Added to Favorites!', `Spread ${currentSpreadIndex + 1} saved for album cover highlight.`, 'gold');
+    }
+
+    function addRetouchNote() {
+      const input = document.getElementById('retouch-note-input');
+      input.focus();
+      showToast('Note Mode Active', 'Type your retouching instructions below and click Save.', 'purple');
+    }
+
+    function saveNote() {
+      const input = document.getElementById('retouch-note-input');
+      const val = input.value.trim();
+      if (!val) {
+        showToast('Empty Note', 'Please type a note before saving.', 'warning');
+        return;
+      }
+      showToast('Instruction Saved!', `Retouch Note for Spread ${currentSpreadIndex + 1}: "${val}"`, 'success');
+      input.value = '';
+    }
+
+    function downloadSpread() {
+      showToast('Preparing High-Res Download', 'Downloading 300 DPI album spread layout...', 'sapphire', {
+        actionText: 'Cancel',
+        onAction: () => showToast('Download Cancelled', '', 'warning')
+      });
+    }
+  </script>
+</body>
+</html>

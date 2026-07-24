@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OBM Studio - Premium Wedding Photography, Pre-Wedding Films, Drone 4K Videography, LED Wall Stage Productions, and Client Photo Selection Portal.">
+  <title>OBM Studio | Premium Photography & Cinema Production</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Google Fonts & Custom Design System -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#07090e] text-slate-100 antialiased selection:bg-cyan-500 selection:text-slate-950">
+
+  <!-- ==================== TOP NAVIGATION BAR ==================== -->
+  <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-6 md:px-12 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+        <i data-lucide="camera" class="w-5 h-5 text-slate-950"></i>
+      </div>
+      <div>
+        <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent font-['Outfit']">
+          OBM STUDIO
+        </span>
+        <span class="block text-[10px] text-cyan-400 font-semibold tracking-widest uppercase">Photography & Cinema</span>
+      </div>
+    </div>
+
+    <!-- Desktop Navigation Links -->
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+      <a href="#services" class="hover:text-cyan-400 transition-colors">Services</a>
+      <a href="packages.html" class="hover:text-amber-400 transition-colors text-amber-400 font-semibold">Packages (INR ₹)</a>
+      <a href="digital-album.html" class="hover:text-cyan-400 transition-colors">Digital Album</a>
+      <a href="#portfolio" class="hover:text-cyan-400 transition-colors">Portfolio</a>
+    </div>
+
+    <!-- Right Side CTA -->
+    <div class="flex items-center gap-4">
+      <button class="open-login-btn btn-primary text-xs md:text-sm">
+        <i data-lucide="lock" class="w-4 h-4"></i>
+        <span>Client Selection Login</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="relative min-h-screen flex items-center justify-center pt-28 pb-16 px-6 overflow-hidden">
+    <div class="hero-glow"></div>
+
+    <!-- Hero Background Image overlay -->
+    <div class="absolute inset-0 z-0 opacity-30">
+      <img src="assets/hero_bg.jpg" alt="OBM Studio Setup" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-b from-[#07090e]/80 via-[#07090e]/60 to-[#07090e]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-5xl mx-auto text-center space-y-8">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+        Next-Gen Studio & Production Experience
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-none font-['Outfit']">
+        Capturing Timeless Stories With <span class="gradient-text-cyan">Cinematic Precision</span>
+      </h1>
+
+      <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto font-light leading-relaxed">
+        From breathtaking <strong class="text-white">4K Drone Aerials</strong> and <strong class="text-white">Live LED Wall Stage Displays</strong> to intimate <strong class="text-white">Wedding Candid Photography</strong> &amp; <strong class="text-white">Outdoor Pre-Wedding Films</strong>.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+        <button class="open-login-btn btn-primary text-base py-4 px-8">
+          <i data-lucide="key" class="w-5 h-5"></i>
+          Photo Selection Portal
+        </button>
+
+        <a href="#services" class="btn-outline text-base py-4 px-8">
+          <i data-lucide="film" class="w-5 h-5 text-cyan-400"></i>
+          Explore Our Services
+        </a>
+      </div>
+
+      <!-- Studio Statistics -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 pt-12 border-t border-slate-800/80 max-w-4xl mx-auto">
+        <div class="p-4 rounded-2xl bg-slate-900/40 backdrop-blur border border-slate-800">
+          <h3 class="text-3xl font-bold text-white font-['Outfit']">1,200+</h3>
+          <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Events Captured</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/40 backdrop-blur border border-slate-800">
+          <h3 class="text-3xl font-bold text-cyan-400 font-['Outfit']">4K HDR</h3>
+          <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Drone & Cinema Gear</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/40 backdrop-blur border border-slate-800">
+          <h3 class="text-3xl font-bold text-amber-400 font-['Outfit']">LED Stage</h3>
+          <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Live Streaming Walls</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/40 backdrop-blur border border-slate-800">
+          <h3 class="text-3xl font-bold text-emerald-400 font-['Outfit']">100%</h3>
+          <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Client Delight</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== SERVICES & OFFERINGS SECTION ==================== -->
+  <section id="services" class="py-24 px-6 md:px-12 max-w-7xl mx-auto relative z-10">
+    <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+      <span class="badge badge-gold">What We Do Best</span>
+      <h2 class="text-3xl md:text-5xl font-bold text-white font-['Outfit']">
+        Comprehensive Photography &amp; Film Offerings
+      </h2>
+      <p class="text-slate-400 text-base">
+        Equipped with state-of-the-art cameras, aerial drones, and live event production technology to deliver unmatched clarity and style.
+      </p>
+    </div>
+
+    <!-- Service Grid Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      
+      <!-- Service 1: Drone 4K -->
+      <div class="glass-card overflow-hidden group">
+        <div class="service-img-wrap">
+          <img src="assets/drone.jpg" alt="Drone Photography & Videography">
+          <div class="service-overlay"></div>
+          <span class="absolute top-4 left-4 badge">High-Tech Production</span>
+        </div>
+        <div class="p-6 space-y-3">
+          <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+            Drone 4K Photography &amp; Videography
+          </h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Ultra-high definition aerial cinema shots capturing grand venues, scenic landscapes, and outdoor wedding festivities with cinematic smoothness.
+          </p>
+        </div>
+      </div>
+
+      <!-- Service 2: LED Wall Stage Setup -->
+      <div class="glass-card overflow-hidden group">
+        <div class="service-img-wrap">
+          <img src="assets/led_wall.jpg" alt="LED Wall & Live Stream">
+          <div class="service-overlay"></div>
+          <span class="absolute top-4 left-4 badge badge-purple">Live Stage Tech</span>
+        </div>
+        <div class="p-6 space-y-3">
+          <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+            LED Wall &amp; Live Stream Setup
+          </h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Giant high-resolution LED screens, video wall stage displays, multi-camera live switching, and instant broadcast streaming for large events.
+          </p>
+        </div>
+      </div>
+
+      <!-- Service 3: Wedding Photography -->
+      <div class="glass-card overflow-hidden group">
+        <div class="service-img-wrap">
+          <img src="assets/wedding.jpg" alt="Wedding & Candid Photography">
+          <div class="service-overlay"></div>
+          <span class="absolute top-4 left-4 badge badge-gold">Premium Wedding</span>
+        </div>
+        <div class="p-6 space-y-3">
+          <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+            Wedding &amp; Candid Photography
+          </h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Preserving raw emotions, rituals, and unforgettable celebrations with artistic candid framing and vibrant color tones.
+          </p>
+        </div>
+      </div>
+
+      <!-- Service 4: Pre-Wedding Films -->
+      <div class="glass-card overflow-hidden group">
+        <div class="service-img-wrap">
+          <img src="assets/pre_wedding.jpg" alt="Pre-Wedding & Outdoor Shoot">
+          <div class="service-overlay"></div>
+          <span class="absolute top-4 left-4 badge">Cinematic Couples</span>
+        </div>
+        <div class="p-6 space-y-3">
+          <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+            Pre-Wedding &amp; Outdoor Shoots
+          </h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Romantic outdoor story-driven video teasers filmed with gimbal stabilizers, prime lenses, and golden-hour sunset lighting.
+          </p>
+        </div>
+      </div>
+
+      <!-- Service 5: Traditional Photography & Videography -->
+      <div class="glass-card p-6 flex flex-col justify-between group">
+        <div class="space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+            <i data-lucide="camera" class="w-6 h-6"></i>
+          </div>
+          <span class="badge">Full Coverage</span>
+          <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+            Traditional Photography &amp; Video
+          </h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Comprehensive documentation of every guest, family ritual, and stage event with crisp lighting and crystal-clear audio recording.
+          </p>
+        </div>
+        <div class="pt-6 border-t border-slate-800 text-xs text-cyan-400 font-semibold flex items-center gap-1">
+          <span>High-Resolution Deliverables</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </div>
+      </div>
+
+      <!-- Service 6: Client Photo Selection Portal CTA Card -->
+      <div class="glass-card p-6 border-cyan-500/40 bg-gradient-to-br from-cyan-950/30 via-slate-900/60 to-slate-900/90 flex flex-col justify-between group">
+        <div class="space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <i data-lucide="folder-check" class="w-6 h-6"></i>
+          </div>
+          <span class="badge badge-gold">Client Portal</span>
+          <h3 class="text-xl font-bold text-white">
+            Digital Photo Selection Workspace
+          </h3>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Access your private client dashboard to filter, favorite, and select your favorite event photos directly online for album printing.
+          </p>
+        </div>
+        <button class="open-login-btn btn-primary w-full mt-6 justify-center">
+          <i data-lucide="lock" class="w-4 h-4"></i>
+          Login &amp; Select Photos
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ==================== PORTFOLIO GALLERY ==================== -->
+  <section id="portfolio" class="py-20 px-6 md:px-12 bg-slate-950/60 border-y border-slate-800/80">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <span class="badge">Visual Portfolio</span>
+          <h2 class="text-3xl md:text-5xl font-bold text-white mt-2 font-['Outfit']">Our Recent Masterpieces</h2>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button class="filter-btn active py-2 px-5 rounded-full text-xs font-semibold transition-all bg-cyan-500 text-slate-950" data-filter="all">All Work</button>
+          <button class="filter-btn py-2 px-5 rounded-full text-xs font-semibold transition-all bg-slate-800/60 text-slate-300 hover:bg-slate-700/80" data-filter="wedding">Weddings</button>
+          <button class="filter-btn py-2 px-5 rounded-full text-xs font-semibold transition-all bg-slate-800/60 text-slate-300 hover:bg-slate-700/80" data-filter="prewedding">Pre-Wedding</button>
+          <button class="filter-btn py-2 px-5 rounded-full text-xs font-semibold transition-all bg-slate-800/60 text-slate-300 hover:bg-slate-700/80" data-filter="drone">Drone &amp; Tech</button>
+        </div>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Item 1 -->
+        <div class="gallery-card glass-card overflow-hidden group cursor-pointer" data-category="wedding">
+          <div class="relative h-64 overflow-hidden">
+            <img src="assets/wedding.jpg" alt="Wedding Candid" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+            <button class="preview-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-slate-900/80 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <i data-lucide="maximize-2" class="w-4 h-4"></i>
+            </button>
+            <div class="absolute bottom-4 left-4 right-4">
+              <span class="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Wedding</span>
+              <h3 class="text-lg font-bold text-white">Grand Palace Rituals</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="gallery-card glass-card overflow-hidden group cursor-pointer" data-category="drone">
+          <div class="relative h-64 overflow-hidden">
+            <img src="assets/drone.jpg" alt="Drone Aerial" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+            <button class="preview-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-slate-900/80 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <i data-lucide="maximize-2" class="w-4 h-4"></i>
+            </button>
+            <div class="absolute bottom-4 left-4 right-4">
+              <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest">Drone 4K</span>
+              <h3 class="text-lg font-bold text-white">Coastal Venue Aerial</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="gallery-card glass-card overflow-hidden group cursor-pointer" data-category="prewedding">
+          <div class="relative h-64 overflow-hidden">
+            <img src="assets/pre_wedding.jpg" alt="Pre-Wedding Film" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+            <button class="preview-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-slate-900/80 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <i data-lucide="maximize-2" class="w-4 h-4"></i>
+            </button>
+            <div class="absolute bottom-4 left-4 right-4">
+              <span class="text-[10px] font-bold text-purple-400 uppercase tracking-widest">Pre-Wedding</span>
+              <h3 class="text-lg font-bold text-white">Sunset Beach Romance</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="gallery-card glass-card overflow-hidden group cursor-pointer" data-category="drone">
+          <div class="relative h-64 overflow-hidden">
+            <img src="assets/led_wall.jpg" alt="LED Wall Live Stage" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+            <button class="preview-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-slate-900/80 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <i data-lucide="maximize-2" class="w-4 h-4"></i>
+            </button>
+            <div class="absolute bottom-4 left-4 right-4">
+              <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest">Live Stage</span>
+              <h3 class="text-lg font-bold text-white">Mega LED Broadcast</h3>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ==================== CLIENT PORTAL LOGIN MODAL ==================== -->
+  <div id="login-modal" class="modal-overlay">
+    <div class="modal-box relative">
+      <button id="close-login-btn" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <div class="space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+          <i data-lucide="lock" class="w-6 h-6"></i>
+        </div>
+
+        <h3 class="text-2xl font-bold text-white font-['Outfit']">Client Photo Selection</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Enter your unique Event Passcode to access your private high-resolution photo gallery and make your album selections.
+        </p>
+
+        <form id="client-login-form" class="space-y-4 pt-2">
+          <div>
+            <label for="event-passcode" class="block text-xs font-semibold uppercase text-slate-300 mb-2">Event Passcode / Access Code</label>
+            <input type="text" id="event-passcode" placeholder="e.g. DEMO2026" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors uppercase font-mono tracking-widest">
+          </div>
+
+          <div id="passcode-error" class="hidden text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg p-2.5"></div>
+
+          <button type="submit" class="btn-primary w-full justify-center py-3.5">
+            <span>Unlock Photo Portal</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+
+        <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs">
+          <span class="text-slate-400">Testing? Use instant code:</span>
+          <button id="demo-code-btn" type="button" class="text-cyan-400 hover:underline font-semibold font-mono">
+            Auto-fill DEMO2026
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== LIGHTBOX PREVIEW MODAL ==================== -->
+  <div id="preview-modal" class="modal-overlay">
+    <div class="modal-box max-w-4xl p-4 bg-slate-950 border-slate-800 relative">
+      <button id="close-preview-btn" class="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-slate-900/80 text-slate-300 hover:text-white flex items-center justify-center">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="space-y-3">
+        <div class="rounded-xl overflow-hidden max-h-[75vh]">
+          <img id="preview-modal-img" src="" alt="Preview" class="w-full h-full object-contain mx-auto">
+        </div>
+        <h3 id="preview-modal-title" class="text-lg font-bold text-white px-2"></h3>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="py-12 px-6 md:px-12 border-t border-slate-800/80 bg-slate-950 text-slate-400 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400">
+          <i data-lucide="camera" class="w-4 h-4"></i>
+        </div>
+        <span class="font-bold text-sm text-white">OBM STUDIO</span>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="#services" class="hover:text-cyan-400 transition-colors">Services</a>
+        <a href="#portfolio" class="hover:text-cyan-400 transition-colors">Portfolio</a>
+        <a href="#" class="open-login-btn text-cyan-400 hover:underline">Client Selection Portal</a>
+      </div>
+
+      <p>© 2026 OBM Studio Photography &amp; Film Productions. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="toast.js"></script>
+  <script src="portfolio.js"></script>
+</body>
+</html>
