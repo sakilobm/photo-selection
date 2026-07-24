@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="OBM Studio Digital Album — Interactive double-page spread flipbook showcase. Preview your wedding album in full luxury detail.">
   <title>Digital Album Showcase | OBM Studio</title>
+  <!-- Tailwind CSS (Production Warning Filtered) -->
+  <script>(function(){var w=console.warn;console.warn=function(){if(arguments[0]&&typeof arguments[0]==='string'&&arguments[0].includes('cdn.tailwindcss.com'))return;w.apply(console,arguments);};})();</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Global theme engine: MUST load before styles.css -->
@@ -103,13 +105,13 @@
       <!-- Chapter Tabs -->
       <div class="flex flex-wrap items-center gap-2">
         <button onclick="switchChapter('wedding', this)" class="chapter-btn chapter-btn-active py-2 px-4 rounded-full text-xs transition-all" id="ch-wedding">
-          💍 Wedding Ceremony
+          <i data-lucide="heart" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i> Wedding Ceremony
         </button>
         <button onclick="switchChapter('prewedding', this)" class="chapter-btn bg-slate-800/80 text-slate-300 hover:bg-slate-700 py-2 px-4 rounded-full text-xs transition-all">
-          🌅 Pre-Wedding Beach
+          <i data-lucide="sun" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i> Pre-Wedding Beach
         </button>
         <button onclick="switchChapter('reception', this)" class="chapter-btn bg-slate-800/80 text-slate-300 hover:bg-slate-700 py-2 px-4 rounded-full text-xs transition-all">
-          ✨ LED Stage Reception
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i> LED Stage Reception
         </button>
       </div>
     </div>
@@ -289,7 +291,7 @@
     }
 
     function toggleFavoriteSpread() {
-      showToast('Added to Favorites! ⭐', `Spread ${currentSpreadIndex + 1} saved for album cover highlight.`, 'gold');
+      showToast('Added to Favorites!', `Spread ${currentSpreadIndex + 1} saved for album cover highlight.`, 'gold');
     }
 
     function addRetouchNote() {
@@ -301,7 +303,7 @@
       const input = document.getElementById('retouch-note-input');
       const val = input.value.trim();
       if (!val) { showToast('Empty Note', 'Please type a note before saving.', 'warning'); return; }
-      showToast('Instruction Saved! ✅', `Note for Spread ${currentSpreadIndex + 1}: "${val}"`, 'success');
+      showToast('Instruction Saved!', `Note for Spread ${currentSpreadIndex + 1}: "${val}"`, 'success');
       input.value = '';
     }
 

@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="OBM Studio Packages — Silver Royal, Gold Elite, Platinum Plus & Imperial Stage. Transparent wedding photography & production rates in Indian Rupees (₹).">
   <title>Packages & Pricing | OBM Studio</title>
+  <!-- Tailwind CSS (Production Warning Filtered) -->
+  <script>(function(){var w=console.warn;console.warn=function(){if(arguments[0]&&typeof arguments[0]==='string'&&arguments[0].includes('cdn.tailwindcss.com'))return;w.apply(console,arguments);};})();</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Global theme engine: loads before styles so CSS vars are ready -->
@@ -102,8 +104,8 @@
       <!-- Tier 2: Gold Elite (Most Popular) -->
       <div class="glass-card p-8 flex flex-col justify-between relative scale-105 z-10 border-amber-500/40" data-reveal
            style="background-image:linear-gradient(rgba(30,15,0,0.6),rgba(7,13,24,0.85)),linear-gradient(135deg,rgba(255,183,3,0.5) 0%,rgba(167,139,250,0.2) 50%,rgba(255,183,3,0.4) 100%); box-shadow: 0 0 60px rgba(255,183,3,0.2);">
-        <div class="absolute -top-4 left-1/2 -translate-x-1/2 badge badge-gold shadow-lg whitespace-nowrap">
-          🔥 Most Popular
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 badge badge-gold shadow-lg whitespace-nowrap flex items-center gap-1.5">
+          <i data-lucide="flame" class="w-3.5 h-3.5 text-amber-400"></i> Most Popular
         </div>
         <div class="space-y-6 pt-2">
           <div class="space-y-2">
@@ -310,7 +312,7 @@
 
     function selectPackage(name, price) {
       const formatted = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
-      showToast(`${name} Selected! 🎉`, `Package at ${formatted} added to your quote. Team will contact you.`, 'gold', { duration: 5000, position: 'bottom-center' });
+      showToast(`${name} Selected!`, `Package at ${formatted} added to your quote. Team will contact you.`, 'gold', { duration: 5000, position: 'bottom-center' });
     }
 
     function calculateCustomRate() {
@@ -325,7 +327,7 @@
 
     function bookCustomEstimate() {
       const p = document.getElementById('custom-total-price').textContent;
-      showToast('Custom Estimate Saved! ✅', `Your package total is ${p}. We'll contact you within 24 hours!`, 'success', { position: 'bottom-center' });
+      showToast('Custom Estimate Saved!', `Your package total is ${p}. We'll contact you within 24 hours!`, 'success', { position: 'bottom-center' });
     }
 
     function triggerDemoToast() {

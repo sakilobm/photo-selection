@@ -7,6 +7,8 @@
   <meta name="description"
     content="OBM Studio — Award-winning photography & cinema production. A family studio built from love, craft, and a decade of dedication. Wedding, Drone, LED Wall, Candid & Pre-Wedding specialists.">
   <title>OBM Studio | A Decade of Stories, Captured in Light</title>
+  <!-- Tailwind CSS (Production Warning Filtered) -->
+  <script>(function(){var w=console.warn;console.warn=function(){if(arguments[0]&&typeof arguments[0]==='string'&&arguments[0].includes('cdn.tailwindcss.com'))return;w.apply(console,arguments);};})();</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Global theme engine: MUST load before styles.css -->
@@ -444,25 +446,33 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
         <div class="award-card" data-reveal>
-          <div class="text-4xl mb-3">🏆</div>
+          <div class="w-12 h-12 mx-auto mb-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/10">
+            <i data-lucide="trophy" class="w-6 h-6"></i>
+          </div>
           <h4 class="text-xl font-black text-white font-['Outfit'] mb-1">Best Wedding Studio</h4>
           <p class="text-xs text-amber-400 font-bold uppercase tracking-wider">Regional Award 2023</p>
           <p class="text-xs text-slate-400 mt-2">Voted by 500+ couples in the region</p>
         </div>
         <div class="award-card" data-reveal>
-          <div class="text-4xl mb-3">⭐</div>
+          <div class="w-12 h-12 mx-auto mb-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/10">
+            <i data-lucide="star" class="w-6 h-6"></i>
+          </div>
           <h4 class="text-xl font-black text-white font-['Outfit'] mb-1">5-Star Rated</h4>
           <p class="text-xs text-amber-400 font-bold uppercase tracking-wider">Across All Platforms</p>
           <p class="text-xs text-slate-400 mt-2">500+ verified 5-star client reviews</p>
         </div>
         <div class="award-card" data-reveal>
-          <div class="text-4xl mb-3">🎬</div>
+          <div class="w-12 h-12 mx-auto mb-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/10">
+            <i data-lucide="clapperboard" class="w-6 h-6"></i>
+          </div>
           <h4 class="text-xl font-black text-white font-['Outfit'] mb-1">1,200+ Events</h4>
           <p class="text-xs text-amber-400 font-bold uppercase tracking-wider">Captured Since 2014</p>
           <p class="text-xs text-slate-400 mt-2">From intimate gatherings to grand weddings</p>
         </div>
         <div class="award-card" data-reveal>
-          <div class="text-4xl mb-3">💎</div>
+          <div class="w-12 h-12 mx-auto mb-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/10">
+            <i data-lucide="gem" class="w-6 h-6"></i>
+          </div>
           <h4 class="text-xl font-black text-white font-['Outfit'] mb-1">100% Referral</h4>
           <p class="text-xs text-amber-400 font-bold uppercase tracking-wider">Growth for 6 Years</p>
           <p class="text-xs text-slate-400 mt-2">No ads needed — just quality and love</p>
@@ -473,30 +483,30 @@
       <div class="overflow-hidden relative" data-reveal>
         <div class="flex gap-6 scroll-track py-2">
           <template id="marquee-tpl">
-            <span
-              class="px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">🎊
-              Wedding Photography</span>
-            <span
-              class="px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">🛸
-              4K Drone Aerial Cinema</span>
-            <span
-              class="px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">🖥️
-              LED Wall Stage Tech</span>
-            <span
-              class="px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">🎬
-              Pre-Wedding Films</span>
-            <span
-              class="px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">📷
-              Candid Photography</span>
-            <span
-              class="px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">🌅
-              Outdoor Shoots</span>
-            <span
-              class="px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">📡
-              Live Streaming</span>
-            <span
-              class="px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">🏆
-              Award-Winning Quality</span>
+            <span class="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">
+              <i data-lucide="heart" class="w-4 h-4 text-amber-400"></i> Wedding Photography
+            </span>
+            <span class="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">
+              <i data-lucide="plane" class="w-4 h-4 text-cyan-400"></i> 4K Drone Aerial Cinema
+            </span>
+            <span class="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">
+              <i data-lucide="tv" class="w-4 h-4 text-purple-400"></i> LED Wall Stage Tech
+            </span>
+            <span class="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">
+              <i data-lucide="clapperboard" class="w-4 h-4 text-rose-400"></i> Pre-Wedding Films
+            </span>
+            <span class="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">
+              <i data-lucide="aperture" class="w-4 h-4 text-emerald-400"></i> Candid Photography
+            </span>
+            <span class="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">
+              <i data-lucide="sun" class="w-4 h-4 text-amber-400"></i> Outdoor Shoots
+            </span>
+            <span class="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">
+              <i data-lucide="radio" class="w-4 h-4 text-rose-400"></i> Live Streaming
+            </span>
+            <span class="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-slate-900/60 border border-slate-700/80 text-slate-300 text-sm font-semibold whitespace-nowrap">
+              <i data-lucide="trophy" class="w-4 h-4 text-amber-400"></i> Award-Winning Quality
+            </span>
           </template>
         </div>
       </div>

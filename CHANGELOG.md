@@ -9,6 +9,12 @@ All notable changes to the `obm-new-version` project will be documented in this 
   - Base background: `#f8fafc` (Light mode)
   - Toggles `.theme-light` on `document.documentElement`
   - Accent colors: Royal Blue (`#2563eb`) & Sky Blue (`#0284c7`)
+- **Lucide SVG Vector Icons Replacement** — Replaced all raw text emojis across the site with sleek, professional Lucide vector SVG icons:
+  - Digital album chapter buttons (`digital-album.html`): `heart` (Wedding Ceremony), `sun` (Pre-Wedding Beach), `sparkles` (LED Stage Reception).
+  - Award recognition cards (`index.html`): `trophy` (Best Studio), `star` (5-Star Rated), `clapperboard` (1,200+ Events), `gem` (100% Referral).
+  - Infinite marquee brand strip (`index.html`): `heart`, `plane`, `tv`, `clapperboard`, `aperture`, `sun`, `radio`, `trophy`.
+  - Packages badge (`packages.html`): `flame` (Most Popular).
+  - Toast notification engine (`toast.js`): Replaced raw emoji icons with vector SVG icons for `sapphire`, `gold`, `success`, `error`, `warning`, `purple` themes.
 - **Toast Notifications Light Mode Fix** — Added explicit `html.theme-light .toast-item` overrides in `styles.css` so toast popups render as clean white glass boxes (`rgba(255,255,255,0.96)`) with dark slate title (`#0f172a`) and message text (`#475569`) instead of pitch black boxes.
 - **Active Chapter & Tab Buttons Contrast Fix** — Updated `.chapter-btn-active` in `digital-album.html` and `styles.css` to enforce crisp white text (`#ffffff !important`) over blue gradient backgrounds. Inactive chapter buttons reset cleanly to white pills with slate borders.
 - **Pearl White Light Mode Overrides** — Fixed text & contrast across light mode:
