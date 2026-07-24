@@ -3,242 +3,179 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="OBM Studio Packages - Silver Royal, Gold Elite, Platinum Plus & Imperial Production Rates in Indian Rupees.">
-  <title>Pricing & Packages | OBM Studio Photography</title>
-  
-  <!-- Tailwind CSS CDN -->
+  <meta name="description" content="OBM Studio Packages — Silver Royal, Gold Elite, Platinum Plus & Imperial Stage. Transparent wedding photography & production rates in Indian Rupees (₹).">
+  <title>Packages & Pricing | OBM Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Custom Styles -->
+  <!-- Global theme engine: loads before styles so CSS vars are ready -->
+  <script src="theme.js"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-[#07090e] text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+<body class="text-slate-100 antialiased selection:text-slate-950" style="background-color:#020407">
 
-  <!-- ==================== TOP NAVIGATION ==================== -->
-  <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-6 md:px-12 flex items-center justify-between glass-nav">
-    <div class="flex items-center gap-3">
-      <a href="index.html" class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
-          <i data-lucide="crown" class="w-5 h-5 text-slate-950"></i>
+  <!-- ══════ ANIMATED AURORA BACKGROUND ══════ -->
+  <div class="aurora-mesh">
+    <div class="aurora-blob aurora-blob-1"></div>
+    <div class="aurora-blob aurora-blob-2"></div>
+    <div class="aurora-blob aurora-blob-3"></div>
+    <div class="aurora-blob aurora-blob-4"></div>
+  </div>
+
+  <!-- ══════ FLOATING PILL NAVIGATION ══════ -->
+  <div class="floating-nav-container">
+    <nav class="floating-nav-pill">
+      <a href="index.html" class="flex items-center gap-3 no-underline">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-400 via-orange-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+          <i data-lucide="crown" class="w-4 h-4 text-slate-950"></i>
         </div>
         <div>
-          <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-amber-400 bg-clip-text text-transparent font-['Outfit']">
-            OBM STUDIO
-          </span>
-          <span class="block text-[10px] text-amber-400 font-semibold tracking-widest uppercase">Packages & Pricing</span>
+          <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-amber-400 bg-clip-text text-transparent font-['Outfit']">OBM STUDIO</span>
+          <span class="block text-[9px] text-amber-400 font-bold tracking-widest uppercase -mt-1">Packages & Pricing</span>
         </div>
       </a>
-    </div>
 
-    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-      <a href="index.html" class="hover:text-amber-400 transition-colors">Home</a>
-      <a href="packages.html" class="text-amber-400 font-bold border-b-2 border-amber-400 pb-1">Packages</a>
-      <a href="digital-album.html" class="hover:text-amber-400 transition-colors">Digital Album</a>
-      <a href="index.html#portfolio" class="hover:text-amber-400 transition-colors">Portfolio</a>
-    </div>
+      <div class="hidden md:flex items-center gap-1">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="packages.html" class="nav-link active">Packages ₹</a>
+        <a href="digital-album.html" class="nav-link">Albums</a>
+        <a href="index.html#portfolio" class="nav-link">Portfolio</a>
+      </div>
 
-    <div class="flex items-center gap-4">
-      <a href="index.html#login" class="open-login-btn btn-primary btn-gold text-xs md:text-sm">
-        <i data-lucide="key" class="w-4 h-4"></i>
-        <span>Client Selection</span>
+      <!-- GLOBAL THEME SWITCHER -->
+      <div class="global-theme-switcher">
+        <label>Theme</label>
+        <button class="theme-switcher-dot bg-sky-500"    data-theme="sapphire" title="Sapphire Ice"    onclick="OBMTheme.set('sapphire')"></button>
+        <button class="theme-switcher-dot bg-purple-500" data-theme="amethyst" title="Amethyst Glow"   onclick="OBMTheme.set('amethyst')"></button>
+        <button class="theme-switcher-dot bg-emerald-500"data-theme="emerald"  title="Emerald Forest"  onclick="OBMTheme.set('emerald')"></button>
+        <button class="theme-switcher-dot bg-rose-500"   data-theme="rose"     title="Rose Quartz"     onclick="OBMTheme.set('rose')"></button>
+        <button class="theme-switcher-dot bg-amber-500"  data-theme="amber"    title="Amber Sunset"    onclick="OBMTheme.set('amber')"></button>
+      </div>
+
+      <a href="index.html" class="btn-primary btn-gold text-xs py-2.5 px-5">
+        <i data-lucide="key" class="w-3.5 h-3.5"></i> Client Portal
       </a>
-    </div>
-  </nav>
+    </nav>
+  </div>
 
-  <!-- ==================== HERO HEADER ==================== -->
-  <section class="relative pt-36 pb-16 px-6 max-w-7xl mx-auto text-center space-y-6">
-    <div class="hero-glow"></div>
-    <span class="badge badge-gold">Official Investment Guide</span>
-    <h1 class="text-4xl md:text-6xl font-extrabold text-white font-['Outfit'] tracking-tight">
-      Transparent <span class="gradient-text-gold">Wedding & Production Tiers</span>
+  <!-- ══════ HERO HEADER ══════ -->
+  <section class="relative pt-36 pb-16 px-6 max-w-7xl mx-auto text-center space-y-6" data-reveal>
+    <span class="badge badge-gold">Official Investment Guide 2026</span>
+    <h1 class="text-4xl md:text-6xl font-extrabold text-white font-['Outfit'] tracking-tight mt-3">
+      Transparent <span class="grad-gold">Wedding &amp; Production Tiers</span>
     </h1>
     <p class="text-slate-400 text-base md:text-lg max-w-3xl mx-auto font-light leading-relaxed">
       Invest in memories that last generations. All rates are in <strong class="text-amber-400">Indian Rupees (₹ INR)</strong> with zero hidden charges. Choose a signature tier or customize your team.
     </p>
   </section>
 
-
-  <!-- ==================== PACKAGES PRICING GRID ==================== -->
+  <!-- ══════ PACKAGES GRID ══════ -->
   <section class="py-12 px-6 md:px-12 max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
+
       <!-- Tier 1: Silver Royal -->
-      <div class="glass-card p-8 flex flex-col justify-between relative group hover:border-slate-600">
+      <div class="glass-card p-8 flex flex-col justify-between relative group" data-reveal>
         <div class="space-y-6">
           <div class="space-y-2">
             <span class="badge">Essential Coverage</span>
             <h3 class="text-2xl font-bold text-white font-['Outfit']">Silver Royal</h3>
             <p class="text-xs text-slate-400">Ideal for traditional rituals &amp; intimate family ceremonies.</p>
           </div>
-
           <div class="py-4 border-y border-slate-800">
             <div class="text-3xl font-extrabold text-white font-['Outfit']">₹65,000</div>
-            <span class="text-[11px] text-slate-400">Inclusive of taxes • Per Event Day</span>
+            <span class="text-[11px] text-slate-400">All inclusive • Per Event Day</span>
           </div>
-
           <ul class="space-y-3 text-xs text-slate-300">
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
-              <span>1 Senior Traditional Photographer</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
-              <span>1 Traditional HD Videographer</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
-              <span>1 Artistic Candid Photographer</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
-              <span>40 Page Synthetic Flush Mount Album</span>
-            </li>
-            <li class="flex items-center gap-2.5 text-slate-500 line-through">
-              <i data-lucide="x" class="w-4 h-4 text-slate-600"></i>
-              <span>4K Drone Aerial Filming</span>
-            </li>
-            <li class="flex items-center gap-2.5 text-slate-500 line-through">
-              <i data-lucide="x" class="w-4 h-4 text-slate-600"></i>
-              <span>LED Wall Stage Broadcast</span>
-            </li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-slate-400 flex-shrink-0"></i><span>1 Senior Traditional Photographer</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-slate-400 flex-shrink-0"></i><span>1 Traditional HD Videographer</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-slate-400 flex-shrink-0"></i><span>1 Artistic Candid Photographer</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-slate-400 flex-shrink-0"></i><span>40 Page Synthetic Flush Mount Album</span></li>
+            <li class="flex items-center gap-2.5 opacity-40"><i data-lucide="x" class="w-4 h-4 flex-shrink-0"></i><span class="line-through">4K Drone Aerial Filming</span></li>
+            <li class="flex items-center gap-2.5 opacity-40"><i data-lucide="x" class="w-4 h-4 flex-shrink-0"></i><span class="line-through">LED Wall Stage Broadcast</span></li>
           </ul>
         </div>
-
-        <button onclick="selectPackage('Silver Royal', 65000)" class="btn-outline w-full justify-center mt-8 text-xs py-3">
+        <button onclick="selectPackage('Silver Royal', 65000)" class="btn-ghost w-full justify-center mt-8 text-xs py-3">
           Book Silver Royal
         </button>
       </div>
 
       <!-- Tier 2: Gold Elite (Most Popular) -->
-      <div class="glass-card p-8 flex flex-col justify-between relative border-amber-500/50 bg-gradient-to-b from-amber-950/20 via-slate-900/60 to-slate-900/90 shadow-glow-gold scale-105 z-10">
-        <div class="absolute -top-4 left-50 -translate-x-1/2 left-1/2 badge badge-gold shadow-lg">
-          🔥 Most Popular Choice
+      <div class="glass-card p-8 flex flex-col justify-between relative scale-105 z-10 border-amber-500/40" data-reveal
+           style="background-image:linear-gradient(rgba(30,15,0,0.6),rgba(7,13,24,0.85)),linear-gradient(135deg,rgba(255,183,3,0.5) 0%,rgba(167,139,250,0.2) 50%,rgba(255,183,3,0.4) 100%); box-shadow: 0 0 60px rgba(255,183,3,0.2);">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 badge badge-gold shadow-lg whitespace-nowrap">
+          🔥 Most Popular
         </div>
-
         <div class="space-y-6 pt-2">
           <div class="space-y-2">
-            <span class="badge badge-gold">Cinematic & Drone</span>
+            <span class="badge badge-gold">Cinematic &amp; Drone</span>
             <h3 class="text-2xl font-bold text-white font-['Outfit']">Gold Elite</h3>
             <p class="text-xs text-amber-200/80">Complete candid, cinematic films &amp; aerial drone shots.</p>
           </div>
-
           <div class="py-4 border-y border-amber-500/30">
             <div class="text-4xl font-extrabold text-amber-400 font-['Outfit']">₹1,45,000</div>
-            <span class="text-[11px] text-amber-200/60">Inclusive of taxes • 2 Event Days</span>
+            <span class="text-[11px] text-amber-200/60">All inclusive • 2 Event Days</span>
           </div>
-
           <ul class="space-y-3 text-xs text-slate-200">
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-amber-400"></i>
-              <span>2 Candid Photographers &amp; 1 Cinematographer</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-amber-400"></i>
-              <span>4K Drone Operator (Aerial Venue Coverage)</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-amber-400"></i>
-              <span>Outdoor Pre-Wedding Film Teaser</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-amber-400"></i>
-              <span>50 Page Luxury Album + Acrylic Glass Box</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-amber-400"></i>
-              <span>Digital Photo Selection Portal Access</span>
-            </li>
-            <li class="flex items-center gap-2.5 text-slate-500 line-through">
-              <i data-lucide="x" class="w-4 h-4 text-slate-600"></i>
-              <span>LED Wall Stage Screen Setup</span>
-            </li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>2 Candid Photographers &amp; 1 Cinematographer</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>4K Drone Operator (Aerial Venue Coverage)</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>Outdoor Pre-Wedding Film Teaser</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>50 Page Luxury Album + Acrylic Glass Box</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check-circle" class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>Digital Photo Selection Portal Access</span></li>
+            <li class="flex items-center gap-2.5 opacity-40"><i data-lucide="x" class="w-4 h-4 flex-shrink-0"></i><span class="line-through">LED Wall Stage Screen Setup</span></li>
           </ul>
         </div>
-
         <button onclick="selectPackage('Gold Elite', 145000)" class="btn-primary btn-gold w-full justify-center mt-8 text-xs py-3.5">
           Select Gold Elite
         </button>
       </div>
 
       <!-- Tier 3: Platinum Plus -->
-      <div class="glass-card p-8 flex flex-col justify-between relative group hover:border-cyan-500/50">
+      <div class="glass-card p-8 flex flex-col justify-between relative group" data-reveal>
         <div class="space-y-6">
           <div class="space-y-2">
-            <span class="badge">Grand Wedding Production</span>
+            <span class="badge badge-cyan">Grand Wedding Cinema</span>
             <h3 class="text-2xl font-bold text-white font-['Outfit']">Platinum Plus</h3>
-            <p class="text-xs text-slate-400">Full 4K Cinema team, dual drones, and premium leather albums.</p>
+            <p class="text-xs text-slate-400">Full 4K cinema team, dual drones, and premium leather albums.</p>
           </div>
-
           <div class="py-4 border-y border-slate-800">
-            <div class="text-3xl font-extrabold text-cyan-400 font-['Outfit']">₹2,85,000</div>
-            <span class="text-[11px] text-slate-400">Inclusive of taxes • 3 Event Days</span>
+            <div class="text-3xl font-extrabold grad-cyan font-['Outfit']" style="-webkit-text-fill-color:var(--theme-accent)">₹2,85,000</div>
+            <span class="text-[11px] text-slate-400">All inclusive • 3 Event Days</span>
           </div>
-
           <ul class="space-y-3 text-xs text-slate-300">
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
-              <span>Full Cinema Crew (3 Candid + 2 Traditional)</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
-              <span>2 Dual 4K Cinema Drones (Day &amp; Night)</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
-              <span>Full Length Wedding Film + 3 min Trailer</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
-              <span>2 Luxury Leather Canvases + 2 Mini Parent Albums</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-cyan-400"></i>
-              <span>Digital Flipbook Album Viewer Included</span>
-            </li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>Full Cinema Crew (3 Candid + 2 Traditional)</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>2 Dual 4K Cinema Drones (Day &amp; Night)</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>Full Length Wedding Film + 3 min Trailer</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>2 Luxury Leather Canvases + 2 Parent Albums</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>Digital Flipbook Album Viewer Included</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>Private Client Photo Selection Portal</span></li>
           </ul>
         </div>
-
         <button onclick="selectPackage('Platinum Plus', 285000)" class="btn-primary w-full justify-center mt-8 text-xs py-3">
           Select Platinum Plus
         </button>
       </div>
 
       <!-- Tier 4: Imperial Stage & LED -->
-      <div class="glass-card p-8 flex flex-col justify-between relative group hover:border-purple-500/50">
+      <div class="glass-card p-8 flex flex-col justify-between relative group" data-reveal>
         <div class="space-y-6">
           <div class="space-y-2">
-            <span class="badge badge-purple">Stage & LED Production</span>
+            <span class="badge badge-purple">Stage &amp; LED Production</span>
             <h3 class="text-2xl font-bold text-white font-['Outfit']">Imperial Stage</h3>
             <p class="text-xs text-slate-400">Massive LED wall screens, live multi-camera broadcast &amp; crane rigs.</p>
           </div>
-
           <div class="py-4 border-y border-slate-800">
             <div class="text-3xl font-extrabold text-purple-400 font-['Outfit']">₹4,50,000</div>
-            <span class="text-[11px] text-slate-400">Inclusive of taxes • Full Stage Crew</span>
+            <span class="text-[11px] text-slate-400">All inclusive • Full Stage Crew</span>
           </div>
-
           <ul class="space-y-3 text-xs text-slate-300">
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-purple-400"></i>
-              <span>Massive High-Definition LED Video Wall Setup</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-purple-400"></i>
-              <span>Multi-Cam Live Streaming &amp; Stage Crane Jib</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-purple-400"></i>
-              <span>Complete Photography &amp; Cinematography Crew</span>
-            </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="check" class="w-4 h-4 text-purple-400"></i>
-              <span>Unlimited Albums &amp; Instant Photo Selection</span>
-            </li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>Massive High-Definition LED Video Wall Setup</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>Multi-Cam Live Streaming &amp; Stage Crane Jib</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>Complete Photography &amp; Cinematography Crew</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>Unlimited Albums &amp; Instant Photo Selection</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>4K Drone Aerial Coverage Full Event</span></li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>VIP Priority Delivery (48hrs Digital)</span></li>
           </ul>
         </div>
-
-        <button onclick="selectPackage('Imperial Stage', 450000)" class="btn-outline w-full justify-center mt-8 text-xs py-3">
+        <button onclick="selectPackage('Imperial Stage', 450000)" class="btn-ghost w-full justify-center mt-8 text-xs py-3">
           Select Imperial Stage
         </button>
       </div>
@@ -246,93 +183,66 @@
     </div>
   </section>
 
-
-  <!-- ==================== CUSTOM CALCULATOR SECTION ==================== -->
-  <section class="py-16 px-6 md:px-12 max-w-5xl mx-auto">
-    <div class="glass-card p-8 md:p-12 space-y-8 border-amber-500/30">
+  <!-- ══════ CUSTOM CALCULATOR ══════ -->
+  <section class="py-16 px-6 md:px-12 max-w-5xl mx-auto" data-reveal>
+    <div class="glass-card p-8 md:p-12 space-y-8" style="border-color:rgba(255,183,3,0.3)">
       <div class="text-center space-y-3">
         <span class="badge badge-gold">Interactive Rate Calculator</span>
-        <h2 class="text-2xl md:text-4xl font-bold text-white font-['Outfit']">Build Your Custom Photography Package</h2>
+        <h2 class="text-2xl md:text-4xl font-bold text-white font-['Outfit']">Build Your Custom Package</h2>
         <p class="text-slate-400 text-sm">Select options to calculate your custom estimate in Indian Rupees (₹ INR).</p>
       </div>
-
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-        <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-amber-400 transition-colors">
+        <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-amber-400/60 transition-colors">
           <input type="checkbox" id="opt-drone" class="w-4 h-4 accent-amber-500" onchange="calculateCustomRate()">
-          <div>
-            <span class="font-bold text-white block">4K Drone Aerial Coverage</span>
-            <span class="text-xs text-amber-400 font-mono">+ ₹20,000 / Day</span>
-          </div>
+          <div><span class="font-bold text-white block">4K Drone Aerial Coverage</span><span class="text-xs text-amber-400 font-mono">+ ₹20,000 / Day</span></div>
         </label>
-
-        <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-amber-400 transition-colors">
+        <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-amber-400/60 transition-colors">
           <input type="checkbox" id="opt-led" class="w-4 h-4 accent-amber-500" onchange="calculateCustomRate()">
-          <div>
-            <span class="font-bold text-white block">LED Wall Stage Video Display</span>
-            <span class="text-xs text-amber-400 font-mono">+ ₹45,000 / Event</span>
-          </div>
+          <div><span class="font-bold text-white block">LED Wall Stage Video Display</span><span class="text-xs text-amber-400 font-mono">+ ₹45,000 / Event</span></div>
         </label>
-
-        <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-amber-400 transition-colors">
+        <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-amber-400/60 transition-colors">
           <input type="checkbox" id="opt-prewedding" class="w-4 h-4 accent-amber-500" onchange="calculateCustomRate()">
-          <div>
-            <span class="font-bold text-white block">Outdoor Pre-Wedding Film Shoot</span>
-            <span class="text-xs text-amber-400 font-mono">+ ₹35,000</span>
-          </div>
+          <div><span class="font-bold text-white block">Outdoor Pre-Wedding Film Shoot</span><span class="text-xs text-amber-400 font-mono">+ ₹35,000</span></div>
         </label>
-
-        <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-amber-400 transition-colors">
+        <label class="flex items-center gap-3 p-4 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer hover:border-amber-400/60 transition-colors">
           <input type="checkbox" id="opt-live" class="w-4 h-4 accent-amber-500" onchange="calculateCustomRate()">
-          <div>
-            <span class="font-bold text-white block">YouTube &amp; Web Live Streaming</span>
-            <span class="text-xs text-amber-400 font-mono">+ ₹25,000</span>
-          </div>
+          <div><span class="font-bold text-white block">YouTube &amp; Web Live Streaming</span><span class="text-xs text-amber-400 font-mono">+ ₹25,000</span></div>
         </label>
       </div>
-
       <div class="p-6 rounded-2xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-900 border border-amber-500/40 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <span class="text-xs uppercase tracking-wider text-amber-300 font-semibold">Estimated Custom Investment:</span>
           <div id="custom-total-price" class="text-3xl font-extrabold text-amber-400 font-['Outfit']">₹65,000</div>
         </div>
-
         <button onclick="bookCustomEstimate()" class="btn-primary btn-gold text-xs py-3 px-6">
-          <i data-lucide="send" class="w-4 h-4"></i>
-          Request Custom Proposal
+          <i data-lucide="send" class="w-4 h-4"></i> Request Custom Proposal
         </button>
       </div>
     </div>
   </section>
 
-
-  <!-- ==================== MODERN TOAST CUSTOMIZATION PLAYGROUND ==================== -->
-  <section class="py-16 px-6 md:px-12 max-w-5xl mx-auto">
-    <div class="glass-card p-8 md:p-12 space-y-6 border-cyan-500/30">
+  <!-- ══════ TOAST DEMO PLAYGROUND ══════ -->
+  <section class="py-16 px-6 md:px-12 max-w-5xl mx-auto" data-reveal>
+    <div class="glass-card p-8 md:p-12 space-y-6" style="border-color:rgba(var(--theme-accentRGB),0.3)">
       <div class="space-y-2">
-        <span class="badge">Developer & Client Feature</span>
-        <h2 class="text-2xl md:text-3xl font-bold text-white font-['Outfit']">
-          Modern Toast Notification Playground
-        </h2>
-        <p class="text-slate-400 text-xs md:text-sm">
-          Test and customize our interactive toast notification system with custom colors, positions, progress bars, and chime sounds!
-        </p>
+        <span class="badge badge-cyan">Notification System Demo</span>
+        <h2 class="text-2xl md:text-3xl font-bold text-white font-['Outfit']">Toast Notification Playground</h2>
+        <p class="text-slate-400 text-xs md:text-sm">Test our notification system — customize color, position and duration in real-time.</p>
       </div>
-
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
         <div>
-          <label class="block font-semibold text-slate-300 mb-1">Toast Theme Style</label>
+          <label class="block font-semibold text-slate-300 mb-1">Toast Theme</label>
           <select id="toast-demo-type" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white">
-            <option value="gold">Luxury Gold (Package Select)</option>
-            <option value="sapphire">Sapphire Cyan (Default)</option>
+            <option value="gold">Luxury Gold</option>
+            <option value="sapphire">Sapphire Cyan</option>
             <option value="success">Emerald Success</option>
             <option value="warning">Amber Warning</option>
             <option value="error">Rose Error</option>
             <option value="purple">Imperial Purple</option>
           </select>
         </div>
-
         <div>
-          <label class="block font-semibold text-slate-300 mb-1">Screen Position</label>
+          <label class="block font-semibold text-slate-300 mb-1">Position</label>
           <select id="toast-demo-pos" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white">
             <option value="bottom-right">Bottom Right</option>
             <option value="bottom-left">Bottom Left</option>
@@ -342,59 +252,64 @@
             <option value="top-center">Top Center</option>
           </select>
         </div>
-
         <div>
           <label class="block font-semibold text-slate-300 mb-1">Duration (ms)</label>
           <input type="number" id="toast-demo-duration" value="4000" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white font-mono">
         </div>
       </div>
-
       <div class="flex flex-wrap items-center gap-4">
         <button onclick="triggerDemoToast()" class="btn-primary text-xs py-3 px-6">
-          <i data-lucide="bell-ring" class="w-4 h-4"></i>
-          Trigger Custom Toast
+          <i data-lucide="bell-ring" class="w-4 h-4"></i> Trigger Custom Toast
         </button>
-
-        <button onclick="showToast('OBM Studio', 'Package updated successfully in Indian Rupees (₹)!', 'gold')" class="btn-outline text-xs py-3 px-6">
+        <button onclick="showToast('OBM Studio', 'Package updated — ₹ INR pricing confirmed!', 'gold')" class="btn-ghost text-xs py-3 px-6">
           Quick Gold Toast
         </button>
       </div>
     </div>
   </section>
 
-
-  <!-- ==================== FOOTER ==================== -->
-  <footer class="py-12 px-6 md:px-12 border-t border-slate-800/80 bg-slate-950 text-slate-400 text-xs">
+  <!-- ══════ FOOTER ══════ -->
+  <footer class="py-12 px-6 border-t border-slate-800/60 bg-slate-950/90 text-slate-400 text-xs relative z-10">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">
-          <i data-lucide="crown" class="w-4 h-4"></i>
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-400 via-purple-500 to-amber-400 flex items-center justify-center">
+          <i data-lucide="camera" class="w-4 h-4 text-slate-950"></i>
         </div>
-        <span class="font-bold text-sm text-white">OBM STUDIO PACKAGES</span>
+        <div>
+          <span class="font-black text-sm text-white">OBM STUDIO</span>
+          <span class="block text-[10px] text-slate-500">Photography & Cinema Since 2014</span>
+        </div>
       </div>
-      <p>© 2026 OBM Studio Photography. Rates listed in INR (₹).</p>
+      <div class="flex flex-wrap items-center gap-6">
+        <a href="index.html" class="hover:text-white transition-colors">Home</a>
+        <a href="index.html#story" class="hover:text-white transition-colors">Our Story</a>
+        <a href="digital-album.html" class="hover:text-white transition-colors">Digital Album</a>
+        <a href="index.html#portfolio" class="hover:text-white transition-colors">Portfolio</a>
+      </div>
+      <p>© 2026 OBM Studio — All rates in ₹ INR. No hidden charges.</p>
     </div>
   </footer>
 
-  <!-- Toast Engine & Page Scripts -->
   <script src="toast.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
+
+      // Scroll reveal
+      const ro = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('revealed'), i * 80);
+            ro.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('[data-reveal]').forEach(el => ro.observe(el));
     });
 
     function selectPackage(name, price) {
-      const formattedPrice = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
-      showToast(
-        `${name} Selected!`, 
-        `Package added to quote at ${formattedPrice}. Redirecting to selection portal...`, 
-        'gold',
-        {
-          duration: 4500,
-          actionText: 'View Portal',
-          onAction: () => { window.location.href = 'index.html#login'; }
-        }
-      );
+      const formatted = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
+      showToast(`${name} Selected! 🎉`, `Package at ${formatted} added to your quote. Team will contact you.`, 'gold', { duration: 5000, position: 'bottom-center' });
     }
 
     function calculateCustomRate() {
@@ -403,32 +318,20 @@
       if (document.getElementById('opt-led').checked) base += 45000;
       if (document.getElementById('opt-prewedding').checked) base += 35000;
       if (document.getElementById('opt-live').checked) base += 25000;
-
-      const formatted = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(base);
-      document.getElementById('custom-total-price').textContent = formatted;
+      const f = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(base);
+      document.getElementById('custom-total-price').textContent = f;
     }
 
     function bookCustomEstimate() {
-      const priceText = document.getElementById('custom-total-price').textContent;
-      showToast(
-        'Custom Estimate Saved!', 
-        `Your personalized package total is ${priceText}. Our team will contact you shortly!`, 
-        'success',
-        { position: 'bottom-center' }
-      );
+      const p = document.getElementById('custom-total-price').textContent;
+      showToast('Custom Estimate Saved! ✅', `Your package total is ${p}. We'll contact you within 24 hours!`, 'success', { position: 'bottom-center' });
     }
 
     function triggerDemoToast() {
       const type = document.getElementById('toast-demo-type').value;
-      const pos = document.getElementById('toast-demo-pos').value;
-      const duration = parseInt(document.getElementById('toast-demo-duration').value) || 4000;
-
-      showToast(
-        `Interactive ${type.toUpperCase()} Toast`,
-        `Positioned at ${pos} with ${duration}ms auto-dismiss duration.`,
-        type,
-        { position: pos, duration: duration }
-      );
+      const pos  = document.getElementById('toast-demo-pos').value;
+      const dur  = parseInt(document.getElementById('toast-demo-duration').value) || 4000;
+      showToast(`${type.charAt(0).toUpperCase()+type.slice(1)} Notification`, `Showing at ${pos} for ${dur}ms — OBM Toast Engine`, type, { position: pos, duration: dur });
     }
   </script>
 </body>

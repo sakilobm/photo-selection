@@ -515,6 +515,9 @@ function setAppTheme(themeName, event, skipRipple = false) {
     activeTheme = themeName;
     localStorage.setItem('obm_theme', themeName);
 
+    // Sync global OBM Theme engine (aurora blobs + CSS vars across all pages)
+    if (window.OBMTheme) OBMTheme.apply(themeName);
+
     // Redraw icons and highlights
     updateThemeIndicators();
 }

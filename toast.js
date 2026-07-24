@@ -1,170 +1,128 @@
 /**
- * OBM STUDIO - MODERN CUSTOMIZABLE TOAST NOTIFICATION ENGINE
- * Version 2.0.0
+ * OBM Studio - Universal Toast Notification Engine
+ * Supports: sapphire, gold, success, error, warning, purple themes
+ * Supports: top-right, top-left, top-center, bottom-right, bottom-left, bottom-center
  */
 
-class ToastEngine {
-  constructor() {
-    this.containers = {};
-    this.audioCtx = null;
-    this.soundEnabled = true;
-    this.initContainers();
-  }
+(function() {
+  'use strict';
 
-  initContainers() {
-    const positions = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'];
-    positions.forEach(pos => {
-      let container = document.getElementById(`toast-container-${pos}`);
-      if (!container) {
-        container = document.createElement('div');
-        container.id = `toast-container-${pos}`;
-        container.className = `toast-container toast-pos-${pos}`;
-        document.body.appendChild(container);
-      }
-      this.containers[pos] = container;
-    });
-  }
+  // Default config
+  const DEFAULT = {
+    duration: 4000,
+    position: 'top-right',
+    theme: 'sapphire',
+    showProgress: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    icon: null
+  };
 
-  playChime(type) {
-    if (!this.soundEnabled) return;
-    try {
-      if (!this.audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) this.audioCtx = new AudioContext();
-      }
-      if (this.audioCtx && this.audioCtx.state === 'suspended') {
-        this.audioCtx.resume();
-      }
-      if (!this.audioCtx) return;
+  const THEME_ICONS = {
+    sapphire:  { emoji: '💎', color: '#00d2ff' },
+    gold:      { emoji: '✨', color: '#ffb703' },
+    success:   { emoji: '✅', color: '#34d399' },
+    error:     { emoji: '❌', color: '#f87171' },
+    warning:   { emoji: '⚠️', color: '#fbbf24' },
+    purple:    { emoji: '🔮', color: '#a78bfa' }
+  };
 
-      const osc = this.audioCtx.createOscillator();
-      const gain = this.audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(this.audioCtx.destination);
+  const containers = {};
 
-      const now = this.audioCtx.currentTime;
-      let freq = 520;
-      if (type === 'gold' || type === 'success') freq = 659.25; // E5
-      else if (type === 'warning') freq = 440; // A4
-      else if (type === 'error') freq = 330; // E4
-      else if (type === 'sapphire') freq = 880; // A5
-
-      osc.frequency.setValueAtTime(freq, now);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.12);
-
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-
-      osc.start(now);
-      osc.stop(now + 0.25);
-    } catch (e) {
-      // Audio fallback
+  function getContainer(position) {
+    if (!containers[position]) {
+      const el = document.createElement('div');
+      el.className = `toast-container toast-pos-${position}`;
+      document.body.appendChild(el);
+      containers[position] = el;
     }
+    return containers[position];
   }
 
-  show(config = {}) {
-    const {
-      title = 'Notification',
-      message = '',
-      type = 'sapphire', // success, error, warning, info, gold, sapphire, purple
-      position = 'bottom-right',
-      duration = 4000,
-      showProgress = true,
-      actionText = null,
-      onAction = null,
-      icon = null
-    } = config;
+  window.showToast = function(title, message, theme = 'sapphire', options = {}) {
+    const config = { ...DEFAULT, ...options, theme, title, message };
+    const container = getContainer(config.position);
+    const themeIcon = THEME_ICONS[config.theme] || THEME_ICONS.sapphire;
+    const icon = config.icon || themeIcon.emoji;
 
-    const targetContainer = this.containers[position] || this.containers['bottom-right'];
-
-    // Create Toast Element
-    const toast = document.createElement('div');
-    toast.className = `toast-item toast-theme-${type}`;
-
-    // Select Icon
-    let iconMarkup = icon;
-    if (!iconMarkup) {
-      switch (type) {
-        case 'success': iconMarkup = '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>'; break;
-        case 'gold': iconMarkup = '<i data-lucide="sparkles" class="w-5 h-5 text-amber-400"></i>'; break;
-        case 'warning': iconMarkup = '<i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400"></i>'; break;
-        case 'error': iconMarkup = '<i data-lucide="x-circle" class="w-5 h-5 text-rose-400"></i>'; break;
-        case 'purple': iconMarkup = '<i data-lucide="crown" class="w-5 h-5 text-purple-400"></i>'; break;
-        default: iconMarkup = '<i data-lucide="bell" class="w-5 h-5 text-cyan-400"></i>'; break;
-      }
-    }
-
-    toast.innerHTML = `
+    const toastEl = document.createElement('div');
+    toastEl.className = `toast-item toast-theme-${config.theme}`;
+    toastEl.innerHTML = `
       <div class="toast-body">
-        <div class="toast-icon-box">${iconMarkup}</div>
+        <div class="toast-icon-box" style="font-size:1.4rem">${icon}</div>
         <div class="toast-content">
-          <h4 class="toast-title">${title}</h4>
-          ${message ? `<p class="toast-msg">${message}</p>` : ''}
+          <p class="toast-title">${config.title}</p>
+          ${config.message ? `<p class="toast-msg">${config.message}</p>` : ''}
         </div>
-        ${actionText ? `<button class="toast-action-btn">${actionText}</button>` : ''}
-        <button class="toast-close-btn" aria-label="Close">&times;</button>
+        <button class="toast-close-btn" aria-label="Close">×</button>
       </div>
-      ${showProgress && duration > 0 ? `<div class="toast-progress-bar" style="animation-duration: ${duration}ms;"></div>` : ''}
+      ${config.showProgress ? `<div class="toast-progress-bar" style="animation-duration:${config.duration}ms"></div>` : ''}
     `;
 
-    // Render Lucide icons inside toast
-    if (window.lucide) {
-      lucide.createIcons({ el: toast });
+    container.appendChild(toastEl);
+
+    let dismissed = false;
+    let paused = false;
+    let elapsed = 0;
+    let start = Date.now();
+    let timer;
+
+    function dismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      toastEl.classList.remove('toast-show');
+      toastEl.classList.add('toast-hide');
+      setTimeout(() => toastEl.remove(), 400);
     }
 
-    // Attach Action Handler
-    if (actionText && typeof onAction === 'function') {
-      const actionBtn = toast.querySelector('.toast-action-btn');
-      if (actionBtn) {
-        actionBtn.addEventListener('click', () => {
-          onAction();
-          this.dismiss(toast);
-        });
-      }
+    function startTimer() {
+      timer = setTimeout(dismiss, config.duration - elapsed);
     }
 
-    // Close Button Event
-    const closeBtn = toast.querySelector('.toast-close-btn');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.dismiss(toast));
-    }
-
-    // Append to container
-    targetContainer.appendChild(toast);
-    this.playChime(type);
-
-    // Trigger Entrance Animation
+    // Show
     requestAnimationFrame(() => {
-      toast.classList.add('toast-show');
+      requestAnimationFrame(() => toastEl.classList.add('toast-show'));
     });
 
-    // Auto Dismiss
-    if (duration > 0) {
-      toast.dismissTimer = setTimeout(() => {
-        this.dismiss(toast);
-      }, duration);
+    startTimer();
+
+    // Pause on hover
+    if (config.pauseOnHover) {
+      toastEl.addEventListener('mouseenter', () => {
+        paused = true;
+        clearTimeout(timer);
+        elapsed += Date.now() - start;
+        const bar = toastEl.querySelector('.toast-progress-bar');
+        if (bar) bar.style.animationPlayState = 'paused';
+      });
+      toastEl.addEventListener('mouseleave', () => {
+        paused = false;
+        start = Date.now();
+        const bar = toastEl.querySelector('.toast-progress-bar');
+        if (bar) bar.style.animationPlayState = 'running';
+        startTimer();
+      });
     }
 
-    return toast;
-  }
+    // Close button
+    toastEl.querySelector('.toast-close-btn').addEventListener('click', dismiss);
+    if (config.closeOnClick) {
+      toastEl.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('toast-close-btn')) dismiss();
+      });
+    }
 
-  dismiss(toast) {
-    if (!toast) return;
-    if (toast.dismissTimer) clearTimeout(toast.dismissTimer);
-    toast.classList.remove('toast-show');
-    toast.classList.add('toast-hide');
-    setTimeout(() => {
-      if (toast.parentNode) {
-        toast.parentNode.removeChild(toast);
-      }
-    }, 350);
-  }
-}
+    return { dismiss };
+  };
 
-// Global Toast Singleton
-window.obmToast = new ToastEngine();
+  // Convenience aliases
+  window.toast = {
+    success: (title, msg, opts) => showToast(title, msg, 'success', opts),
+    error:   (title, msg, opts) => showToast(title, msg, 'error', opts),
+    warning: (title, msg, opts) => showToast(title, msg, 'warning', opts),
+    info:    (title, msg, opts) => showToast(title, msg, 'sapphire', opts),
+    gold:    (title, msg, opts) => showToast(title, msg, 'gold', opts),
+    purple:  (title, msg, opts) => showToast(title, msg, 'purple', opts),
+  };
 
-// Convenience shorthand
-window.showToast = function(title, message, type = 'sapphire', options = {}) {
-  return window.obmToast.show({ title, message, type, ...options });
-};
+})();
