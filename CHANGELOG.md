@@ -2,6 +2,34 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [2.2.0] - 2026-07-25
+
+### Added — Studio Dashboard Full Feature Upgrade (`admin.html`, `admin-store.js`)
+- **Client Manager (Tab 3)** — Complete professional client directory rewrite:
+  - Avatar circle with gradient color derived from client name hash
+  - Status badges: `COMPLETED` (green), `FLAGGED` (yellow), `PENDING` (amber), `BLOCKED` (red)
+  - Quick Register Client inline form (name + email)
+  - Action buttons per client: **Download** (ZIP archive), **Flag** (toggle completion), **Block** (toggle access), **Delete** (with confirmation)
+  - Flagged clients show info banner: "This client has been flagged as already selected/sent."
+  - Stats per client: photos allocated, photos selected, registration date
+- **Deleted Detection (Tab 7)** — Full approved vs rejected comparison panel:
+  - Client selector dropdown with selection counts
+  - Split-panel layout: Approved/Selected (left) vs Rejected/Not Selected (right)
+  - Photo items with thumbnails, filenames, and category labels (CANDID, PORTRAIT, TRADITIONAL)
+  - Download Approved and Download Rejected buttons with toast feedback
+  - Permanently Removed section with empty state: "Workspace fully intact"
+  - Finalize Workspace button to flag client as completed
+- **Upload & Send (Tab 8)** — Full dispatch engine:
+  - Target client dropdown populated from Client Manager (excludes blocked clients)
+  - Drag-and-drop zone (JPG, PNG, WEBP, PSD • Max 20 files)
+  - Queued files list with filename, file size, and remove button
+  - Sequential upload simulation with individual progress bars per file
+  - Dispatch to Client Portal button with loading spinner animation
+- **admin-store.js** — Expanded data model:
+  - Client portal schema: `email`, `flag`, `blocked`, `flagged`, `addedDate`, `photos: { approved[], rejected[], deleted[] }`
+  - New methods: `toggleClientFlag()`, `toggleClientBlock()`, `updateClientPortal()`, `getActiveClients()`, `getClientByCode()`
+  - Deep merge on load to ensure new fields from defaults are present in persisted data
+
 ## [2.1.0] - 2026-07-24
 
 ### Added — Global Theme Engine & Full-Site Adoption

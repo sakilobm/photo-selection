@@ -554,30 +554,37 @@
     </div>
 
 
-    <!-- TAB 3: CLIENT DIRECTORY -->
-    <div id="dash-pane-portals" class="dash-pane hidden space-y-8">
-      <div class="glass-panel-card overflow-x-auto" data-reveal>
-        <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
-          <h3 class="text-base font-bold text-white">Client Selection Directory</h3>
-          <button onclick="openNewPortalModal()" class="btn-primary text-xs py-2 px-4 flex items-center gap-1.5">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Client
+    <!-- TAB 3: CLIENT MANAGER (FULL PROFESSIONAL DIRECTORY) -->
+    <div id="dash-pane-portals" class="dash-pane hidden space-y-6">
+
+      <!-- Section Header -->
+      <div class="glass-panel-card" data-reveal>
+        <div class="flex items-center gap-3 mb-1">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400">
+            <i data-lucide="users" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-white font-['Outfit']">Client Directory</h3>
+            <p class="text-xs text-slate-400">Manage all registered portal users. Block access, flag completed sessions, and track live selection states across all clients.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Register Client -->
+      <div class="glass-panel-card" data-reveal>
+        <div class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-3">QUICK REGISTER CLIENT</div>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input type="text" id="cm-client-name" placeholder="Client Name" class="dash-input flex-1">
+          <input type="email" id="cm-client-email" placeholder="Email Address" class="dash-input flex-1">
+          <button onclick="cmAddClient()" class="btn-primary text-xs py-2.5 px-6 flex items-center gap-2 shrink-0 whitespace-nowrap">
+            <i data-lucide="user-plus" class="w-4 h-4"></i> Add Client
           </button>
         </div>
-        <table class="w-full text-left text-xs">
-          <thead>
-            <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
-              <th class="py-3 px-4">Passcode</th>
-              <th class="py-3 px-4">Client Name</th>
-              <th class="py-3 px-4">Event Date</th>
-              <th class="py-3 px-4">Progress</th>
-              <th class="py-3 px-4">Status</th>
-              <th class="py-3 px-4 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody id="portals-table-body" class="divide-y divide-white/5 text-slate-300">
-            <!-- JS populated -->
-          </tbody>
-        </table>
+      </div>
+
+      <!-- Client Cards List -->
+      <div id="cm-client-list" class="space-y-4" data-reveal>
+        <!-- JS populated -->
       </div>
     </div>
 
@@ -650,27 +657,142 @@
       </div>
     </div>
 
-    <!-- TAB 7: DELETED DETECTION -->
-    <div id="dash-pane-deleted" class="dash-pane hidden space-y-8">
-      <div class="glass-panel-card space-y-4 text-center py-12" data-reveal>
-        <div class="w-12 h-12 mx-auto rounded-2xl bg-rose-500/10 border border-rose-400/30 flex items-center justify-center text-rose-400">
-          <i data-lucide="shield-alert" class="w-6 h-6"></i>
+
+    <!-- TAB 7: DELETED DETECTION (FULL COMPARISON) -->
+    <div id="dash-pane-deleted" class="dash-pane hidden space-y-6">
+
+      <!-- Section Header -->
+      <div class="glass-panel-card" data-reveal>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-400/30 flex items-center justify-center text-rose-400">
+              <i data-lucide="search-x" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-black text-white font-['Outfit']">Compare & Detect Deleted Photos</h3>
+              <p class="text-xs text-slate-400">Inspect approved selections vs unselected/deleted photos per client. Download approved or rejected photo packages directly.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <select id="dd-client-select" class="dash-input text-xs py-2.5 min-w-[220px]" onchange="renderDeletedDetection()">
+              <!-- JS populated -->
+            </select>
+            <button onclick="ddFinalizeWorkspace()" class="btn-primary text-xs py-2.5 px-5 flex items-center gap-2 whitespace-nowrap">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Finalize Workspace
+            </button>
+          </div>
         </div>
-        <h3 class="text-lg font-bold text-white">Deleted Asset Protection Active</h3>
-        <p class="text-xs text-slate-400 max-w-md mx-auto">No deleted or rejected photos detected in current client sessions. All assets intact.</p>
+      </div>
+
+      <!-- Approved vs Rejected Split Panels -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" data-reveal>
+
+        <!-- Approved / Selected Panel -->
+        <div class="glass-panel-card space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i> APPROVED / SELECTED
+            </h4>
+            <div class="flex items-center gap-2">
+              <span id="dd-approved-count" class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-xs font-bold flex items-center justify-center">0</span>
+              <button onclick="ddDownloadApproved()" class="text-xs py-1.5 px-3 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 hover:bg-emerald-500/20 transition-colors flex items-center gap-1.5 font-bold">
+                <i data-lucide="download" class="w-3 h-3"></i> Download Approved
+              </button>
+            </div>
+          </div>
+          <div id="dd-approved-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-1" style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;">
+            <!-- JS populated -->
+          </div>
+        </div>
+
+        <!-- Rejected / Not Selected Panel -->
+        <div class="glass-panel-card space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-sm font-bold text-rose-400 uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="x-circle" class="w-4 h-4"></i> REJECTED / NOT SELECTED
+            </h4>
+            <div class="flex items-center gap-2">
+              <span id="dd-rejected-count" class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-400 text-xs font-bold flex items-center justify-center">0</span>
+              <button onclick="ddDownloadRejected()" class="text-xs py-1.5 px-3 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-400 hover:bg-rose-500/20 transition-colors flex items-center gap-1.5 font-bold">
+                <i data-lucide="download" class="w-3 h-3"></i> Download Rejected
+              </button>
+            </div>
+          </div>
+          <div id="dd-rejected-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-1" style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;">
+            <!-- JS populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Permanently Removed Section -->
+      <div class="glass-panel-card border-rose-500/20" data-reveal>
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-sm font-bold text-rose-400 uppercase tracking-wider flex items-center gap-2">
+            <i data-lucide="trash-2" class="w-4 h-4"></i> PERMANENTLY REMOVED FROM WORKSPACE
+          </h4>
+          <span id="dd-deleted-count" class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-400 text-xs font-bold flex items-center justify-center">0</span>
+        </div>
+        <div id="dd-deleted-list" class="space-y-2">
+          <!-- JS populated OR empty state -->
+        </div>
       </div>
     </div>
 
-    <!-- TAB 8: UPLOAD & SEND -->
-    <div id="dash-pane-upload" class="dash-pane hidden space-y-8">
-      <div class="glass-panel-card space-y-4 text-center py-12" data-reveal>
-        <div class="w-12 h-12 mx-auto rounded-2xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-blue-400">
-          <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+
+    <!-- TAB 8: UPLOAD & SEND (FULL DISPATCH ENGINE) -->
+    <div id="dash-pane-upload" class="dash-pane hidden space-y-6">
+
+      <!-- Section Header -->
+      <div class="glass-panel-card" data-reveal>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-blue-400">
+            <i data-lucide="send" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-white font-['Outfit']">Upload & Dispatch to Client</h3>
+            <p class="text-xs text-slate-400">Upload images to allocate to a specific client's portal. They will see these photos when they log in with their email.</p>
+          </div>
         </div>
-        <h3 class="text-lg font-bold text-white">Upload New Client Asset Pack</h3>
-        <p class="text-xs text-slate-400 max-w-md mx-auto">Drag &amp; drop high-resolution JPEG / RAW photos to generate client selection link.</p>
-        <button onclick="showToast('Upload Started', 'Simulating client asset package upload...', 'sapphire')" class="btn-primary text-xs py-3 px-6 mx-auto inline-flex items-center gap-2">
-          <i data-lucide="upload" class="w-4 h-4"></i> Select Photos Folder
+      </div>
+
+      <!-- Upload Form -->
+      <div class="glass-panel-card space-y-5" data-reveal>
+
+        <!-- Target Client Selector -->
+        <div>
+          <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-2">TARGET CLIENT EMAIL</label>
+          <select id="upload-client-select" class="dash-input text-sm py-3">
+            <option value="">-- Select Client --</option>
+            <!-- JS populated from client manager -->
+          </select>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div id="upload-dropzone" class="relative border-2 border-dashed border-white/15 rounded-2xl py-12 px-8 text-center transition-all cursor-pointer hover:border-white/30 hover:bg-white/3"
+             onclick="document.getElementById('upload-file-input').click()"
+             ondragover="event.preventDefault(); this.classList.add('border-blue-400','bg-blue-500/5')"
+             ondragleave="this.classList.remove('border-blue-400','bg-blue-500/5')"
+             ondrop="handleFileDrop(event)">
+          <i data-lucide="cloud-upload" class="w-10 h-10 mx-auto text-slate-500 mb-3"></i>
+          <p class="text-sm font-bold text-white mb-1">Drag photos or click to browse</p>
+          <p class="text-xs text-slate-500">Supports JPG, PNG, WEBP • Max 20 files</p>
+          <input type="file" id="upload-file-input" multiple accept="image/jpeg,image/png,image/webp,.psd" class="hidden" onchange="handleFileSelect(event)">
+        </div>
+
+        <!-- Queued Files List -->
+        <div id="upload-queue-section" class="hidden">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">QUEUED FILES</span>
+            <span id="upload-queue-count" class="text-xs font-bold text-blue-400"></span>
+          </div>
+          <div id="upload-queue-list" class="space-y-2 max-h-[300px] overflow-y-auto pr-1" style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;">
+            <!-- JS populated -->
+          </div>
+        </div>
+
+        <!-- Dispatch Button -->
+        <button id="upload-dispatch-btn" onclick="dispatchUpload()" class="w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 transition-all disabled:opacity-40 disabled:cursor-not-allowed" style="background: var(--theme-accent); color: #000;" disabled>
+          <i data-lucide="rocket" class="w-5 h-5"></i> Dispatch to Client Portal
         </button>
       </div>
     </div>
@@ -678,27 +800,11 @@
   </main>
 
 
-  <!-- ══════ NEW PORTAL MODAL ══════ -->
-  <div id="new-portal-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="glass-panel-card max-w-md w-full p-6 space-y-4">
-      <h3 class="text-lg font-bold text-white font-['Outfit']">Create Client Portal</h3>
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Client Name</label>
-        <input type="text" id="new-client-name" placeholder="Ramesh &amp; Kavya" class="dash-input">
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1">Passcode</label>
-        <input type="text" id="new-client-code" placeholder="RAMESH2026" class="dash-input uppercase font-mono">
-      </div>
-      <div class="flex justify-end gap-3 pt-2">
-        <button onclick="closeNewPortalModal()" class="btn-ghost text-xs py-2 px-4">Cancel</button>
-        <button onclick="saveNewClientPortal()" class="btn-primary text-xs py-2 px-4">Create</button>
-      </div>
-    </div>
-  </div>
-
   <script src="toast.js"></script>
   <script>
+    // ── Upload queue state ──
+    let uploadQueue = [];
+
     document.addEventListener('DOMContentLoaded', () => {
       if (window.lucide) lucide.createIcons();
 
@@ -727,7 +833,9 @@
       document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revealed'));
     }
 
-    // ── AUTH ──
+    // ══════════════════════════════════
+    //  AUTH
+    // ══════════════════════════════════
     function autofillPasscode() {
       document.getElementById('admin-passcode-input').value = 'ADMIN2026';
     }
@@ -753,7 +861,9 @@
       showToast('Logged Out', 'Studio session locked.', 'sapphire');
     }
 
-    // ── SCALABLE TAB SWITCHER ──
+    // ══════════════════════════════════
+    //  SCALABLE TAB SWITCHER
+    // ══════════════════════════════════
     function switchDashTab(tabId, btn) {
       document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -763,14 +873,26 @@
         pane.classList.remove('hidden');
         pane.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revealed'));
       }
+      // Re-render tab-specific data
+      if (tabId === 'portals') renderClientManager();
+      if (tabId === 'deleted') { populateDeletedClientDropdown(); renderDeletedDetection(); }
+      if (tabId === 'upload') populateUploadClientDropdown();
+      if (window.lucide) lucide.createIcons();
     }
 
-    // ── RENDER DATA ──
+    // ══════════════════════════════════
+    //  RENDER ALL DATA
+    // ══════════════════════════════════
     function renderAllData() {
       const data = OBMStore.data;
 
       // KPIs
       document.getElementById('kpi-clients').textContent = data.clientPortals.length;
+      const totalApproved = data.clientPortals.reduce((sum, p) => sum + (p.photos?.approved?.length || 0), 0);
+      const totalRejected = data.clientPortals.reduce((sum, p) => sum + (p.photos?.rejected?.length || 0), 0);
+      const totalDeleted = data.clientPortals.reduce((sum, p) => sum + (p.photos?.deleted?.length || 0), 0);
+      document.getElementById('kpi-selected').textContent = totalApproved || data.clientPortals.reduce((s, p) => s + p.selectedPhotos, 0);
+      document.getElementById('kpi-deleted').textContent = totalDeleted;
 
       // Packages
       data.packages.forEach(pkg => {
@@ -782,36 +904,409 @@
       document.getElementById('live-code-input').value = data.liveEvent.code;
       document.getElementById('live-status-select').value = data.liveEvent.status;
 
-      // Render Table
-      renderPortalsTable();
-    }
+      // Client Manager
+      renderClientManager();
 
-    function renderPortalsTable() {
-      const tbody = document.getElementById('portals-table-body');
-      tbody.innerHTML = OBMStore.data.clientPortals.map(p => `
-        <tr class="hover:bg-white/5 transition-colors">
-          <td class="py-3 px-4 font-mono text-cyan-400 font-bold">${p.code}</td>
-          <td class="py-3 px-4 font-bold text-white">${p.clientName}</td>
-          <td class="py-3 px-4 text-slate-400">${p.eventDate}</td>
-          <td class="py-3 px-4">
-            <div class="flex items-center gap-2">
-              <div class="w-20 h-1.5 rounded-full bg-slate-900 overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-cyan-400 to-purple-500" style="width:${(p.selectedPhotos / p.maxSelection)*100}%"></div>
-              </div>
-              <span class="text-[10px] text-slate-400 font-mono">${p.selectedPhotos}/${p.maxSelection}</span>
-            </div>
-          </td>
-          <td class="py-3 px-4"><span class="badge badge-cyan text-[9px]">${p.status}</span></td>
-          <td class="py-3 px-4 text-right">
-            <button onclick="deleteClientPortal('${p.code}')" class="p-1 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors" title="Delete">
-              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-            </button>
-          </td>
-        </tr>
-      `).join('');
+      // Deleted Detection
+      populateDeletedClientDropdown();
+      renderDeletedDetection();
+
+      // Upload dropdowns
+      populateUploadClientDropdown();
+
       if (window.lucide) lucide.createIcons();
     }
 
+    // ══════════════════════════════════
+    //  CLIENT MANAGER (TAB 3)
+    // ══════════════════════════════════
+    function getStatusBadge(client) {
+      const badges = [];
+      if (client.flag === 'COMPLETED' || client.status === 'Completed') {
+        badges.push('<span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-[9px] font-extrabold uppercase tracking-wider">COMPLETED</span>');
+      } else if (client.flag === 'BLOCKED' || client.blocked) {
+        badges.push('<span class="px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-400/30 text-rose-400 text-[9px] font-extrabold uppercase tracking-wider">BLOCKED</span>');
+      } else {
+        badges.push('<span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-400 text-[9px] font-extrabold uppercase tracking-wider">PENDING</span>');
+      }
+      if (client.flagged) {
+        badges.push('<span class="px-2.5 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-400/30 text-yellow-400 text-[9px] font-extrabold uppercase tracking-wider">FLAGGED</span>');
+      }
+      return badges.join(' ');
+    }
+
+    function getAvatarColor(name) {
+      const colors = ['from-cyan-400 to-blue-500', 'from-purple-400 to-pink-500', 'from-emerald-400 to-teal-500', 'from-amber-400 to-orange-500', 'from-rose-400 to-red-500'];
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      return colors[Math.abs(hash) % colors.length];
+    }
+
+    function renderClientManager() {
+      const container = document.getElementById('cm-client-list');
+      if (!container) return;
+
+      const clients = OBMStore.data.clientPortals;
+      if (clients.length === 0) {
+        container.innerHTML = '<div class="glass-panel-card text-center py-10"><p class="text-sm text-slate-400">No clients registered yet. Add your first client above.</p></div>';
+        return;
+      }
+
+      container.innerHTML = clients.map(p => {
+        const initial = (p.clientName || 'C')[0].toUpperCase();
+        const avatarGradient = getAvatarColor(p.clientName);
+        const allocated = p.totalPhotos || 0;
+        const selected = p.selectedPhotos || 0;
+        const email = p.email || 'no-email@example.com';
+        const date = p.addedDate || p.eventDate || '-';
+        const flaggedNote = p.flagged
+          ? `<div class="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-500/5 border border-blue-400/20">
+               <i data-lucide="info" class="w-3.5 h-3.5 text-blue-400 shrink-0"></i>
+               <span class="text-[10px] text-blue-300">This client has been flagged as already selected/sent. They will see a "Thank you" screen instead of gallery access.</span>
+             </div>` : '';
+
+        return `
+          <div class="glass-panel-card transition-all hover:border-white/20">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-full bg-gradient-to-tr ${avatarGradient} flex items-center justify-center text-slate-950 font-black text-lg shrink-0 shadow-lg">
+                  ${initial}
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-sm font-black text-white">${p.clientName}</span>
+                    ${getStatusBadge(p)}
+                  </div>
+                  <p class="text-xs text-slate-400 mt-0.5">${email}</p>
+                  <div class="flex items-center gap-3 mt-1 text-[10px] text-slate-500">
+                    <span class="flex items-center gap-1"><i data-lucide="image" class="w-3 h-3"></i> ${allocated} allocated</span>
+                    <span class="flex items-center gap-1"><i data-lucide="heart" class="w-3 h-3"></i> ${selected} selected</span>
+                    <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> ${date}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="cmDownloadClient('${p.code}')" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors" title="Download Client Assets">
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                </button>
+                <button onclick="cmToggleFlag('${p.code}')" class="w-9 h-9 rounded-xl ${p.flagged ? 'bg-yellow-500/10 border-yellow-400/30 text-yellow-400' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'} border flex items-center justify-center transition-colors" title="${p.flagged ? 'Unflag Client' : 'Flag as Completed'}">
+                  <i data-lucide="flag" class="w-4 h-4"></i>
+                </button>
+                <button onclick="cmToggleBlock('${p.code}')" class="w-9 h-9 rounded-xl ${p.blocked ? 'bg-rose-500/10 border-rose-400/30 text-rose-400' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'} border flex items-center justify-center transition-colors" title="${p.blocked ? 'Unblock Client' : 'Block Access'}">
+                  <i data-lucide="ban" class="w-4 h-4"></i>
+                </button>
+                <button onclick="cmDeleteClient('${p.code}')" class="w-9 h-9 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 flex items-center justify-center text-rose-400 transition-colors" title="Delete Client">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+            ${flaggedNote}
+          </div>`;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function cmAddClient() {
+      const name = document.getElementById('cm-client-name').value.trim();
+      const email = document.getElementById('cm-client-email').value.trim();
+      if (!name) { showToast('Missing Name', 'Please enter a client name.', 'error'); return; }
+      const code = name.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 8) + '2026';
+      OBMStore.addClientPortal({ code, clientName: name, email });
+      document.getElementById('cm-client-name').value = '';
+      document.getElementById('cm-client-email').value = '';
+      renderAllData();
+      showToast('Client Added', `${name} registered with code ${code}`, 'success');
+    }
+
+    function cmToggleFlag(code) {
+      OBMStore.toggleClientFlag(code);
+      const client = OBMStore.getClientByCode(code);
+      renderAllData();
+      showToast(client?.flagged ? 'Client Flagged' : 'Flag Removed', `${client?.clientName || code} flag updated.`, 'gold');
+    }
+
+    function cmToggleBlock(code) {
+      OBMStore.toggleClientBlock(code);
+      const client = OBMStore.getClientByCode(code);
+      renderAllData();
+      showToast(client?.blocked ? 'Client Blocked' : 'Client Unblocked', `${client?.clientName || code} access updated.`, client?.blocked ? 'error' : 'success');
+    }
+
+    function cmDeleteClient(code) {
+      const client = OBMStore.getClientByCode(code);
+      if (!confirm(`Delete "${client?.clientName || code}" permanently?`)) return;
+      OBMStore.deleteClientPortal(code);
+      renderAllData();
+      showToast('Client Deleted', `${client?.clientName || code} removed from directory.`, 'sapphire');
+    }
+
+    function cmDownloadClient(code) {
+      const client = OBMStore.getClientByCode(code);
+      showToast('Download Started', `Preparing ZIP archive for ${client?.clientName || code}...`, 'sapphire');
+    }
+
+    // ══════════════════════════════════
+    //  DELETED DETECTION (TAB 7)
+    // ══════════════════════════════════
+    function populateDeletedClientDropdown() {
+      const select = document.getElementById('dd-client-select');
+      if (!select) return;
+      const clients = OBMStore.data.clientPortals;
+      select.innerHTML = clients.map((p, i) => `<option value="${p.code}" ${i === 0 ? 'selected' : ''}>${p.clientName} (${p.selectedPhotos} selected)</option>`).join('');
+    }
+
+    function renderDeletedDetection() {
+      const select = document.getElementById('dd-client-select');
+      if (!select) return;
+      const code = select.value;
+      const client = OBMStore.getClientByCode(code);
+      if (!client) return;
+
+      const photos = client.photos || { approved: [], rejected: [], deleted: [] };
+
+      // Approved
+      const approvedList = document.getElementById('dd-approved-list');
+      const approvedCount = document.getElementById('dd-approved-count');
+      approvedCount.textContent = photos.approved.length;
+
+      if (photos.approved.length === 0) {
+        approvedList.innerHTML = '<div class="text-center py-8"><p class="text-xs text-slate-500">No photos selected for this client.</p></div>';
+      } else {
+        approvedList.innerHTML = photos.approved.map(photo => `
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-white/3 border border-white/5 hover:bg-white/5 transition-colors">
+            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0">
+              <i data-lucide="check" class="w-4 h-4"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-bold text-white truncate">${photo.name}</p>
+              <span class="text-[9px] text-emerald-400 font-bold uppercase">${photo.category}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Rejected
+      const rejectedList = document.getElementById('dd-rejected-list');
+      const rejectedCount = document.getElementById('dd-rejected-count');
+      rejectedCount.textContent = photos.rejected.length;
+
+      if (photos.rejected.length === 0) {
+        rejectedList.innerHTML = '<div class="text-center py-8"><p class="text-xs text-slate-500">No rejected photos for this client.</p></div>';
+      } else {
+        rejectedList.innerHTML = photos.rejected.map(photo => `
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-white/3 border border-white/5 hover:bg-white/5 transition-colors">
+            <img src="${photo.thumb || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=80&h=80&fit=crop'}" alt="${photo.name}" class="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-bold text-white truncate">${photo.name}</p>
+              <span class="text-[9px] text-rose-400 font-bold uppercase">${photo.category}</span>
+            </div>
+            <button class="w-6 h-6 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-400 hover:bg-rose-500/20 transition-colors shrink-0">
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+          </div>
+        `).join('');
+      }
+
+      // Deleted
+      const deletedList = document.getElementById('dd-deleted-list');
+      const deletedCount = document.getElementById('dd-deleted-count');
+      deletedCount.textContent = photos.deleted.length;
+
+      if (photos.deleted.length === 0) {
+        deletedList.innerHTML = `
+          <div class="text-center py-8">
+            <div class="w-10 h-10 mx-auto rounded-full bg-emerald-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 mb-3">
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+            <p class="text-sm font-bold text-white">Workspace fully intact</p>
+            <p class="text-xs text-slate-500">No permanently removed assets.</p>
+          </div>`;
+      } else {
+        deletedList.innerHTML = photos.deleted.map(photo => `
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
+            <div class="w-10 h-10 rounded-lg bg-rose-500/10 border border-rose-400/30 flex items-center justify-center text-rose-400 shrink-0">
+              <i data-lucide="trash" class="w-4 h-4"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-bold text-white truncate">${photo.name}</p>
+              <span class="text-[9px] text-rose-400 font-bold uppercase">${photo.category}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function ddDownloadApproved() {
+      const code = document.getElementById('dd-client-select')?.value;
+      const client = OBMStore.getClientByCode(code);
+      showToast('Download Started', `Preparing approved photos ZIP for ${client?.clientName || 'client'}...`, 'success');
+    }
+
+    function ddDownloadRejected() {
+      const code = document.getElementById('dd-client-select')?.value;
+      const client = OBMStore.getClientByCode(code);
+      showToast('Download Started', `Preparing rejected photos ZIP for ${client?.clientName || 'client'}...`, 'sapphire');
+    }
+
+    function ddFinalizeWorkspace() {
+      const code = document.getElementById('dd-client-select')?.value;
+      const client = OBMStore.getClientByCode(code);
+      if (!client) return;
+      OBMStore.toggleClientFlag(code);
+      renderAllData();
+      showToast('Workspace Finalized', `${client.clientName} marked as finalized.`, 'success');
+    }
+
+    // ══════════════════════════════════
+    //  UPLOAD & SEND (TAB 8)
+    // ══════════════════════════════════
+    function populateUploadClientDropdown() {
+      const select = document.getElementById('upload-client-select');
+      if (!select) return;
+      const clients = OBMStore.getActiveClients();
+      const currentVal = select.value;
+      select.innerHTML = '<option value="">-- Select Client --</option>' +
+        clients.map(p => `<option value="${p.code}">${p.clientName} (${p.email || p.code})</option>`).join('');
+      if (currentVal) select.value = currentVal;
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function handleFileSelect(e) {
+      const files = Array.from(e.target.files);
+      addFilesToQueue(files);
+    }
+
+    function handleFileDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('border-blue-400', 'bg-blue-500/5');
+      const files = Array.from(e.dataTransfer.files);
+      addFilesToQueue(files);
+    }
+
+    function addFilesToQueue(files) {
+      files.forEach(file => {
+        if (uploadQueue.length >= 20) return;
+        uploadQueue.push({
+          id: Date.now() + Math.random(),
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          progress: 0,
+          status: 'queued'
+        });
+      });
+      renderUploadQueue();
+    }
+
+    function removeFromQueue(id) {
+      uploadQueue = uploadQueue.filter(f => f.id !== id);
+      renderUploadQueue();
+    }
+
+    function renderUploadQueue() {
+      const section = document.getElementById('upload-queue-section');
+      const list = document.getElementById('upload-queue-list');
+      const countEl = document.getElementById('upload-queue-count');
+      const dispatchBtn = document.getElementById('upload-dispatch-btn');
+
+      if (uploadQueue.length === 0) {
+        section.classList.add('hidden');
+        dispatchBtn.disabled = true;
+        return;
+      }
+
+      section.classList.remove('hidden');
+      countEl.textContent = `${uploadQueue.length} file${uploadQueue.length > 1 ? 's' : ''}`;
+      dispatchBtn.disabled = !document.getElementById('upload-client-select').value;
+
+      list.innerHTML = uploadQueue.map(file => `
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-white/3 border border-white/5 hover:bg-white/5 transition-colors" data-file-id="${file.id}">
+          <div class="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-400/20 flex items-center justify-center text-blue-400 shrink-0">
+            <i data-lucide="file-image" class="w-4 h-4"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-bold text-white truncate">${file.name}</p>
+            ${file.status === 'uploading' ? `
+              <div class="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden mt-1">
+                <div class="h-full bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full transition-all" style="width:${file.progress}%"></div>
+              </div>` :
+            file.status === 'done' ? '<span class="text-[9px] text-emerald-400 font-bold">✓ UPLOADED</span>' :
+            ''}
+          </div>
+          <span class="text-[10px] text-slate-500 font-mono shrink-0">${formatFileSize(file.size)}</span>
+          ${file.status !== 'done' ? `
+            <button onclick="removeFromQueue(${file.id})" class="w-6 h-6 rounded-full flex items-center justify-center text-rose-400 hover:bg-rose-500/10 transition-colors shrink-0">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>` : ''}
+        </div>
+      `).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function dispatchUpload() {
+      const clientCode = document.getElementById('upload-client-select').value;
+      if (!clientCode) { showToast('No Client', 'Please select a target client.', 'error'); return; }
+      if (uploadQueue.length === 0) { showToast('No Files', 'Please add files to the queue.', 'error'); return; }
+
+      const client = OBMStore.getClientByCode(clientCode);
+      const dispatchBtn = document.getElementById('upload-dispatch-btn');
+      dispatchBtn.disabled = true;
+      dispatchBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Dispatching...';
+      if (window.lucide) lucide.createIcons();
+
+      // Simulate sequential upload with progress bars
+      let idx = 0;
+      function uploadNext() {
+        if (idx >= uploadQueue.length) {
+          // All done
+          showToast('Dispatch Complete', `${uploadQueue.length} files dispatched to ${client?.clientName || 'client'}`, 'success');
+          uploadQueue = [];
+          renderUploadQueue();
+          dispatchBtn.innerHTML = '<i data-lucide="rocket" class="w-5 h-5"></i> Dispatch to Client Portal';
+          if (window.lucide) lucide.createIcons();
+          return;
+        }
+
+        const file = uploadQueue[idx];
+        file.status = 'uploading';
+        file.progress = 0;
+        renderUploadQueue();
+
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += Math.random() * 25 + 10;
+          if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            file.progress = 100;
+            file.status = 'done';
+            renderUploadQueue();
+            idx++;
+            setTimeout(uploadNext, 200);
+          } else {
+            file.progress = Math.round(progress);
+            // Update only the progress bar for this file
+            const el = document.querySelector(`[data-file-id="${file.id}"] .bg-gradient-to-r`);
+            if (el) el.style.width = file.progress + '%';
+          }
+        }, 150 + Math.random() * 200);
+      }
+      uploadNext();
+    }
+
+    // ══════════════════════════════════
+    //  PACKAGES & LIVE (existing)
+    // ══════════════════════════════════
     function savePackagePrice(id) {
       const val = document.getElementById(`pkg-${id}-price`).value;
       OBMStore.updatePackagePrice(id, val);
@@ -827,27 +1322,20 @@
       showToast('Broadcast Updated', `Status set to ${config.status}`, 'purple');
     }
 
-    function openNewPortalModal() { document.getElementById('new-portal-modal').classList.remove('hidden'); }
-    function closeNewPortalModal() { document.getElementById('new-portal-modal').classList.add('hidden'); }
-
-    function saveNewClientPortal() {
-      const name = document.getElementById('new-client-name').value.trim();
-      const code = document.getElementById('new-client-code').value.toUpperCase().trim();
-      if (!name || !code) return;
-      OBMStore.addClientPortal({
-        code, clientName: name, eventDate: new Date().toISOString().split('T')[0],
-        totalPhotos: 1000, selectedPhotos: 0, maxSelection: 100, status: 'In Progress'
-      });
-      closeNewPortalModal();
-      renderAllData();
-      showToast('Portal Created', `Passcode ${code} registered.`, 'success');
+    function saveMetricsConfig() {
+      const years = document.getElementById('metric-years').value;
+      const events = document.getElementById('metric-events').value;
+      OBMStore.updateMetrics({ yearsExperience: parseInt(years), totalEvents: parseInt(events) });
+      showToast('Metrics Saved', 'Homepage achievements updated.', 'success');
     }
 
-    function deleteClientPortal(code) {
-      OBMStore.deleteClientPortal(code);
-      renderAllData();
-      showToast('Portal Removed', `Client ${code} removed.`, 'sapphire');
-    }
+    // Enable/disable dispatch button when client is selected
+    document.addEventListener('change', (e) => {
+      if (e.target.id === 'upload-client-select') {
+        const btn = document.getElementById('upload-dispatch-btn');
+        if (btn) btn.disabled = !e.target.value || uploadQueue.length === 0;
+      }
+    });
   </script>
 </body>
 </html>
