@@ -181,17 +181,17 @@
   <!-- ══════ FLOATING PILL NAVIGATION ══════ -->
   <div class="floating-nav-container">
     <nav class="floating-nav-pill">
-      <a href="index.html" class="flex items-center gap-3 no-underline">
-        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+      <a href="index.html" class="flex items-center gap-3 no-underline shrink-0">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-500 flex items-center justify-center shadow-lg shadow-cyan-500/30 shrink-0">
           <i data-lucide="book-open" class="w-4 h-4 text-slate-950"></i>
         </div>
-        <div>
-          <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent font-['Outfit']">OBM STUDIO</span>
-          <span class="block text-[9px] text-[var(--theme-accent)] font-bold tracking-widest uppercase -mt-1">Digital Album</span>
+        <div class="shrink-0">
+          <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent font-['Outfit'] whitespace-nowrap">OBM STUDIO</span>
+          <span class="block text-[9px] text-[var(--theme-accent)] font-bold tracking-widest uppercase -mt-1 whitespace-nowrap">Digital Album</span>
         </div>
       </a>
 
-      <div class="hidden md:flex items-center gap-1">
+      <div class="hidden lg:flex items-center gap-1 shrink-0">
         <a href="index.html" class="nav-link">Home</a>
         <a href="packages.html" class="nav-link" style="color:#ffb703;font-weight:700">Packages ₹</a>
         <a href="digital-album.html" class="nav-link active">Albums</a>
@@ -201,7 +201,7 @@
       </div>
 
       <!-- GLOBAL THEME SWITCHER -->
-      <div class="global-theme-switcher">
+      <div class="global-theme-switcher shrink-0">
         <label>Theme</label>
         <button class="theme-switcher-dot bg-sky-500"    data-theme="sapphire" title="Sapphire Ice"    onclick="OBMTheme.set('sapphire')"></button>
         <button class="theme-switcher-dot bg-purple-500" data-theme="amethyst" title="Amethyst Glow"   onclick="OBMTheme.set('amethyst')"></button>
@@ -211,7 +211,7 @@
         <button class="theme-switcher-dot bg-white border border-slate-300 shadow-sm" data-theme="white" title="Pearl White" onclick="OBMTheme.set('white')"></button>
       </div>
 
-      <a href="photo-selection.html" class="btn-primary text-xs py-2.5 px-5">
+      <a href="photo-selection.html" class="btn-primary text-xs py-2.5 px-4 shrink-0 whitespace-nowrap">
         <i data-lucide="check-square" class="w-3.5 h-3.5"></i> Selection
       </a>
     </nav>

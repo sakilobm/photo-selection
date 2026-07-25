@@ -30,20 +30,20 @@
   <!-- ══════ FLOATING PILL NAVIGATION ══════ -->
   <div class="floating-nav-container">
     <nav class="floating-nav-pill">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 shrink-0">
         <div
-          class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-400 via-purple-500 to-amber-400 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+          class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-400 via-purple-500 to-amber-400 flex items-center justify-center shadow-lg shadow-cyan-500/30 shrink-0">
           <i data-lucide="camera" class="w-4 h-4 text-slate-950 font-black"></i>
         </div>
-        <div>
+        <div class="shrink-0">
           <span
-            class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent font-['Outfit']">OBM
+            class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent font-['Outfit'] whitespace-nowrap">OBM
             STUDIO</span>
-          <span class="block text-[9px] text-cyan-400 font-bold tracking-widest uppercase -mt-1">Photography &
+          <span class="block text-[9px] text-cyan-400 font-bold tracking-widest uppercase -mt-1 whitespace-nowrap">Photography &
             Cinema</span>
         </div>
       </div>
-      <div class="hidden md:flex items-center gap-1">
+      <div class="hidden lg:flex items-center gap-1 shrink-0">
         <a href="#story" class="nav-link">Our Story</a>
         <a href="#services" class="nav-link">Services</a>
         <a href="packages.html" class="nav-link" style="color:#ffb703;font-weight:700">Packages ₹</a>
@@ -53,7 +53,7 @@
         <a href="#portfolio" class="nav-link">Portfolio</a>
       </div>
       <!-- GLOBAL THEME SWITCHER -->
-      <div class="global-theme-switcher">
+      <div class="global-theme-switcher shrink-0">
         <label>Theme</label>
         <button class="theme-switcher-dot bg-sky-500" data-theme="sapphire" title="Sapphire Ice"
           onclick="OBMTheme.set('sapphire')"></button>
@@ -68,7 +68,7 @@
         <button class="theme-switcher-dot bg-white border border-slate-300 shadow-sm" data-theme="white" title="Pearl White"
           onclick="OBMTheme.set('white')"></button>
       </div>
-      <button class="open-login-btn btn-primary text-xs py-2.5 px-5">
+      <button class="open-login-btn btn-primary text-xs py-2.5 px-4 shrink-0 whitespace-nowrap">
         <i data-lucide="lock" class="w-3.5 h-3.5"></i> Client Portal
       </button>
     </nav>
