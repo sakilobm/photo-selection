@@ -7,7 +7,7 @@ All notable changes to the `obm-new-version` project will be documented in this 
 ### Added — Studio Dashboard Full Feature Upgrade (`admin.html`, `admin-store.js`)
 - **Client Manager (Tab 3)** — Complete professional client directory rewrite:
   - **Visual Status Differentiation for Client Cards**:
-    - **Completed**: Emerald green left accent bar (`border-left: 5px solid #10b981`) & subtle emerald glass tint
+    - **Completed**: Rich Emerald Green scheme (`background: #d1fae5` in Light theme, 6px emerald left border `#10b981`, mint green gradient & ambient glow)
     - **Flagged**: Warm amber left accent bar (`border-left: 5px solid #f59e0b`) & golden glass glow with high-contrast info banner
     - **Pending**: Sky blue left accent bar (`border-left: 5px solid #0284c7`) & subtle cyan glass backdrop
     - **Blocked**: Rose red left accent bar (`border-left: 5px solid #f43f5e`) & red tinted overlay

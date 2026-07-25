@@ -356,6 +356,60 @@
     html.theme-light .text-white { color: #0f172a !important; }
     html.theme-light .text-slate-400, html.theme-light .text-slate-300 { color: #475569 !important; }
     html.theme-light td, html.theme-light th { color: #334155 !important; }
+
+    /* ── High Specificity Light Theme Status Card Fill Overrides ── */
+    html.theme-light .glass-panel-card.client-card-pending {
+      background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%) !important;
+      border: 1.5px solid #38bdf8 !important;
+      border-left: 6px solid #0284c7 !important;
+      box-shadow: 0 12px 35px rgba(2, 132, 199, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+      opacity: 1 !important;
+    }
+    html.theme-light .glass-panel-card.client-card-flagged {
+      background: linear-gradient(135deg, #fef9c3 0%, #ffffff 100%) !important;
+      border: 1.5px solid #f59e0b !important;
+      border-left: 6px solid #d97706 !important;
+      box-shadow: 0 12px 35px rgba(245, 158, 11, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+      opacity: 0.88 !important;
+      filter: grayscale(10%) !important;
+    }
+    html.theme-light .glass-panel-card.client-card-completed {
+      background: linear-gradient(135deg, #d1fae5 0%, #ffffff 100%) !important;
+      border: 1.5px solid #34d399 !important;
+      border-left: 6px solid #10b981 !important;
+      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+    html.theme-light .glass-panel-card.client-card-blocked {
+      background: linear-gradient(135deg, #fee2e2 0%, #ffffff 100%) !important;
+      border: 1.5px solid #f87171 !important;
+      border-left: 6px solid #dc2626 !important;
+      box-shadow: 0 12px 35px rgba(239, 68, 68, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+      opacity: 0.85 !important;
+    }
+
+    /* ── Flag Button High Contrast Styling ── */
+    html.theme-light .cm-btn-flag-active {
+      background: #f59e0b !important;
+      border-color: #d97706 !important;
+      color: #78350f !important;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25) !important;
+    }
+    html.theme-light .cm-btn-flag-active i,
+    html.theme-light .cm-btn-flag-active svg {
+      color: #78350f !important;
+      stroke-width: 2.5px !important;
+    }
+    html.theme-light .cm-btn-flag-inactive {
+      background: rgba(0, 0, 0, 0.06) !important;
+      border-color: rgba(0, 0, 0, 0.12) !important;
+      color: #334155 !important;
+    }
+    html.theme-light .cm-btn-flag-inactive:hover {
+      background: rgba(245, 158, 11, 0.15) !important;
+      color: #b45309 !important;
+    }
   </style>
 </head>
 <body class="antialiased">
@@ -1085,8 +1139,8 @@
 
     function getClientCardClass(p) {
       if (p.blocked || p.flag === 'BLOCKED') return 'client-card-blocked border-l-4 border-l-rose-500';
-      if (p.flagged) return 'client-card-flagged border-l-4 border-l-amber-400';
       if (p.flag === 'COMPLETED' || p.status === 'Completed') return 'client-card-completed border-l-4 border-l-emerald-400';
+      if (p.flagged) return 'client-card-flagged border-l-4 border-l-amber-400';
       return 'client-card-pending border-l-4 border-l-sky-400';
     }
 
@@ -1114,11 +1168,25 @@
       const allClients = OBMStore.data.clientPortals;
       updateCMFilterCounts(allClients);
 
-      let filtered = allClients;
-      if (cmCurrentFilter === 'flagged') filtered = allClients.filter(p => p.flagged);
-      else if (cmCurrentFilter === 'completed') filtered = allClients.filter(p => p.flag === 'COMPLETED' || p.status === 'Completed');
-      else if (cmCurrentFilter === 'pending') filtered = allClients.filter(p => !p.blocked && !p.flagged && (p.flag === 'PENDING' || p.status === 'Pending' || p.status === 'In Progress'));
-      else if (cmCurrentFilter === 'blocked') filtered = allClients.filter(p => p.blocked || p.flag === 'BLOCKED');
+      let filtered = [...allClients];
+      if (cmCurrentFilter === 'flagged') filtered = filtered.filter(p => p.flagged);
+      else if (cmCurrentFilter === 'completed') filtered = filtered.filter(p => p.flag === 'COMPLETED' || p.status === 'Completed');
+      else if (cmCurrentFilter === 'pending') filtered = filtered.filter(p => !p.blocked && !p.flagged && (p.flag === 'PENDING' || p.status === 'Pending' || p.status === 'In Progress'));
+      else if (cmCurrentFilter === 'blocked') filtered = filtered.filter(p => p.blocked || p.flag === 'BLOCKED');
+
+      // ── Smart Auto-Sort Priority ──
+      // Priority 1: Pending / In Progress (Active Top)
+      // Priority 2: Flagged (Moved down)
+      // Priority 3: Completed (Moved to Bottom)
+      // Priority 4: Blocked (Very End)
+      function getSortPriority(p) {
+        if (p.blocked || p.flag === 'BLOCKED') return 4;
+        if (p.flag === 'COMPLETED' || p.status === 'Completed') return 3;
+        if (p.flagged) return 2;
+        return 1; // Pending
+      }
+
+      filtered.sort((a, b) => getSortPriority(a) - getSortPriority(b));
 
       if (filtered.length === 0) {
         container.innerHTML = `<div class="glass-panel-card text-center py-10"><p class="text-sm text-slate-400">No ${cmCurrentFilter === 'all' ? '' : cmCurrentFilter} clients found.</p></div>`;
@@ -1164,7 +1232,7 @@
                 <button onclick="cmDownloadClient('${p.code}')" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors" title="Download Client Assets">
                   <i data-lucide="download" class="w-4 h-4"></i>
                 </button>
-                <button onclick="cmToggleFlag('${p.code}')" class="w-9 h-9 rounded-xl ${p.flagged ? 'bg-yellow-500/20 border-yellow-400/50 text-yellow-300' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'} border flex items-center justify-center transition-colors" title="${p.flagged ? 'Unflag Client' : 'Flag as Completed'}">
+                <button onclick="cmToggleFlag('${p.code}')" class="w-9 h-9 rounded-xl ${p.flagged ? 'cm-btn-flag-active bg-yellow-500/20 border-yellow-400/50 text-yellow-300' : 'cm-btn-flag-inactive bg-white/5 border-white/10 text-slate-400 hover:text-white'} border flex items-center justify-center transition-colors" title="${p.flagged ? 'Unflag Client' : 'Flag as Completed'}">
                   <i data-lucide="flag" class="w-4 h-4"></i>
                 </button>
                 <button onclick="cmToggleBlock('${p.code}')" class="w-9 h-9 rounded-xl ${p.blocked ? 'bg-rose-500/20 border-rose-400/50 text-rose-300' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'} border flex items-center justify-center transition-colors" title="${p.blocked ? 'Unblock Client' : 'Block Access'}">
