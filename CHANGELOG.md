@@ -5,7 +5,15 @@ All notable changes to the `obm-new-version` project will be documented in this 
 ## [2.2.0] - 2026-07-25
 
 ### Added — Studio Dashboard Full Feature Upgrade (`admin.html`, `admin-store.js`)
+- **Upload & Send (Tab 8)** — Full dispatch engine:
+  - **Button Contrast Fix**: Updated `#upload-dispatch-btn` ("Dispatch to Client Portal") to force crisp pure white text (`color: #ffffff !important`) across both Dark and Light (Pearl White) themes instead of hardcoded black text.
 - **Client Manager (Tab 3)** — Complete professional client directory rewrite:
+  - **Unassigned Client Handling (`totalPhotos === 0`)**:
+    - **Single Action Button (Delete Only)**: Newly registered clients with 0 allocated photos hide Download, Flag, and Block action buttons, showing **ONLY the Delete button** (`trash-2`).
+    - **UNASSIGNED Badge**: Displays cool indigo/slate `UNASSIGNED` pill badge.
+    - **Upload Hint & Shortcut Banner**: Displays a hint box inside the card with a direct *"Upload Photos"* button that switches to Tab 8 (Upload & Send) with that client preselected.
+    - **Unassigned Filter Pill**: Added `Unassigned (0)` pill to the Status Quick-Filter Bar.
+    - **Auto-Unlock**: Uploading photos to the client automatically unlocks full action buttons (Download, Flag, Block, Delete).
   - **Visual Status Differentiation for Client Cards**:
     - **Completed**: Rich Emerald Green scheme (`background: #d1fae5` in Light theme, 6px emerald left border `#10b981`, mint green gradient & ambient glow)
     - **Flagged**: Warm amber left accent bar (`border-left: 5px solid #f59e0b`) & golden glass glow with high-contrast info banner
@@ -15,9 +23,9 @@ All notable changes to the `obm-new-version` project will be documented in this 
     - Fixed washed-out left border bars in Light Theme by applying explicit 5px `border-left` status overrides and soft status ambient glows (`box-shadow: 0 12px 35px rgba(..., 0.18)`).
     - Fixed unreadable yellow info text in Light Theme by targeting `.cm-flagged-banner` with high-contrast dark amber text (`#78350f`), amber icon (`#d97706`), and soft yellow fill (`rgba(254, 243, 199, 0.95)`).
     - Fixed low-contrast email & meta counts in Light Theme (`.cm-client-email`, `.cm-client-meta`) using crisp dark slate (`#475569` and `#334155`).
-  - **Status Quick-Filter Bar**: Interactive status pills (`All`, `Flagged`, `Completed`, `Pending`, `Blocked`) with dynamic live count indicators
+  - **Status Quick-Filter Bar**: Interactive status pills (`All`, `Unassigned`, `Flagged`, `Completed`, `Pending`, `Blocked`) with dynamic live count indicators
   - Avatar circle with gradient color derived from client name hash
-  - Status badges: `COMPLETED` (green), `FLAGGED` (yellow), `PENDING` (amber), `BLOCKED` (red)
+  - Status badges: `UNASSIGNED`, `COMPLETED` (green), `FLAGGED` (yellow), `PENDING` (amber), `BLOCKED` (red)
   - Quick Register Client inline form (name + email)
   - Action buttons per client: **Download** (ZIP archive), **Flag** (toggle completion), **Block** (toggle access), **Delete** (with confirmation)
   - Stats per client: photos allocated, photos selected, registration date
