@@ -8,6 +8,7 @@ All notable changes to the `obm-new-version` project will be documented in this 
 - **Visual Contrast & Light Theme Fixes**:
   - **"Upload Photos" Button**: Updated `.cm-unassigned-banner button` to solid Indigo fill (`#4f46e5`) with **crisp bold pure white text** (`color: #ffffff !important`), fixing the dull washed-out text issue in Light Theme.
   - **Navbar Hover Expanded Title Contrast**: Updated `.nav-link:hover .nav-label` and `.floating-nav-pill .nav-link:hover .nav-label` in Light Theme (Pearl White) to render expanded title text ("Albums", "Selection", "Packages", etc.) in **high-contrast dark slate** (`#0f172a !important`), fixing the white-on-white text invisibility issue.
+  - **Most Popular Card Badge**: Removed `overflow: hidden` from the base `.glass-card` styling in `styles.css` and added custom high-contrast opaque background overrides for badges in Light Theme. This resolves the badge clipping issue on the package cards, making the "Most Popular" badge fully visible.
 - **Client Manager (Tab 3)** — Complete professional client directory rewrite:
   - **Unassigned Client Handling (`totalPhotos === 0`)**:
     - **Single Action Button (Delete Only)**: Newly registered clients with 0 allocated photos hide Download, Flag, and Block action buttons, showing **ONLY the Delete button** (`trash-2`).
