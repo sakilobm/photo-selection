@@ -46,15 +46,19 @@
         <a href="index.html#portfolio" class="nav-link">Portfolio</a>
       </div>
 
-      <!-- GLOBAL THEME SWITCHER -->
+      <!-- DUAL-LAYER THEME SWITCHER -->
       <div class="global-theme-switcher shrink-0">
-        <label>Theme</label>
-        <button class="theme-switcher-dot bg-sky-500"    data-theme="sapphire" title="Sapphire Ice"    onclick="OBMTheme.set('sapphire')"></button>
-        <button class="theme-switcher-dot bg-purple-500" data-theme="amethyst" title="Amethyst Glow"   onclick="OBMTheme.set('amethyst')"></button>
-        <button class="theme-switcher-dot bg-emerald-500"data-theme="emerald"  title="Emerald Forest"  onclick="OBMTheme.set('emerald')"></button>
-        <button class="theme-switcher-dot bg-rose-500"   data-theme="rose"     title="Rose Quartz"     onclick="OBMTheme.set('rose')"></button>
-        <button class="theme-switcher-dot bg-amber-500"  data-theme="amber"    title="Amber Sunset"    onclick="OBMTheme.set('amber')"></button>
-        <button class="theme-switcher-dot bg-white border border-slate-300 shadow-sm" data-theme="white" title="Pearl White" onclick="OBMTheme.set('white')"></button>
+        <div class="theme-mode-toggle">
+          <button class="mode-toggle-btn active" data-mode="dark" onclick="OBMTheme.setMode('dark')" title="Black Theme (Dark)">Dark</button>
+          <button class="mode-toggle-btn" data-mode="light" onclick="OBMTheme.setMode('light')" title="White Theme (Light)">Light</button>
+        </div>
+        <div class="theme-color-dots">
+          <button class="theme-switcher-dot bg-sky-500" data-theme="sapphire" title="Sky Blue" onclick="OBMTheme.setAccent('sapphire')"></button>
+          <button class="theme-switcher-dot bg-purple-500" data-theme="amethyst" title="Purple" onclick="OBMTheme.setAccent('amethyst')"></button>
+          <button class="theme-switcher-dot bg-emerald-500" data-theme="emerald" title="Green" onclick="OBMTheme.setAccent('emerald')"></button>
+          <button class="theme-switcher-dot bg-rose-500" data-theme="rose" title="Red" onclick="OBMTheme.setAccent('rose')"></button>
+          <button class="theme-switcher-dot bg-amber-500" data-theme="amber" title="Yellow" onclick="OBMTheme.setAccent('amber')"></button>
+        </div>
       </div>
 
       <a href="index.html" class="btn-primary btn-gold text-xs py-2.5 px-4 shrink-0 whitespace-nowrap">

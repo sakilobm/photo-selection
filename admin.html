@@ -185,6 +185,27 @@
       background: radial-gradient(circle at 50% -20%, #e0e7ff 0%, #f1f5f9 50%, #f8fafc 100%) !important;
       color: #0f172a !important;
     }
+    html.theme-light .admin-lock-modal {
+      background: rgba(248, 250, 252, 0.94) !important;
+    }
+    html.theme-light .admin-lock-card {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border-color: rgba(0, 0, 0, 0.1) !important;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1), 0 0 50px rgba(var(--theme-accentRGB), 0.1) !important;
+    }
+    html.theme-light .admin-lock-card h2 {
+      color: #0f172a !important;
+    }
+    html.theme-light .admin-lock-card p {
+      color: #475569 !important;
+    }
+    html.theme-light .admin-lock-hint-box {
+      background: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+    }
+    html.theme-light .admin-lock-hint-box span {
+      color: #64748b !important;
+    }
     html.theme-light .top-glass-bar,
     html.theme-light .hero-banner-card,
     html.theme-light .kpi-card,
@@ -246,7 +267,7 @@
         </button>
       </form>
 
-      <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs">
+      <div class="admin-lock-hint-box p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs">
         <span class="text-slate-400">Default Passcode:</span>
         <button onclick="autofillPasscode()" class="text-cyan-400 font-mono font-bold hover:underline">ADMIN2026</button>
       </div>
@@ -278,14 +299,19 @@
 
     <!-- Right Controls: Theme dots + View Switcher -->
     <div class="flex items-center gap-4">
-      <div class="global-theme-switcher">
-        <label>THEME</label>
-        <button class="theme-switcher-dot bg-sky-500"    data-theme="sapphire" title="Sapphire Ice"    onclick="OBMTheme.set('sapphire')"></button>
-        <button class="theme-switcher-dot bg-purple-500" data-theme="amethyst" title="Amethyst Glow"   onclick="OBMTheme.set('amethyst')"></button>
-        <button class="theme-switcher-dot bg-emerald-500"data-theme="emerald"  title="Emerald Forest"  onclick="OBMTheme.set('emerald')"></button>
-        <button class="theme-switcher-dot bg-rose-500"   data-theme="rose"     title="Rose Quartz"     onclick="OBMTheme.set('rose')"></button>
-        <button class="theme-switcher-dot bg-amber-500"  data-theme="amber"    title="Amber Sunset"    onclick="OBMTheme.set('amber')"></button>
-        <button class="theme-switcher-dot bg-white border border-slate-300 shadow-sm" data-theme="white" title="Pearl White" onclick="OBMTheme.set('white')"></button>
+      <!-- DUAL-LAYER THEME SWITCHER -->
+      <div class="global-theme-switcher shrink-0">
+        <div class="theme-mode-toggle">
+          <button class="mode-toggle-btn active" data-mode="dark" onclick="OBMTheme.setMode('dark')" title="Black Theme (Dark)">Dark</button>
+          <button class="mode-toggle-btn" data-mode="light" onclick="OBMTheme.setMode('light')" title="White Theme (Light)">Light</button>
+        </div>
+        <div class="theme-color-dots">
+          <button class="theme-switcher-dot bg-sky-500" data-theme="sapphire" title="Sky Blue" onclick="OBMTheme.setAccent('sapphire')"></button>
+          <button class="theme-switcher-dot bg-purple-500" data-theme="amethyst" title="Purple" onclick="OBMTheme.setAccent('amethyst')"></button>
+          <button class="theme-switcher-dot bg-emerald-500" data-theme="emerald" title="Green" onclick="OBMTheme.setAccent('emerald')"></button>
+          <button class="theme-switcher-dot bg-rose-500" data-theme="rose" title="Red" onclick="OBMTheme.setAccent('rose')"></button>
+          <button class="theme-switcher-dot bg-amber-500" data-theme="amber" title="Yellow" onclick="OBMTheme.setAccent('amber')"></button>
+        </div>
       </div>
 
       <!-- Pill Toggle Workspace Switcher -->
