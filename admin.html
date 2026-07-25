@@ -416,6 +416,29 @@
     html.theme-light .cm-unassigned-banner svg {
       color: #4f46e5 !important;
     }
+    .cm-unassigned-banner button,
+    .cm-unassigned-banner button *,
+    html.theme-light .cm-unassigned-banner button,
+    html.theme-light .cm-unassigned-banner button * {
+      color: #ffffff !important;
+      background-color: #4f46e5 !important;
+      font-weight: 800 !important;
+    }
+    .cm-unassigned-banner button:hover,
+    html.theme-light .cm-unassigned-banner button:hover {
+      background-color: #4338ca !important;
+    }
+
+    /* ── Light Theme Navbar Hover Label Contrast Override ── */
+    html.theme-light .nav-link .nav-label,
+    html.theme-light .nav-link:hover .nav-label,
+    html.theme-light .nav-link.active .nav-label,
+    html.theme-light .floating-nav-pill .nav-link .nav-label,
+    html.theme-light .floating-nav-pill .nav-link:hover .nav-label,
+    html.theme-light .floating-nav-pill .nav-link.active .nav-label {
+      color: #0f172a !important;
+      font-weight: 800 !important;
+    }
 
     /* ── Flag Button High Contrast Styling ── */
     html.theme-light .cm-btn-flag-active {
@@ -508,7 +531,7 @@
       <a href="photo-selection.html" class="nav-link" title="Photo Selection"><i data-lucide="check-square"></i><span class="nav-label">Selection</span></a>
       <a href="digital-album.html" class="nav-link" title="Digital Albums"><i data-lucide="book-open"></i><span class="nav-label">Albums</span></a>
       <a href="live-event.html" class="nav-link" title="Live Broadcast"><i data-lucide="radio"></i><span class="nav-label">Live Event</span></a>
-      <a href="admin.html" class="nav-link active" style="color:#a78bfa" title="Admin Command Center"><i data-lucide="shield-check"></i><span class="nav-label">Admin ⚙️</span></a>
+      <a href="admin.html" class="nav-link active" style="color:#a78bfa" title="Admin Command Center"><i data-lucide="shield-check"></i><span class="nav-label">Admin</span></a>
     </div>
 
     <!-- Right Controls: Theme dots + View Switcher -->
@@ -1257,8 +1280,8 @@
               <i data-lucide="folder-plus" class="w-4 h-4 text-indigo-400 shrink-0"></i>
               <span class="text-[11px] text-indigo-200 font-medium">No photos assigned yet. Use 'Upload & Send' to allocate photos to this client.</span>
             </div>
-            <button onclick="switchDashTab('upload'); preselectUploadClient('${email}')" class="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/40 transition-colors shrink-0 flex items-center gap-1.5 border border-indigo-400/30">
-              Upload Photos <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            <button onclick="switchDashTab('upload'); preselectUploadClient('${email}')" class="text-[10px] font-black px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-md transition-all shrink-0 flex items-center gap-1.5 border border-indigo-400/40" style="color:#ffffff !important; background-color:#4f46e5 !important;">
+              Upload Photos <i data-lucide="arrow-right" class="w-3.5 h-3.5" style="color:#ffffff !important;"></i>
             </button>
           </div>`;
         } else if (p.flagged) {

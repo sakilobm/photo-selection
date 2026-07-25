@@ -5,8 +5,9 @@ All notable changes to the `obm-new-version` project will be documented in this 
 ## [2.2.0] - 2026-07-25
 
 ### Added — Studio Dashboard Full Feature Upgrade (`admin.html`, `admin-store.js`)
-- **Upload & Send (Tab 8)** — Full dispatch engine:
-  - **Button Contrast Fix**: Updated `#upload-dispatch-btn` ("Dispatch to Client Portal") to force crisp pure white text (`color: #ffffff !important`) across both Dark and Light (Pearl White) themes instead of hardcoded black text.
+- **Visual Contrast & Light Theme Fixes**:
+  - **"Upload Photos" Button**: Updated `.cm-unassigned-banner button` to solid Indigo fill (`#4f46e5`) with **crisp bold pure white text** (`color: #ffffff !important`), fixing the dull washed-out text issue in Light Theme.
+  - **Navbar Hover Expanded Title Contrast**: Updated `.nav-link:hover .nav-label` and `.floating-nav-pill .nav-link:hover .nav-label` in Light Theme (Pearl White) to render expanded title text ("Albums", "Selection", "Packages", etc.) in **high-contrast dark slate** (`#0f172a !important`), fixing the white-on-white text invisibility issue.
 - **Client Manager (Tab 3)** — Complete professional client directory rewrite:
   - **Unassigned Client Handling (`totalPhotos === 0`)**:
     - **Single Action Button (Delete Only)**: Newly registered clients with 0 allocated photos hide Download, Flag, and Block action buttons, showing **ONLY the Delete button** (`trash-2`).

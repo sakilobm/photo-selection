@@ -586,10 +586,11 @@ html.theme-light .floating-nav-pill {
   border-color: rgba(0, 0, 0, 0.1) !important;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 0 20px rgba(37, 99, 235, 0.1) !important;
 }
-html.theme-light .floating-nav-pill .nav-link {
+html.theme-light .floating-nav-pill .nav-link,
+html.theme-light .floating-nav-pill .nav-link .nav-label,
+html.theme-light .nav-link .nav-label {
   color: #475569 !important;
-  background: rgba(0, 0, 0, 0.04) !important;
-  border-color: rgba(0, 0, 0, 0.06) !important;
+  font-weight: 700 !important;
 }
 html.theme-light .floating-nav-pill .nav-link i,
 html.theme-light .floating-nav-pill .nav-link svg {
@@ -597,17 +598,30 @@ html.theme-light .floating-nav-pill .nav-link svg {
 }
 html.theme-light .floating-nav-pill .nav-link:hover {
   color: #0f172a !important;
-  background: rgba(0, 0, 0, 0.08) !important;
-  border-color: rgba(0, 0, 0, 0.12) !important;
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+html.theme-light .floating-nav-pill .nav-link:hover .nav-label,
+html.theme-light .nav-link:hover .nav-label {
+  color: #0f172a !important;
+  font-weight: 800 !important;
 }
 html.theme-light .floating-nav-pill .nav-link:hover i,
-html.theme-light .floating-nav-pill .nav-link:hover svg {
+html.theme-light .floating-nav-pill .nav-link:hover svg,
+html.theme-light .nav-link:hover i,
+html.theme-light .nav-link:hover svg {
   color: #0f172a !important;
 }
 html.theme-light .floating-nav-pill .nav-link.active {
-  color: var(--theme-accent) !important;
-  background: rgba(var(--theme-accentRGB), 0.14) !important;
+  color: #0f172a !important;
+  background: #ffffff !important;
   border-color: rgba(var(--theme-accentRGB), 0.35) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+}
+html.theme-light .floating-nav-pill .nav-link.active .nav-label,
+html.theme-light .nav-link.active .nav-label {
+  color: #0f172a !important;
 }
 html.theme-light .floating-nav-pill .nav-link.active i,
 html.theme-light .floating-nav-pill .nav-link.active svg {
