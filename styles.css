@@ -136,19 +136,60 @@ h1,h2,h3,h4,h5 { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; lin
   box-shadow: 0 22px 55px rgba(0,0,0,0.8), 0 0 40px rgba(0,210,255,0.18);
 }
 
+/* ═══════════════════════════════════════
+   ICON-FIRST HOVER EXPAND NAV LINKS
+═══════════════════════════════════════ */
 .nav-link {
   color: #94a3b8; font-size: 0.825rem; font-weight: 600;
-  text-decoration: none; padding: 6px 12px; border-radius: var(--r-full);
+  text-decoration: none; padding: 7px 10px; border-radius: var(--r-full);
   white-space: nowrap !important;
-  display: inline-flex; align-items: center; gap: 4px;
-  transition: all 0.3s var(--ease);
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer; position: relative; overflow: hidden;
 }
-.nav-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
+
+.nav-link i, .nav-link svg {
+  width: 15px; height: 15px; flex-shrink: 0;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.nav-link .nav-label {
+  display: inline-block;
+  max-width: 0; opacity: 0; transform: translateX(-8px);
+  transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, transform 0.35s ease;
+  white-space: nowrap; pointer-events: none; font-weight: 700;
+}
+
+/* Hover OR Active state expands label smoothly! */
+.nav-link:hover .nav-label,
+.nav-link.active .nav-label {
+  max-width: 140px; opacity: 1; transform: translateX(0);
+}
+
+.nav-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding: 7px 14px;
+}
+
+.nav-link:hover i, .nav-link:hover svg {
+  transform: scale(1.15); color: #ffffff;
+}
+
 .nav-link.active {
-  color: var(--cyan);
-  background: rgba(0,210,255,0.1);
-  border: 1px solid rgba(0,210,255,0.25);
-  box-shadow: 0 0 18px rgba(0,210,255,0.2);
+  color: var(--theme-accent, #00d2ff);
+  background: rgba(var(--theme-accentRGB, 0, 210, 255), 0.15);
+  border-color: rgba(var(--theme-accentRGB, 0, 210, 255), 0.35);
+  box-shadow: 0 0 20px rgba(var(--theme-accentRGB, 0, 210, 255), 0.25);
+  padding: 7px 14px;
+}
+
+.nav-link.active i, .nav-link.active svg {
+  color: var(--theme-accent, #00d2ff);
 }
 
 /* ═══════════════════════════════════════
@@ -521,15 +562,18 @@ html.theme-light .floating-nav-pill {
 }
 html.theme-light .floating-nav-pill .nav-link {
   color: #475569 !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
 }
 html.theme-light .floating-nav-pill .nav-link:hover {
   color: #0f172a !important;
-  background: rgba(0, 0, 0, 0.06) !important;
+  background: rgba(0, 0, 0, 0.08) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
 }
 html.theme-light .floating-nav-pill .nav-link.active {
   color: var(--theme-accent) !important;
-  background: rgba(var(--theme-accentRGB), 0.12) !important;
-  border-color: rgba(var(--theme-accentRGB), 0.3) !important;
+  background: rgba(var(--theme-accentRGB), 0.14) !important;
+  border-color: rgba(var(--theme-accentRGB), 0.35) !important;
 }
 
 html.theme-light .global-theme-switcher {
