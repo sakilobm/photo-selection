@@ -6,11 +6,20 @@ All notable changes to the `obm-new-version` project will be documented in this 
 
 ### Added — Studio Dashboard Full Feature Upgrade (`admin.html`, `admin-store.js`)
 - **Client Manager (Tab 3)** — Complete professional client directory rewrite:
+  - **Visual Status Differentiation for Client Cards**:
+    - **Completed**: Emerald green left accent bar (`border-left: 5px solid #10b981`) & subtle emerald glass tint
+    - **Flagged**: Warm amber left accent bar (`border-left: 5px solid #f59e0b`) & golden glass glow with high-contrast info banner
+    - **Pending**: Sky blue left accent bar (`border-left: 5px solid #0284c7`) & subtle cyan glass backdrop
+    - **Blocked**: Rose red left accent bar (`border-left: 5px solid #f43f5e`) & red tinted overlay
+  - **Light Theme (Pearl White) Visual Detail & Contrast Overrides**:
+    - Fixed washed-out left border bars in Light Theme by applying explicit 5px `border-left` status overrides and soft status ambient glows (`box-shadow: 0 12px 35px rgba(..., 0.18)`).
+    - Fixed unreadable yellow info text in Light Theme by targeting `.cm-flagged-banner` with high-contrast dark amber text (`#78350f`), amber icon (`#d97706`), and soft yellow fill (`rgba(254, 243, 199, 0.95)`).
+    - Fixed low-contrast email & meta counts in Light Theme (`.cm-client-email`, `.cm-client-meta`) using crisp dark slate (`#475569` and `#334155`).
+  - **Status Quick-Filter Bar**: Interactive status pills (`All`, `Flagged`, `Completed`, `Pending`, `Blocked`) with dynamic live count indicators
   - Avatar circle with gradient color derived from client name hash
   - Status badges: `COMPLETED` (green), `FLAGGED` (yellow), `PENDING` (amber), `BLOCKED` (red)
   - Quick Register Client inline form (name + email)
   - Action buttons per client: **Download** (ZIP archive), **Flag** (toggle completion), **Block** (toggle access), **Delete** (with confirmation)
-  - Flagged clients show info banner: "This client has been flagged as already selected/sent."
   - Stats per client: photos allocated, photos selected, registration date
 - **Deleted Detection (Tab 7)** — Full approved vs rejected comparison panel:
   - Client selector dropdown with selection counts
