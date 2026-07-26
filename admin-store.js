@@ -31,10 +31,67 @@
       studioFounders: 'Husband & Wife Team'
     },
     packages: [
-      { id: 'silver', name: 'Silver Royal', price: 65000, badge: 'Essential Wedding', desc: 'Complete ceremony coverage with dual cameras & traditional film.', popular: false },
-      { id: 'gold', name: 'Gold Elite', price: 145000, badge: 'Cinematic & Drone', desc: 'Complete candid, cinematic films & aerial drone shots.', popular: true },
-      { id: 'platinum', name: 'Platinum Plus', price: 285000, badge: 'Complete Cinema + LED', desc: 'Full multi-day wedding, 4K aerial, pre-wedding & LED wall broadcast.', popular: false },
-      { id: 'imperial', name: 'Imperial Stage', price: 450000, badge: 'Ultra Luxury Experience', desc: 'Unrestricted coverage, 5+ crew, live broadcast, drone, luxury albums & VR film.', popular: false }
+      {
+        id: 'silver',
+        name: 'Silver Royal',
+        price: 65000,
+        badge: 'Essential Coverage',
+        desc: 'Ideal for traditional rituals & intimate family ceremonies.',
+        popular: false,
+        features: [
+          '1 Senior Traditional Photographer',
+          '1 Traditional HD Videographer',
+          '1 Artistic Candid Photographer',
+          '40 Page Synthetic Flush Mount Album'
+        ]
+      },
+      {
+        id: 'gold',
+        name: 'Gold Elite',
+        price: 145000,
+        badge: 'Cinematic & Drone',
+        desc: 'Complete candid, cinematic films & aerial drone shots.',
+        popular: true,
+        features: [
+          '2 Candid Photographers & 1 Cinematographer',
+          '4K Drone Operator (Aerial Venue Coverage)',
+          'Outdoor Pre-Wedding Film Teaser',
+          '50 Page Luxury Album + Acrylic Glass Box',
+          'Digital Photo Selection Portal Access'
+        ]
+      },
+      {
+        id: 'platinum',
+        name: 'Platinum Plus',
+        price: 285000,
+        badge: 'Grand Wedding Cinema',
+        desc: 'Full 4K cinema team, dual drones, and premium leather albums.',
+        popular: false,
+        features: [
+          'Full Cinema Crew (3 Candid + 2 Traditional)',
+          '2 Dual 4K Cinema Drones (Day & Night)',
+          'Full Length Wedding Film + 3 min Trailer',
+          '2 Luxury Leather Canvases + 2 Parent Albums',
+          'Digital Flipbook Album Viewer Included',
+          'Private Client Photo Selection Portal'
+        ]
+      },
+      {
+        id: 'imperial',
+        name: 'Imperial Stage',
+        price: 450000,
+        badge: 'Stage & LED Production',
+        desc: 'Massive LED wall screens, live multi-camera broadcast & crane rigs.',
+        popular: false,
+        features: [
+          'Massive High-Definition LED Video Wall Setup',
+          'Multi-Cam Live Streaming & Stage Crane Jib',
+          'Complete Photography & Cinematography Crew',
+          'Unlimited Albums & Instant Photo Selection',
+          '4K Drone Aerial Coverage Full Event',
+          'VIP Priority Delivery (48hrs Digital)'
+        ]
+      }
     ],
     addons: {
       drone: 20000,
@@ -144,6 +201,16 @@
                   addedDate: p.addedDate || new Date().toISOString().split('T')[0]
                 };
               });
+            } else if (key === 'packages' && Array.isArray(parsed[key])) {
+              // Merge packages: ensure features are present
+              merged.packages = DEFAULT_DATA.packages.map(defPkg => {
+                const userPkg = parsed.packages.find(p => p.id === defPkg.id) || {};
+                return {
+                  ...defPkg,
+                  ...userPkg,
+                  features: userPkg.features || defPkg.features
+                };
+              });
             } else {
               merged[key] = parsed[key];
             }
@@ -189,6 +256,19 @@
         pkg.price = parseInt(newPrice) || pkg.price;
         this.save();
       }
+    }
+
+    updatePackage(id, updatedFields) {
+      const pkg = this.data.packages.find(p => p.id === id);
+      if (pkg) {
+        Object.assign(pkg, updatedFields);
+        this.save();
+      }
+    }
+
+    resetPackages() {
+      this.data.packages = JSON.parse(JSON.stringify(DEFAULT_DATA.packages));
+      this.save();
     }
 
     updateAddonPrice(addonKey, newPrice) {

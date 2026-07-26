@@ -5,10 +5,16 @@ All notable changes to the `obm-new-version` project will be documented in this 
 ## [2.2.0] - 2026-07-25
 
 ### Added — Studio Dashboard Full Feature Upgrade (`admin.html`, `admin-store.js`)
+- **Packages & Price Tab Upgrade (Dynamic Visual Editor)**:
+  - **Dynamic Card Manager**: Completely redesigned the Packages tab into a modern, responsive grid of styled editors matching each package's visual accents (gold for Gold Elite, purple for Imperial, etc.).
+  - **Full Edit Capabilities**: Studio administrators can now edit the **Package Name, Price, Pill Badge, Subtitle/Description**, and dynamically manage the **Highlights list** (allowing adding/removing feature bullet points dynamically).
+  - **Restore to Default**: Added a *"Reset to Defaults"* fallback option to restore the original preset studio packages at any time.
+  - **Dynamic Public Integration**: Replaced the hardcoded cards in `packages.html` with a dynamic template generator reading directly from `OBMStore.data.packages`, propagating edits instantly to public visitors.
 - **Visual Contrast & Light Theme Fixes**:
   - **"Upload Photos" Button**: Updated `.cm-unassigned-banner button` to solid Indigo fill (`#4f46e5`) with **crisp bold pure white text** (`color: #ffffff !important`), fixing the dull washed-out text issue in Light Theme.
   - **Navbar Hover Expanded Title Contrast**: Updated `.nav-link:hover .nav-label` and `.floating-nav-pill .nav-link:hover .nav-label` in Light Theme (Pearl White) to render expanded title text ("Albums", "Selection", "Packages", etc.) in **high-contrast dark slate** (`#0f172a !important`), fixing the white-on-white text invisibility issue.
   - **Most Popular Card Badge**: Removed `overflow: hidden` from the base `.glass-card` styling in `styles.css` and added custom high-contrast opaque background overrides for badges in Light Theme. This resolves the badge clipping issue on the package cards, making the "Most Popular" badge fully visible.
+  - **Dashboard Tab Switcher & Dropdown Pre-selection**: Fixed a JavaScript error in `switchDashTab` by dynamically resolving the navbar button if none is passed. Updated `preselectUploadClient` to map the client's email to their dynamic code inside the `upload-client-select` dropdown to ensure target client email is automatically selected upon redirection.
 - **Client Manager (Tab 3)** — Complete professional client directory rewrite:
   - **Unassigned Client Handling (`totalPhotos === 0`)**:
     - **Single Action Button (Delete Only)**: Newly registered clients with 0 allocated photos hide Download, Flag, and Block action buttons, showing **ONLY the Delete button** (`trash-2`).

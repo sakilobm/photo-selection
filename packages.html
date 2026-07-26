@@ -13,7 +13,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Global theme engine & admin store -->
   <script src="theme.js"></script>
-  <script src="admin-store.js"></script>
+  <script src="admin-store.js?v=2.2.1"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -107,161 +107,8 @@
 
   <!-- ══════ PACKAGES GRID ══════ -->
   <section class="pt-20 pb-12 px-6 md:px-12 max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
-
-      <!-- Tier 1: Silver Royal -->
-      <div class="glass-card p-8 flex flex-col justify-between relative group" data-reveal>
-        <div class="space-y-6">
-          <div class="space-y-2">
-            <span class="badge">Essential Coverage</span>
-            <h3 class="text-2xl font-bold text-white font-['Outfit']">Silver Royal</h3>
-            <p class="text-xs text-slate-400">Ideal for traditional rituals &amp; intimate family ceremonies.</p>
-          </div>
-          <div class="py-4 border-y border-slate-800">
-            <div class="text-3xl font-extrabold text-white font-['Outfit']">₹65,000</div>
-            <span class="text-[11px] text-slate-400">All inclusive • Per Event Day</span>
-          </div>
-          <ul class="space-y-3 text-xs text-slate-300">
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-slate-400 flex-shrink-0"></i><span>1 Senior Traditional Photographer</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-slate-400 flex-shrink-0"></i><span>1 Traditional HD Videographer</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-slate-400 flex-shrink-0"></i><span>1 Artistic Candid Photographer</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-slate-400 flex-shrink-0"></i><span>40 Page Synthetic Flush Mount Album</span></li>
-            <li class="flex items-center gap-2.5 opacity-40"><i data-lucide="x" class="w-4 h-4 flex-shrink-0"></i><span
-                class="line-through">4K Drone Aerial Filming</span></li>
-            <li class="flex items-center gap-2.5 opacity-40"><i data-lucide="x" class="w-4 h-4 flex-shrink-0"></i><span
-                class="line-through">LED Wall Stage Broadcast</span></li>
-          </ul>
-        </div>
-        <button onclick="selectPackage('Silver Royal', 65000)"
-          class="btn-ghost w-full justify-center mt-8 text-xs py-3">
-          Book Silver Royal
-        </button>
-      </div>
-
-      <!-- Tier 2: Gold Elite (Most Popular) -->
-      <div class="glass-card p-8 flex flex-col justify-between relative scale-105 z-10 border-amber-500/40" data-reveal
-        style="background-image:linear-gradient(rgba(30,15,0,0.6),rgba(7,13,24,0.85)),linear-gradient(135deg,rgba(255,183,3,0.5) 0%,rgba(167,139,250,0.2) 50%,rgba(255,183,3,0.4) 100%); box-shadow: 0 0 60px rgba(255,183,3,0.2);">
-        <div
-          class="absolute -top-4 left-1/2 -translate-x-1/2 badge badge-gold shadow-lg whitespace-nowrap flex items-center gap-1.5">
-          <i data-lucide="flame" class="w-3.5 h-3.5 text-amber-400"></i> Most Popular
-        </div>
-        <div class="space-y-6 pt-2">
-          <div class="space-y-2">
-            <span class="badge badge-gold">Cinematic &amp; Drone</span>
-            <h3 class="text-2xl font-bold text-white font-['Outfit']">Gold Elite</h3>
-            <p class="text-xs text-amber-200/80">Complete candid, cinematic films &amp; aerial drone shots.</p>
-          </div>
-          <div class="py-4 border-y border-amber-500/30">
-            <div class="text-4xl font-extrabold text-amber-400 font-['Outfit']">₹1,45,000</div>
-            <span class="text-[11px] text-amber-200/60">All inclusive • 2 Event Days</span>
-          </div>
-          <ul class="space-y-3 text-xs text-slate-200">
-            <li class="flex items-center gap-2.5"><i data-lucide="check-circle"
-                class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>2 Candid Photographers &amp; 1
-                Cinematographer</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check-circle"
-                class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>4K Drone Operator (Aerial Venue Coverage)</span>
-            </li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check-circle"
-                class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>Outdoor Pre-Wedding Film Teaser</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check-circle"
-                class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>50 Page Luxury Album + Acrylic Glass Box</span>
-            </li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check-circle"
-                class="w-4 h-4 text-amber-400 flex-shrink-0"></i><span>Digital Photo Selection Portal Access</span></li>
-            <li class="flex items-center gap-2.5 opacity-40"><i data-lucide="x" class="w-4 h-4 flex-shrink-0"></i><span
-                class="line-through">LED Wall Stage Screen Setup</span></li>
-          </ul>
-        </div>
-        <button onclick="selectPackage('Gold Elite', 145000)"
-          class="btn-primary btn-gold w-full justify-center mt-8 text-xs py-3.5">
-          Select Gold Elite
-        </button>
-      </div>
-
-      <!-- Tier 3: Platinum Plus -->
-      <div class="glass-card p-8 flex flex-col justify-between relative group" data-reveal>
-        <div class="space-y-6">
-          <div class="space-y-2">
-            <span class="badge badge-cyan">Grand Wedding Cinema</span>
-            <h3 class="text-2xl font-bold text-white font-['Outfit']">Platinum Plus</h3>
-            <p class="text-xs text-slate-400">Full 4K cinema team, dual drones, and premium leather albums.</p>
-          </div>
-          <div class="py-4 border-y border-slate-800">
-            <div class="text-3xl font-extrabold grad-cyan font-['Outfit']"
-              style="-webkit-text-fill-color:var(--theme-accent)">₹2,85,000</div>
-            <span class="text-[11px] text-slate-400">All inclusive • 3 Event Days</span>
-          </div>
-          <ul class="space-y-3 text-xs text-slate-300">
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>Full Cinema Crew (3 Candid + 2
-                Traditional)</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>2 Dual 4K Cinema Drones (Day &amp;
-                Night)</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>Full Length Wedding Film + 3 min
-                Trailer</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>2 Luxury Leather Canvases + 2 Parent
-                Albums</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>Digital Flipbook Album Viewer
-                Included</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-[var(--theme-accent)] flex-shrink-0"></i><span>Private Client Photo Selection
-                Portal</span></li>
-          </ul>
-        </div>
-        <button onclick="selectPackage('Platinum Plus', 285000)"
-          class="btn-primary w-full justify-center mt-8 text-xs py-3">
-          Select Platinum Plus
-        </button>
-      </div>
-
-      <!-- Tier 4: Imperial Stage & LED -->
-      <div class="glass-card p-8 flex flex-col justify-between relative group" data-reveal>
-        <div class="space-y-6">
-          <div class="space-y-2">
-            <span class="badge badge-purple">Stage &amp; LED Production</span>
-            <h3 class="text-2xl font-bold text-white font-['Outfit']">Imperial Stage</h3>
-            <p class="text-xs text-slate-400">Massive LED wall screens, live multi-camera broadcast &amp; crane rigs.
-            </p>
-          </div>
-          <div class="py-4 border-y border-slate-800">
-            <div class="text-3xl font-extrabold text-purple-400 font-['Outfit']">₹4,50,000</div>
-            <span class="text-[11px] text-slate-400">All inclusive • Full Stage Crew</span>
-          </div>
-          <ul class="space-y-3 text-xs text-slate-300">
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>Massive High-Definition LED Video Wall
-                Setup</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>Multi-Cam Live Streaming &amp; Stage Crane
-                Jib</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>Complete Photography &amp; Cinematography
-                Crew</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>Unlimited Albums &amp; Instant Photo
-                Selection</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>4K Drone Aerial Coverage Full Event</span></li>
-            <li class="flex items-center gap-2.5"><i data-lucide="check"
-                class="w-4 h-4 text-purple-400 flex-shrink-0"></i><span>VIP Priority Delivery (48hrs Digital)</span>
-            </li>
-          </ul>
-        </div>
-        <button onclick="selectPackage('Imperial Stage', 450000)"
-          class="btn-ghost w-full justify-center mt-8 text-xs py-3">
-          Select Imperial Stage
-        </button>
-      </div>
-
+    <div id="pricing-packages-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
+      <!-- Dynamically rendered via OBMStore -->
     </div>
   </section>
 
@@ -388,7 +235,93 @@
 
   <script src="toast.js"></script>
   <script>
+    function renderPackages() {
+      const container = document.getElementById('pricing-packages-grid');
+      if (!container) return;
+      
+      const packages = OBMStore.data.packages;
+      
+      container.innerHTML = packages.map(p => {
+        const formattedPrice = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p.price);
+        
+        let cardClass = 'glass-card p-8 flex flex-col justify-between relative group';
+        let cardStyle = '';
+        let badgeClass = 'badge';
+        let titleColorClass = 'text-white';
+        let priceColorClass = 'text-white';
+        let checkmarkColorClass = 'text-slate-400';
+        let checkIcon = 'check';
+        let btnClass = 'btn-ghost w-full justify-center mt-8 text-xs py-3';
+        let topBadgeHtml = '';
+        
+        if (p.id === 'silver') {
+          badgeClass = 'badge';
+        } else if (p.id === 'gold') {
+          cardClass = 'glass-card p-8 flex flex-col justify-between relative scale-105 z-10 border-amber-500/40';
+          cardStyle = 'background-image:linear-gradient(rgba(30,15,0,0.6),rgba(7,13,24,0.85)),linear-gradient(135deg,rgba(255,183,3,0.5) 0%,rgba(167,139,250,0.2) 50%,rgba(255,183,3,0.4) 100%); box-shadow: 0 0 60px rgba(255,183,3,0.2);';
+          badgeClass = 'badge badge-gold';
+          checkmarkColorClass = 'text-amber-400';
+          priceColorClass = 'text-amber-400';
+          checkIcon = 'check-circle';
+          btnClass = 'btn-primary btn-gold w-full justify-center mt-8 text-xs py-3.5';
+          topBadgeHtml = `
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 badge badge-gold shadow-lg whitespace-nowrap flex items-center gap-1.5">
+              <i data-lucide="flame" class="w-3.5 h-3.5 text-amber-400"></i> Most Popular
+            </div>
+          `;
+        } else if (p.id === 'platinum') {
+          badgeClass = 'badge badge-cyan';
+          checkmarkColorClass = 'text-[var(--theme-accent)]';
+          priceColorClass = 'grad-cyan';
+          btnClass = 'btn-primary w-full justify-center mt-8 text-xs py-3';
+        } else if (p.id === 'imperial') {
+          badgeClass = 'badge badge-purple';
+          checkmarkColorClass = 'text-purple-400';
+          priceColorClass = 'text-purple-400';
+          btnClass = 'btn-ghost w-full justify-center mt-8 text-xs py-3';
+        }
+        
+        const durationTag = p.id === 'silver' ? 'All inclusive • Per Event Day' :
+                            p.id === 'gold' ? 'All inclusive • 2 Event Days' :
+                            p.id === 'platinum' ? 'All inclusive • 3 Event Days' :
+                            'All inclusive • Full Stage Crew';
+                            
+        const featuresHtml = (p.features || []).map(feat => `
+          <li class="flex items-center gap-2.5">
+            <i data-lucide="${checkIcon}" class="w-4 h-4 ${checkmarkColorClass} flex-shrink-0"></i>
+            <span>${feat}</span>
+          </li>
+        `).join('');
+        
+        const priceStyle = p.id === 'platinum' ? 'style="-webkit-text-fill-color:var(--theme-accent)"' : '';
+        
+        return `
+          <div class="${cardClass}" style="${cardStyle}" data-reveal>
+            ${topBadgeHtml}
+            <div class="space-y-6 ${p.id === 'gold' ? 'pt-2' : ''}">
+              <div class="space-y-2">
+                <span class="${badgeClass}">${p.badge || 'Official Tier'}</span>
+                <h3 class="text-2xl font-bold text-white font-['Outfit']">${p.name}</h3>
+                <p class="text-xs text-slate-400">${p.desc || ''}</p>
+              </div>
+              <div class="py-4 border-y border-slate-800 ${p.id === 'gold' ? 'border-amber-500/30' : ''}">
+                <div class="text-3xl font-extrabold ${priceColorClass} font-['Outfit']" ${priceStyle}>${formattedPrice}</div>
+                <span class="text-[11px] text-slate-400 ${p.id === 'gold' ? 'text-amber-200/60' : ''}">${durationTag}</span>
+              </div>
+              <ul class="space-y-3 text-xs text-slate-300 text-left">
+                ${featuresHtml}
+              </ul>
+            </div>
+            <button onclick="selectPackage('${p.name}', ${p.price})" class="${btnClass}">
+              Select ${p.name}
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      renderPackages();
       if (window.lucide) lucide.createIcons();
 
       // Scroll reveal

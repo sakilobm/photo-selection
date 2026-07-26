@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="OBM Studio Owner & Admin Command Center — Full-spectrum workspace analytics, pricing config, live stream control, and client portal operations.">
+  <meta name="description"
+    content="OBM Studio Owner & Admin Command Center — Full-spectrum workspace analytics, pricing config, live stream control, and client portal operations.">
   <title>Studio Command Center | OBM Studio</title>
   <!-- Tailwind CSS (Production Warning Filtered) -->
-  <script>(function(){var w=console.warn;console.warn=function(){if(arguments[0]&&typeof arguments[0]==='string'&&arguments[0].includes('cdn.tailwindcss.com'))return;w.apply(console,arguments);};})();</script>
+  <script>(function () { var w = console.warn; console.warn = function () { if (arguments[0] && typeof arguments[0] === 'string' && arguments[0].includes('cdn.tailwindcss.com')) return; w.apply(console, arguments); }; })();</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Global theme engine & admin store -->
   <script src="theme.js"></script>
-  <script src="admin-store.js"></script>
+  <script src="admin-store.js?v=2.2.1"></script>
   <link rel="stylesheet" href="styles.css">
   <style>
     /* ═══════════════════════════════════════════
@@ -26,53 +28,120 @@
 
     /* Floating Liquid Aurora Blobs */
     .dashboard-aurora-bg {
-      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
     }
+
     .dash-blob {
-      position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.25;
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.25;
       animation: blobFloat 25s infinite alternate ease-in-out;
     }
-    .dash-blob-1 { top: -10%; left: 20%; width: 500px; height: 500px; background: #6366f1; }
-    .dash-blob-2 { top: 30%; right: 10%; width: 600px; height: 600px; background: #a855f7; animation-delay: -5s; }
-    .dash-blob-3 { bottom: -10%; left: 30%; width: 550px; height: 550px; background: #06b6d4; animation-delay: -10s; }
+
+    .dash-blob-1 {
+      top: -10%;
+      left: 20%;
+      width: 500px;
+      height: 500px;
+      background: #6366f1;
+    }
+
+    .dash-blob-2 {
+      top: 30%;
+      right: 10%;
+      width: 600px;
+      height: 600px;
+      background: #a855f7;
+      animation-delay: -5s;
+    }
+
+    .dash-blob-3 {
+      bottom: -10%;
+      left: 30%;
+      width: 550px;
+      height: 550px;
+      background: #06b6d4;
+      animation-delay: -10s;
+    }
 
     @keyframes blobFloat {
-      0% { transform: translate(0px, 0px) scale(1); }
-      50% { transform: translate(40px, -40px) scale(1.1); }
-      100% { transform: translate(-30px, 30px) scale(0.95); }
+      0% {
+        transform: translate(0px, 0px) scale(1);
+      }
+
+      50% {
+        transform: translate(40px, -40px) scale(1.1);
+      }
+
+      100% {
+        transform: translate(-30px, 30px) scale(0.95);
+      }
     }
 
     /* Top Glass Bar */
     .top-glass-bar {
-      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
-      width: calc(100% - 48px); max-width: 1400px; z-index: 50;
-      background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(25px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
-      padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 48px);
+      max-width: 1400px;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     }
 
     /* Main Container */
     .dashboard-container {
-      position: relative; z-index: 10;
-      max-width: 1400px; margin: 0 auto;
+      position: relative;
+      z-index: 10;
+      max-width: 1400px;
+      margin: 0 auto;
       padding: 110px 24px 60px 24px;
     }
 
     /* Workspace Switcher Pill Toggle */
     .view-toggle-pill {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 4px; border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(12px);
     }
+
     .view-toggle-btn {
-      padding: 8px 18px; border-radius: 999px; font-size: 12px; font-weight: 700;
-      color: rgba(255, 255, 255, 0.6); transition: all 0.3s ease; border: none; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
     }
+
     .view-toggle-btn.active {
-      background: var(--theme-accent, #3b82f6); color: #ffffff;
+      background: var(--theme-accent, #3b82f6);
+      color: #ffffff;
       box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
     }
 
@@ -81,38 +150,69 @@
       background: linear-gradient(135deg, rgba(30, 27, 75, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%);
       backdrop-filter: blur(30px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px; padding: 32px; position: relative; overflow: hidden;
+      border-radius: 24px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
+
     .hero-banner-card::before {
-      content: ''; position: absolute; top: 0; right: 0; width: 400px; height: 100%;
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 400px;
+      height: 100%;
       background: radial-gradient(circle at 100% 0%, rgba(168, 85, 247, 0.25) 0%, transparent 70%);
       pointer-events: none;
     }
 
     /* Scalable Horizontal Navigation Bar inside Banner Card */
     .dashboard-nav-bar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px; border-radius: 16px;
-      background: rgba(3, 7, 18, 0.6); border: 1px solid rgba(255, 255, 255, 0.08);
-      overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 16px;
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
       margin-top: 24px;
     }
-    .dashboard-nav-bar::-webkit-scrollbar { display: none; }
+
+    .dashboard-nav-bar::-webkit-scrollbar {
+      display: none;
+    }
 
     .dash-tab-btn {
-      flex-shrink: 0; padding: 10px 18px; border-radius: 12px;
-      font-size: 12px; font-weight: 700; color: rgba(255, 255, 255, 0.65);
-      background: transparent; border: 1px solid transparent;
-      cursor: pointer; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+      flex-shrink: 0;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.65);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
     }
+
     .dash-tab-btn:hover {
-      color: #ffffff; background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
       transform: translateY(-1px);
     }
+
     .dash-tab-btn.active {
-      background: #3b82f6; color: #ffffff;
+      background: #3b82f6;
+      color: #ffffff;
       border-color: rgba(255, 255, 255, 0.2);
       box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
     }
@@ -122,20 +222,30 @@
       background: rgba(15, 23, 42, 0.45);
       backdrop-filter: blur(20px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px; padding: 20px;
-      display: flex; align-items: center; gap: 16px;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
       transition: all 0.35s ease;
     }
+
     .kpi-card:hover {
       transform: translateY(-4px);
       border-color: rgba(255, 255, 255, 0.2);
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     }
+
     .kpi-icon-box {
-      width: 48px; height: 48px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 20px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
     }
 
     /* Glass Panels */
@@ -143,22 +253,29 @@
       background: rgba(15, 23, 42, 0.45);
       backdrop-filter: blur(24px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px; padding: 28px;
+      border-radius: 24px;
+      padding: 28px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       transition: all 0.3s ease;
     }
+
     .glass-panel-card:hover {
       border-color: rgba(255, 255, 255, 0.16);
     }
 
     /* Form Inputs */
     .dash-input {
-      width: 100%; padding: 12px 16px; border-radius: 14px;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 14px;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #ffffff; font-size: 13px; outline: none;
+      color: #ffffff;
+      font-size: 13px;
+      outline: none;
       transition: all 0.3s ease;
     }
+
     .dash-input:focus {
       border-color: #3b82f6;
       background: rgba(255, 255, 255, 0.08);
@@ -174,6 +291,7 @@
       border-bottom-color: rgba(16, 185, 129, 0.3) !important;
       box-shadow: 0 12px 35px rgba(16, 185, 129, 0.12), inset 0 1px 0 rgba(16, 185, 129, 0.2) !important;
     }
+
     .client-card-flagged {
       background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
       border-left: 5px solid #f59e0b !important;
@@ -182,6 +300,7 @@
       border-bottom-color: rgba(245, 158, 11, 0.35) !important;
       box-shadow: 0 12px 35px rgba(245, 158, 11, 0.14), inset 0 1px 0 rgba(245, 158, 11, 0.2) !important;
     }
+
     .client-card-pending {
       background: linear-gradient(135deg, rgba(56, 189, 248, 0.06) 0%, rgba(15, 23, 42, 0.5) 100%) !important;
       border-left: 5px solid #0284c7 !important;
@@ -190,6 +309,7 @@
       border-bottom-color: rgba(56, 189, 248, 0.25) !important;
       box-shadow: 0 10px 30px rgba(56, 189, 248, 0.08), inset 0 1px 0 rgba(56, 189, 248, 0.15) !important;
     }
+
     .client-card-unassigned {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
       border-left: 5px solid #6366f1 !important;
@@ -198,6 +318,7 @@
       border-bottom-color: rgba(99, 102, 241, 0.25) !important;
       box-shadow: 0 10px 30px rgba(99, 102, 241, 0.08), inset 0 1px 0 rgba(99, 102, 241, 0.15) !important;
     }
+
     .client-card-blocked {
       background: linear-gradient(135deg, rgba(244, 63, 94, 0.12) 0%, rgba(15, 23, 42, 0.65) 100%) !important;
       border-left: 5px solid #f43f5e !important;
@@ -217,6 +338,7 @@
       border-bottom-color: rgba(16, 185, 129, 0.35) !important;
       box-shadow: 0 12px 35px rgba(16, 185, 129, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
     }
+
     html.theme-light .client-card-flagged {
       background: linear-gradient(135deg, rgba(254, 243, 199, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
       border-left: 5px solid #f59e0b !important;
@@ -225,6 +347,7 @@
       border-bottom-color: rgba(245, 158, 11, 0.4) !important;
       box-shadow: 0 12px 35px rgba(245, 158, 11, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
     }
+
     html.theme-light .client-card-pending {
       background: linear-gradient(135deg, rgba(224, 242, 254, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
       border-left: 5px solid #0284c7 !important;
@@ -233,6 +356,7 @@
       border-bottom-color: rgba(2, 132, 199, 0.35) !important;
       box-shadow: 0 12px 35px rgba(2, 132, 199, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
     }
+
     html.theme-light .client-card-blocked {
       background: linear-gradient(135deg, rgba(254, 226, 226, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
       border-left: 5px solid #f43f5e !important;
@@ -248,22 +372,27 @@
       border-color: rgba(245, 158, 11, 0.5) !important;
       box-shadow: 0 4px 12px rgba(245, 158, 11, 0.12) !important;
     }
+
     html.theme-light .cm-flagged-banner span {
       color: #78350f !important;
       font-weight: 700 !important;
     }
+
     html.theme-light .cm-flagged-banner i,
     html.theme-light .cm-flagged-banner svg {
       color: #d97706 !important;
     }
+
     html.theme-light .cm-client-email {
       color: #475569 !important;
       font-weight: 600 !important;
     }
+
     html.theme-light .cm-client-meta {
       color: #334155 !important;
       font-weight: 600 !important;
     }
+
     html.theme-light .cm-client-meta i,
     html.theme-light .cm-client-meta svg {
       color: #64748b !important;
@@ -271,41 +400,74 @@
 
     /* ── Filter Pills ── */
     .cm-filter-pill {
-      padding: 6px 14px; border-radius: 999px; font-size: 11px; font-weight: 700;
-      color: rgba(255, 255, 255, 0.65); background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; transition: all 0.25s ease;
-      display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.65);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
     }
+
     .cm-filter-pill:hover {
-      color: #ffffff; background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
     }
+
     .cm-filter-pill.active {
-      background: var(--theme-accent, #3b82f6); color: #ffffff; border-color: rgba(255, 255, 255, 0.3);
+      background: var(--theme-accent, #3b82f6);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
       box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
     }
+
     html.theme-light .cm-filter-pill {
-      color: #475569; background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.08);
+      color: #475569;
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.08);
     }
+
     html.theme-light .cm-filter-pill:hover {
-      color: #0f172a; background: rgba(0, 0, 0, 0.08);
+      color: #0f172a;
+      background: rgba(0, 0, 0, 0.08);
     }
+
     html.theme-light .cm-filter-pill.active {
-      background: #2563eb !important; color: #ffffff !important;
+      background: #2563eb !important;
+      color: #ffffff !important;
     }
 
     /* Lock Screen Modal */
     .admin-lock-modal {
-      position: fixed; inset: 0; z-index: 9999;
-      background: rgba(3, 7, 18, 0.94); backdrop-filter: blur(35px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 24px; transition: opacity 0.4s ease;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(3, 7, 18, 0.94);
+      backdrop-filter: blur(35px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: opacity 0.4s ease;
     }
+
     .admin-lock-card {
-      max-width: 440px; width: 100%; padding: 44px;
-      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(30px);
+      max-width: 440px;
+      width: 100%;
+      padding: 44px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(30px);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 32px; text-align: center;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 80px rgba(99, 102, 241, 0.2);
+      border-radius: 32px;
+      text-align: center;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 80px rgba(99, 102, 241, 0.2);
     }
 
     /* Pearl White Overrides */
@@ -313,27 +475,34 @@
       background: radial-gradient(circle at 50% -20%, #e0e7ff 0%, #f1f5f9 50%, #f8fafc 100%) !important;
       color: #0f172a !important;
     }
+
     html.theme-light .admin-lock-modal {
       background: rgba(248, 250, 252, 0.94) !important;
     }
+
     html.theme-light .admin-lock-card {
       background: rgba(255, 255, 255, 0.95) !important;
       border-color: rgba(0, 0, 0, 0.1) !important;
       box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1), 0 0 50px rgba(var(--theme-accentRGB), 0.1) !important;
     }
+
     html.theme-light .admin-lock-card h2 {
       color: #0f172a !important;
     }
+
     html.theme-light .admin-lock-card p {
       color: #475569 !important;
     }
+
     html.theme-light .admin-lock-hint-box {
       background: #f1f5f9 !important;
       border-color: #e2e8f0 !important;
     }
+
     html.theme-light .admin-lock-hint-box span {
       color: #64748b !important;
     }
+
     html.theme-light .top-glass-bar,
     html.theme-light .hero-banner-card,
     html.theme-light .kpi-card,
@@ -342,28 +511,45 @@
       border-color: rgba(0, 0, 0, 0.08) !important;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
     }
+
     html.theme-light .dashboard-nav-bar {
       background: rgba(241, 245, 249, 0.8) !important;
       border-color: rgba(203, 213, 225, 0.8) !important;
     }
+
     html.theme-light .dash-tab-btn {
       color: #475569 !important;
     }
+
     html.theme-light .dash-tab-btn:hover {
       color: #0f172a !important;
       background: rgba(0, 0, 0, 0.05) !important;
     }
+
     html.theme-light .dash-tab-btn.active {
-      background: #2563eb !important; color: #ffffff !important;
+      background: #2563eb !important;
+      color: #ffffff !important;
     }
+
     html.theme-light .dash-input {
       background: rgba(241, 245, 249, 0.9) !important;
       border-color: rgba(203, 213, 225, 0.8) !important;
       color: #0f172a !important;
     }
-    html.theme-light .text-white { color: #0f172a !important; }
-    html.theme-light .text-slate-400, html.theme-light .text-slate-300 { color: #475569 !important; }
-    html.theme-light td, html.theme-light th { color: #334155 !important; }
+
+    html.theme-light .text-white {
+      color: #0f172a !important;
+    }
+
+    html.theme-light .text-slate-400,
+    html.theme-light .text-slate-300 {
+      color: #475569 !important;
+    }
+
+    html.theme-light td,
+    html.theme-light th {
+      color: #334155 !important;
+    }
 
     /* ── High Specificity Light Theme Status Card Fill Overrides ── */
     html.theme-light .glass-panel-card.client-card-pending {
@@ -373,6 +559,7 @@
       box-shadow: 0 12px 35px rgba(2, 132, 199, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
       opacity: 1 !important;
     }
+
     html.theme-light .glass-panel-card.client-card-flagged {
       background: linear-gradient(135deg, #fef9c3 0%, #ffffff 100%) !important;
       border: 1.5px solid #f59e0b !important;
@@ -381,6 +568,7 @@
       opacity: 0.88 !important;
       filter: grayscale(10%) !important;
     }
+
     html.theme-light .glass-panel-card.client-card-completed {
       background: linear-gradient(135deg, #d1fae5 0%, #ffffff 100%) !important;
       border: 1.5px solid #34d399 !important;
@@ -389,6 +577,7 @@
       opacity: 1 !important;
       filter: none !important;
     }
+
     html.theme-light .glass-panel-card.client-card-unassigned {
       background: linear-gradient(135deg, #e0e7ff 0%, #ffffff 100%) !important;
       border: 1.5px solid #818cf8 !important;
@@ -396,6 +585,7 @@
       box-shadow: 0 12px 35px rgba(99, 102, 241, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
       opacity: 1 !important;
     }
+
     html.theme-light .glass-panel-card.client-card-blocked {
       background: linear-gradient(135deg, #fee2e2 0%, #ffffff 100%) !important;
       border: 1.5px solid #f87171 !important;
@@ -408,14 +598,17 @@
       background: rgba(224, 231, 255, 0.95) !important;
       border-color: rgba(99, 102, 241, 0.4) !important;
     }
+
     html.theme-light .cm-unassigned-banner span {
       color: #3730a3 !important;
       font-weight: 700 !important;
     }
+
     html.theme-light .cm-unassigned-banner i,
     html.theme-light .cm-unassigned-banner svg {
       color: #4f46e5 !important;
     }
+
     .cm-unassigned-banner button,
     .cm-unassigned-banner button *,
     html.theme-light .cm-unassigned-banner button,
@@ -424,6 +617,7 @@
       background-color: #4f46e5 !important;
       font-weight: 800 !important;
     }
+
     .cm-unassigned-banner button:hover,
     html.theme-light .cm-unassigned-banner button:hover {
       background-color: #4338ca !important;
@@ -447,16 +641,19 @@
       color: #78350f !important;
       box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25) !important;
     }
+
     html.theme-light .cm-btn-flag-active i,
     html.theme-light .cm-btn-flag-active svg {
       color: #78350f !important;
       stroke-width: 2.5px !important;
     }
+
     html.theme-light .cm-btn-flag-inactive {
       background: rgba(0, 0, 0, 0.06) !important;
       border-color: rgba(0, 0, 0, 0.12) !important;
       color: #334155 !important;
     }
+
     #upload-dispatch-btn,
     #upload-dispatch-btn *,
     html.theme-light #upload-dispatch-btn,
@@ -465,6 +662,7 @@
     }
   </style>
 </head>
+
 <body class="antialiased">
 
   <!-- ══════ FLOATING LIQUID AURORA BACKGROUND ══════ -->
@@ -477,7 +675,8 @@
   <!-- ══════ PASSCODE LOCK SCREEN MODAL ══════ -->
   <div id="admin-lock-screen" class="admin-lock-modal">
     <div class="admin-lock-card">
-      <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-tr from-cyan-400 via-purple-500 to-amber-400 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+      <div
+        class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-tr from-cyan-400 via-purple-500 to-amber-400 flex items-center justify-center shadow-lg shadow-cyan-500/30">
         <i data-lucide="shield-check" class="w-8 h-8 text-slate-950"></i>
       </div>
       <h2 class="text-2xl font-black text-white font-['Outfit'] mb-2">OBM Studio Command Center</h2>
@@ -485,7 +684,8 @@
 
       <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
         <div class="mb-4">
-          <input type="password" id="admin-passcode-input" placeholder="Enter Admin Passcode" class="dash-input text-center text-lg tracking-widest font-mono" placeholder="• • • • • •">
+          <input type="password" id="admin-passcode-input" placeholder="Enter Admin Passcode"
+            class="dash-input text-center text-lg tracking-widest font-mono" placeholder="• • • • • •">
         </div>
         <p id="admin-auth-error" class="text-xs text-rose-400 mb-4 hidden">Invalid passcode. Try: ADMIN2026</p>
 
@@ -494,9 +694,11 @@
         </button>
       </form>
 
-      <div class="admin-lock-hint-box p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs">
+      <div
+        class="admin-lock-hint-box p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs">
         <span class="text-slate-400">Default Passcode:</span>
-        <button onclick="autofillPasscode()" class="text-cyan-400 font-mono font-bold hover:underline">ADMIN2026</button>
+        <button onclick="autofillPasscode()"
+          class="text-cyan-400 font-mono font-bold hover:underline">ADMIN2026</button>
       </div>
     </div>
   </div>
@@ -504,18 +706,21 @@
   <!-- ══════ TOP GLASS HEADER BAR ══════ -->
   <header class="top-glass-bar">
     <a href="index.html" class="flex items-center gap-3 no-underline">
-      <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-400 via-purple-500 to-amber-400 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+      <div
+        class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-400 via-purple-500 to-amber-400 flex items-center justify-center shadow-lg shadow-cyan-500/30">
         <i data-lucide="sliders" class="w-4 h-4 text-slate-950 font-black"></i>
       </div>
       <div>
         <span class="font-extrabold text-lg tracking-tight nav-logo-text font-['Outfit']">OBM STUDIO</span>
-        <span class="block text-[9px] text-[var(--theme-accent)] font-bold tracking-widest uppercase -mt-1">PREMIUM PORTAL</span>
+        <span class="block text-[9px] text-[var(--theme-accent)] font-bold tracking-widest uppercase -mt-1">PREMIUM
+          PORTAL</span>
       </div>
     </a>
 
     <!-- Active Session Pill -->
     <div class="hidden sm:flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-      <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 flex items-center justify-center text-slate-950 font-black text-xs">
+      <div
+        class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 flex items-center justify-center text-slate-950 font-black text-xs">
         OBM
       </div>
       <div>
@@ -526,12 +731,18 @@
 
     <!-- Quick Navigation Bar -->
     <div class="hidden xl:flex items-center gap-1.5 shrink-0">
-      <a href="index.html" class="nav-link" title="Home"><i data-lucide="home"></i><span class="nav-label">Home</span></a>
-      <a href="packages.html" class="nav-link" style="color:#ffb703" title="Packages ₹"><i data-lucide="crown"></i><span class="nav-label">Packages</span></a>
-      <a href="photo-selection.html" class="nav-link" title="Photo Selection"><i data-lucide="check-square"></i><span class="nav-label">Selection</span></a>
-      <a href="digital-album.html" class="nav-link" title="Digital Albums"><i data-lucide="book-open"></i><span class="nav-label">Albums</span></a>
-      <a href="live-event.html" class="nav-link" title="Live Broadcast"><i data-lucide="radio"></i><span class="nav-label">Live Event</span></a>
-      <a href="admin.html" class="nav-link active" style="color:#a78bfa" title="Admin Command Center"><i data-lucide="shield-check"></i><span class="nav-label">Admin</span></a>
+      <a href="index.html" class="nav-link" title="Home"><i data-lucide="home"></i><span
+          class="nav-label">Home</span></a>
+      <a href="packages.html" class="nav-link" style="color:#ffb703" title="Packages ₹"><i data-lucide="crown"></i><span
+          class="nav-label">Packages</span></a>
+      <a href="photo-selection.html" class="nav-link" title="Photo Selection"><i data-lucide="check-square"></i><span
+          class="nav-label">Selection</span></a>
+      <a href="digital-album.html" class="nav-link" title="Digital Albums"><i data-lucide="book-open"></i><span
+          class="nav-label">Albums</span></a>
+      <a href="live-event.html" class="nav-link" title="Live Broadcast"><i data-lucide="radio"></i><span
+          class="nav-label">Live Event</span></a>
+      <a href="admin.html" class="nav-link active" style="color:#a78bfa" title="Admin Command Center"><i
+          data-lucide="shield-check"></i><span class="nav-label">Admin</span></a>
     </div>
 
     <!-- Right Controls: Theme dots + View Switcher -->
@@ -539,15 +750,22 @@
       <!-- DUAL-LAYER THEME SWITCHER -->
       <div class="global-theme-switcher shrink-0">
         <div class="theme-mode-toggle">
-          <button class="mode-toggle-btn active" data-mode="dark" onclick="OBMTheme.setMode('dark')" title="Black Theme (Dark)">Dark</button>
-          <button class="mode-toggle-btn" data-mode="light" onclick="OBMTheme.setMode('light')" title="White Theme (Light)">Light</button>
+          <button class="mode-toggle-btn active" data-mode="dark" onclick="OBMTheme.setMode('dark')"
+            title="Black Theme (Dark)">Dark</button>
+          <button class="mode-toggle-btn" data-mode="light" onclick="OBMTheme.setMode('light')"
+            title="White Theme (Light)">Light</button>
         </div>
         <div class="theme-color-dots">
-          <button class="theme-switcher-dot bg-sky-500" data-theme="sapphire" title="Sky Blue" onclick="OBMTheme.setAccent('sapphire')"></button>
-          <button class="theme-switcher-dot bg-purple-500" data-theme="amethyst" title="Purple" onclick="OBMTheme.setAccent('amethyst')"></button>
-          <button class="theme-switcher-dot bg-emerald-500" data-theme="emerald" title="Green" onclick="OBMTheme.setAccent('emerald')"></button>
-          <button class="theme-switcher-dot bg-rose-500" data-theme="rose" title="Red" onclick="OBMTheme.setAccent('rose')"></button>
-          <button class="theme-switcher-dot bg-amber-500" data-theme="amber" title="Yellow" onclick="OBMTheme.setAccent('amber')"></button>
+          <button class="theme-switcher-dot bg-sky-500" data-theme="sapphire" title="Sky Blue"
+            onclick="OBMTheme.setAccent('sapphire')"></button>
+          <button class="theme-switcher-dot bg-purple-500" data-theme="amethyst" title="Purple"
+            onclick="OBMTheme.setAccent('amethyst')"></button>
+          <button class="theme-switcher-dot bg-emerald-500" data-theme="emerald" title="Green"
+            onclick="OBMTheme.setAccent('emerald')"></button>
+          <button class="theme-switcher-dot bg-rose-500" data-theme="rose" title="Red"
+            onclick="OBMTheme.setAccent('rose')"></button>
+          <button class="theme-switcher-dot bg-amber-500" data-theme="amber" title="Yellow"
+            onclick="OBMTheme.setAccent('amber')"></button>
         </div>
       </div>
 
@@ -561,7 +779,8 @@
         </button>
       </div>
 
-      <button onclick="handleLogout()" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-rose-400 transition-colors" title="Lock Dashboard">
+      <button onclick="handleLogout()"
+        class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-rose-400 transition-colors" title="Lock Dashboard">
         <i data-lucide="log-out" class="w-4 h-4"></i>
       </button>
     </div>
@@ -576,7 +795,8 @@
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-2">
-            <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-300 text-[10px] font-extrabold uppercase tracking-widest">
+            <span
+              class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-300 text-[10px] font-extrabold uppercase tracking-widest">
               STUDIO COMMAND CENTER
             </span>
             <span class="text-[10px] text-slate-400 font-mono">v3.5 Live Sync</span>
@@ -585,11 +805,13 @@
             Workspace &amp; Client Management
           </h1>
           <p class="text-xs md:text-sm text-slate-300 mt-2 max-w-2xl">
-            Full-spectrum workspace analytics, packages &amp; pricing configuration, live broadcast control room, album review, and asset operations.
+            Full-spectrum workspace analytics, packages &amp; pricing configuration, live broadcast control room, album
+            review, and asset operations.
           </p>
         </div>
 
-        <div class="flex items-center gap-2.5 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-xs font-extrabold uppercase tracking-widest whitespace-nowrap self-start md:self-auto">
+        <div
+          class="flex items-center gap-2.5 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-xs font-extrabold uppercase tracking-widest whitespace-nowrap self-start md:self-auto">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
           LIVE SESSION SYNC
         </div>
@@ -722,7 +944,8 @@
       <!-- Quick Action Toolbar -->
       <div class="glass-panel-card flex flex-col sm:flex-row items-center justify-between gap-4" data-reveal>
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400">
+          <div
+            class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-center justify-center text-amber-400">
             <i data-lucide="download" class="w-5 h-5"></i>
           </div>
           <div>
@@ -732,10 +955,13 @@
         </div>
 
         <div class="flex items-center gap-3">
-          <button onclick="showToast('Filenames Copied', '85 selected image filenames copied to clipboard.', 'sapphire')" class="btn-ghost text-xs py-2.5 px-4 flex items-center gap-2">
+          <button
+            onclick="showToast('Filenames Copied', '85 selected image filenames copied to clipboard.', 'sapphire')"
+            class="btn-ghost text-xs py-2.5 px-4 flex items-center gap-2">
             <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Filenames
           </button>
-          <button onclick="showToast('ZIP Preparing', 'Downloading selected high-resolution ZIP archive...', 'success')" class="btn-primary text-xs py-2.5 px-5 flex items-center gap-2">
+          <button onclick="showToast('ZIP Preparing', 'Downloading selected high-resolution ZIP archive...', 'success')"
+            class="btn-primary text-xs py-2.5 px-5 flex items-center gap-2">
             <i data-lucide="archive" class="w-3.5 h-3.5"></i> Download Selected ZIP
           </button>
         </div>
@@ -744,39 +970,28 @@
 
 
     <!-- TAB 2: PACKAGES & RATES -->
-    <div id="dash-pane-packages" class="dash-pane hidden space-y-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-reveal>
-        <div class="glass-panel-card space-y-4">
-          <h3 class="text-base font-bold text-white flex items-center gap-2">
-            <i data-lucide="tag" class="w-4 h-4 text-slate-400"></i> Silver Royal Rate
-          </h3>
-          <input type="number" id="pkg-silver-price" class="dash-input" value="65000">
-          <button onclick="savePackagePrice('silver')" class="btn-primary text-xs py-2.5 px-4">Update Rate</button>
+    <div id="dash-pane-packages" class="dash-pane hidden space-y-6">
+      <!-- Section Header -->
+      <div class="glass-panel-card" data-reveal>
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <i data-lucide="tag" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-black text-white font-['Outfit']">Packages & Pricing Manager</h3>
+              <p class="text-xs text-slate-400">Edit titles, prices, descriptions, badges, and features for all signature wedding tiers.</p>
+            </div>
+          </div>
+          <button onclick="resetPackagesToDefault()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all active:scale-95 border border-slate-700">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset to Defaults
+          </button>
         </div>
+      </div>
 
-        <div class="glass-panel-card space-y-4 border-amber-500/30">
-          <h3 class="text-base font-bold text-amber-400 flex items-center gap-2">
-            <i data-lucide="flame" class="w-4 h-4"></i> Gold Elite Rate (Most Popular)
-          </h3>
-          <input type="number" id="pkg-gold-price" class="dash-input" value="145000">
-          <button onclick="savePackagePrice('gold')" class="btn-primary btn-gold text-xs py-2.5 px-4">Update Rate</button>
-        </div>
-
-        <div class="glass-panel-card space-y-4">
-          <h3 class="text-base font-bold text-purple-400 flex items-center gap-2">
-            <i data-lucide="gem" class="w-4 h-4"></i> Platinum Plus Rate
-          </h3>
-          <input type="number" id="pkg-platinum-price" class="dash-input" value="285000">
-          <button onclick="savePackagePrice('platinum')" class="btn-primary text-xs py-2.5 px-4">Update Rate</button>
-        </div>
-
-        <div class="glass-panel-card space-y-4">
-          <h3 class="text-base font-bold text-cyan-400 flex items-center gap-2">
-            <i data-lucide="crown" class="w-4 h-4"></i> Imperial Stage Rate
-          </h3>
-          <input type="number" id="pkg-imperial-price" class="dash-input" value="450000">
-          <button onclick="savePackagePrice('imperial')" class="btn-primary text-xs py-2.5 px-4">Update Rate</button>
-        </div>
+      <!-- Dynamically Injected Package Cards -->
+      <div id="packages-editor-grid" class="grid grid-cols-1 xl:grid-cols-2 gap-6" data-reveal="scale">
+        <!-- JS Injected Cards -->
       </div>
     </div>
 
@@ -787,12 +1002,14 @@
       <!-- Section Header -->
       <div class="glass-panel-card" data-reveal>
         <div class="flex items-center gap-3 mb-1">
-          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400">
+          <div
+            class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400">
             <i data-lucide="users" class="w-5 h-5"></i>
           </div>
           <div>
             <h3 class="text-lg font-black text-white font-['Outfit']">Client Directory</h3>
-            <p class="text-xs text-slate-400">Manage all registered portal users. Block access, flag completed sessions, and track live selection states across all clients.</p>
+            <p class="text-xs text-slate-400">Manage all registered portal users. Block access, flag completed sessions,
+              and track live selection states across all clients.</p>
           </div>
         </div>
       </div>
@@ -803,7 +1020,8 @@
         <div class="flex flex-col sm:flex-row gap-3">
           <input type="text" id="cm-client-name" placeholder="Client Name" class="dash-input flex-1">
           <input type="email" id="cm-client-email" placeholder="Email Address" class="dash-input flex-1">
-          <button onclick="cmAddClient()" class="btn-primary text-xs py-2.5 px-6 flex items-center gap-2 shrink-0 whitespace-nowrap">
+          <button onclick="cmAddClient()"
+            class="btn-primary text-xs py-2.5 px-6 flex items-center gap-2 shrink-0 whitespace-nowrap">
             <i data-lucide="user-plus" class="w-4 h-4"></i> Add Client
           </button>
         </div>
@@ -813,12 +1031,23 @@
       <div class="flex items-center justify-between flex-wrap gap-3 py-1" data-reveal>
         <div class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">FILTER BY STATUS:</div>
         <div class="flex items-center gap-2 overflow-x-auto" id="cm-filter-pills">
-          <button onclick="setCMFilter('all', this)" class="cm-filter-pill active" data-filter="all">All <span id="cm-count-all" class="font-mono opacity-80">(0)</span></button>
-          <button onclick="setCMFilter('unassigned', this)" class="cm-filter-pill" data-filter="unassigned"><i data-lucide="folder-plus" class="w-3 h-3 text-indigo-400"></i> Unassigned <span id="cm-count-unassigned" class="font-mono opacity-80">(0)</span></button>
-          <button onclick="setCMFilter('pending', this)" class="cm-filter-pill" data-filter="pending"><i data-lucide="clock" class="w-3 h-3 text-sky-400"></i> Pending <span id="cm-count-pending" class="font-mono opacity-80">(0)</span></button>
-          <button onclick="setCMFilter('flagged', this)" class="cm-filter-pill" data-filter="flagged"><i data-lucide="flag" class="w-3 h-3 text-amber-400"></i> Flagged <span id="cm-count-flagged" class="font-mono opacity-80">(0)</span></button>
-          <button onclick="setCMFilter('completed', this)" class="cm-filter-pill" data-filter="completed"><i data-lucide="check-circle" class="w-3 h-3 text-emerald-400"></i> Completed <span id="cm-count-completed" class="font-mono opacity-80">(0)</span></button>
-          <button onclick="setCMFilter('blocked', this)" class="cm-filter-pill" data-filter="blocked"><i data-lucide="ban" class="w-3 h-3 text-rose-400"></i> Blocked <span id="cm-count-blocked" class="font-mono opacity-80">(0)</span></button>
+          <button onclick="setCMFilter('all', this)" class="cm-filter-pill active" data-filter="all">All <span
+              id="cm-count-all" class="font-mono opacity-80">(0)</span></button>
+          <button onclick="setCMFilter('unassigned', this)" class="cm-filter-pill" data-filter="unassigned"><i
+              data-lucide="folder-plus" class="w-3 h-3 text-indigo-400"></i> Unassigned <span id="cm-count-unassigned"
+              class="font-mono opacity-80">(0)</span></button>
+          <button onclick="setCMFilter('pending', this)" class="cm-filter-pill" data-filter="pending"><i
+              data-lucide="clock" class="w-3 h-3 text-sky-400"></i> Pending <span id="cm-count-pending"
+              class="font-mono opacity-80">(0)</span></button>
+          <button onclick="setCMFilter('flagged', this)" class="cm-filter-pill" data-filter="flagged"><i
+              data-lucide="flag" class="w-3 h-3 text-amber-400"></i> Flagged <span id="cm-count-flagged"
+              class="font-mono opacity-80">(0)</span></button>
+          <button onclick="setCMFilter('completed', this)" class="cm-filter-pill" data-filter="completed"><i
+              data-lucide="check-circle" class="w-3 h-3 text-emerald-400"></i> Completed <span id="cm-count-completed"
+              class="font-mono opacity-80">(0)</span></button>
+          <button onclick="setCMFilter('blocked', this)" class="cm-filter-pill" data-filter="blocked"><i
+              data-lucide="ban" class="w-3 h-3 text-rose-400"></i> Blocked <span id="cm-count-blocked"
+              class="font-mono opacity-80">(0)</span></button>
         </div>
       </div>
 
@@ -859,7 +1088,8 @@
             <img src="assets/wedding.jpg" class="w-full h-full object-cover opacity-60">
             <div class="absolute top-3 left-3 badge badge-gold text-[9px] uppercase tracking-widest">Live Signal</div>
           </div>
-          <a href="live-event.html" target="_blank" class="btn-ghost w-full justify-center text-xs py-2.5">Open Live Stream Page</a>
+          <a href="live-event.html" target="_blank" class="btn-ghost w-full justify-center text-xs py-2.5">Open Live
+            Stream Page</a>
         </div>
       </div>
     </div>
@@ -872,7 +1102,8 @@
         <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex items-start justify-between gap-4">
           <div>
             <span class="badge badge-purple text-[9px] mb-1">Spread 1 (Page 05)</span>
-            <p class="text-xs text-white">"Please enhance the background lighting and warm up the gold mandap tones."</p>
+            <p class="text-xs text-white">"Please enhance the background lighting and warm up the gold mandap tones."
+            </p>
             <p class="text-[10px] text-slate-500 mt-1">Client: Vikram &amp; Ananya</p>
           </div>
           <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold">Pending</span>
@@ -905,19 +1136,23 @@
       <div class="glass-panel-card" data-reveal>
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-400/30 flex items-center justify-center text-rose-400">
+            <div
+              class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-400/30 flex items-center justify-center text-rose-400">
               <i data-lucide="search-x" class="w-5 h-5"></i>
             </div>
             <div>
               <h3 class="text-lg font-black text-white font-['Outfit']">Compare & Detect Deleted Photos</h3>
-              <p class="text-xs text-slate-400">Inspect approved selections vs unselected/deleted photos per client. Download approved or rejected photo packages directly.</p>
+              <p class="text-xs text-slate-400">Inspect approved selections vs unselected/deleted photos per client.
+                Download approved or rejected photo packages directly.</p>
             </div>
           </div>
           <div class="flex items-center gap-3 shrink-0">
-            <select id="dd-client-select" class="dash-input text-xs py-2.5 min-w-[220px]" onchange="renderDeletedDetection()">
+            <select id="dd-client-select" class="dash-input text-xs py-2.5 min-w-[220px]"
+              onchange="renderDeletedDetection()">
               <!-- JS populated -->
             </select>
-            <button onclick="ddFinalizeWorkspace()" class="btn-primary text-xs py-2.5 px-5 flex items-center gap-2 whitespace-nowrap">
+            <button onclick="ddFinalizeWorkspace()"
+              class="btn-primary text-xs py-2.5 px-5 flex items-center gap-2 whitespace-nowrap">
               <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Finalize Workspace
             </button>
           </div>
@@ -934,13 +1169,16 @@
               <i data-lucide="check-circle-2" class="w-4 h-4"></i> APPROVED / SELECTED
             </h4>
             <div class="flex items-center gap-2">
-              <span id="dd-approved-count" class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-xs font-bold flex items-center justify-center">0</span>
-              <button onclick="ddDownloadApproved()" class="text-xs py-1.5 px-3 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 hover:bg-emerald-500/20 transition-colors flex items-center gap-1.5 font-bold">
+              <span id="dd-approved-count"
+                class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-xs font-bold flex items-center justify-center">0</span>
+              <button onclick="ddDownloadApproved()"
+                class="text-xs py-1.5 px-3 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 hover:bg-emerald-500/20 transition-colors flex items-center gap-1.5 font-bold">
                 <i data-lucide="download" class="w-3 h-3"></i> Download Approved
               </button>
             </div>
           </div>
-          <div id="dd-approved-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-1" style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;">
+          <div id="dd-approved-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-1"
+            style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;">
             <!-- JS populated -->
           </div>
         </div>
@@ -952,13 +1190,16 @@
               <i data-lucide="x-circle" class="w-4 h-4"></i> REJECTED / NOT SELECTED
             </h4>
             <div class="flex items-center gap-2">
-              <span id="dd-rejected-count" class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-400 text-xs font-bold flex items-center justify-center">0</span>
-              <button onclick="ddDownloadRejected()" class="text-xs py-1.5 px-3 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-400 hover:bg-rose-500/20 transition-colors flex items-center gap-1.5 font-bold">
+              <span id="dd-rejected-count"
+                class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-400 text-xs font-bold flex items-center justify-center">0</span>
+              <button onclick="ddDownloadRejected()"
+                class="text-xs py-1.5 px-3 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-400 hover:bg-rose-500/20 transition-colors flex items-center gap-1.5 font-bold">
                 <i data-lucide="download" class="w-3 h-3"></i> Download Rejected
               </button>
             </div>
           </div>
-          <div id="dd-rejected-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-1" style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;">
+          <div id="dd-rejected-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-1"
+            style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;">
             <!-- JS populated -->
           </div>
         </div>
@@ -970,7 +1211,8 @@
           <h4 class="text-sm font-bold text-rose-400 uppercase tracking-wider flex items-center gap-2">
             <i data-lucide="trash-2" class="w-4 h-4"></i> PERMANENTLY REMOVED FROM WORKSPACE
           </h4>
-          <span id="dd-deleted-count" class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-400 text-xs font-bold flex items-center justify-center">0</span>
+          <span id="dd-deleted-count"
+            class="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-400 text-xs font-bold flex items-center justify-center">0</span>
         </div>
         <div id="dd-deleted-list" class="space-y-2">
           <!-- JS populated OR empty state -->
@@ -985,12 +1227,14 @@
       <!-- Section Header -->
       <div class="glass-panel-card" data-reveal>
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-blue-400">
+          <div
+            class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-400/30 flex items-center justify-center text-blue-400">
             <i data-lucide="send" class="w-5 h-5"></i>
           </div>
           <div>
             <h3 class="text-lg font-black text-white font-['Outfit']">Upload & Dispatch to Client</h3>
-            <p class="text-xs text-slate-400">Upload images to allocate to a specific client's portal. They will see these photos when they log in with their email.</p>
+            <p class="text-xs text-slate-400">Upload images to allocate to a specific client's portal. They will see
+              these photos when they log in with their email.</p>
           </div>
         </div>
       </div>
@@ -1000,7 +1244,8 @@
 
         <!-- Target Client Selector -->
         <div>
-          <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-2">TARGET CLIENT EMAIL</label>
+          <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-2">TARGET CLIENT
+            EMAIL</label>
           <select id="upload-client-select" class="dash-input text-sm py-3">
             <option value="">-- Select Client --</option>
             <!-- JS populated from client manager -->
@@ -1008,15 +1253,16 @@
         </div>
 
         <!-- Drag & Drop Zone -->
-        <div id="upload-dropzone" class="relative border-2 border-dashed border-white/15 rounded-2xl py-12 px-8 text-center transition-all cursor-pointer hover:border-white/30 hover:bg-white/3"
-             onclick="document.getElementById('upload-file-input').click()"
-             ondragover="event.preventDefault(); this.classList.add('border-blue-400','bg-blue-500/5')"
-             ondragleave="this.classList.remove('border-blue-400','bg-blue-500/5')"
-             ondrop="handleFileDrop(event)">
+        <div id="upload-dropzone"
+          class="relative border-2 border-dashed border-white/15 rounded-2xl py-12 px-8 text-center transition-all cursor-pointer hover:border-white/30 hover:bg-white/3"
+          onclick="document.getElementById('upload-file-input').click()"
+          ondragover="event.preventDefault(); this.classList.add('border-blue-400','bg-blue-500/5')"
+          ondragleave="this.classList.remove('border-blue-400','bg-blue-500/5')" ondrop="handleFileDrop(event)">
           <i data-lucide="cloud-upload" class="w-10 h-10 mx-auto text-slate-500 mb-3"></i>
           <p class="text-sm font-bold text-white mb-1">Drag photos or click to browse</p>
           <p class="text-xs text-slate-500">Supports JPG, PNG, WEBP • Max 20 files</p>
-          <input type="file" id="upload-file-input" multiple accept="image/jpeg,image/png,image/webp,.psd" class="hidden" onchange="handleFileSelect(event)">
+          <input type="file" id="upload-file-input" multiple accept="image/jpeg,image/png,image/webp,.psd"
+            class="hidden" onchange="handleFileSelect(event)">
         </div>
 
         <!-- Queued Files List -->
@@ -1025,13 +1271,16 @@
             <span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">QUEUED FILES</span>
             <span id="upload-queue-count" class="text-xs font-bold text-blue-400"></span>
           </div>
-          <div id="upload-queue-list" class="space-y-2 max-h-[300px] overflow-y-auto pr-1" style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;">
+          <div id="upload-queue-list" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"
+            style="scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;">
             <!-- JS populated -->
           </div>
         </div>
 
         <!-- Dispatch Button -->
-        <button id="upload-dispatch-btn" onclick="dispatchUpload()" class="w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 transition-all disabled:opacity-40 disabled:cursor-not-allowed" style="background: var(--theme-accent); color: #ffffff !important;" disabled>
+        <button id="upload-dispatch-btn" onclick="dispatchUpload()"
+          class="w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          style="background: var(--theme-accent); color: #ffffff !important;" disabled>
           <i data-lucide="rocket" class="w-5 h-5"></i> Dispatch to Client Portal
         </button>
       </div>
@@ -1106,7 +1355,18 @@
     // ══════════════════════════════════
     function switchDashTab(tabId, btn) {
       document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+
+      let targetBtn = btn;
+      if (!targetBtn) {
+        targetBtn = Array.from(document.querySelectorAll('.dash-tab-btn')).find(b => {
+          const attr = b.getAttribute('onclick') || '';
+          return attr.includes(`switchDashTab('${tabId}'`);
+        });
+      }
+      if (targetBtn) {
+        targetBtn.classList.add('active');
+      }
+
       document.querySelectorAll('.dash-pane').forEach(pane => pane.classList.add('hidden'));
       const pane = document.getElementById(`dash-pane-${tabId}`);
       if (pane) {
@@ -1114,6 +1374,7 @@
         pane.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revealed'));
       }
       // Re-render tab-specific data
+      if (tabId === 'packages') renderPackageManagement();
       if (tabId === 'portals') renderClientManager();
       if (tabId === 'deleted') { populateDeletedClientDropdown(); renderDeletedDetection(); }
       if (tabId === 'upload') populateUploadClientDropdown();
@@ -1135,10 +1396,7 @@
       document.getElementById('kpi-deleted').textContent = totalDeleted;
 
       // Packages
-      data.packages.forEach(pkg => {
-        const input = document.getElementById(`pkg-${pkg.id}-price`);
-        if (input) input.value = pkg.price;
-      });
+      renderPackageManagement();
 
       // Live
       document.getElementById('live-code-input').value = data.liveEvent.code;
@@ -1224,7 +1482,18 @@
     function preselectUploadClient(email) {
       const select = document.getElementById('upload-client-select');
       if (select) {
-        select.value = email;
+        const clients = OBMStore.getActiveClients();
+        const client = clients.find(p => p.email === email);
+        if (client) {
+          select.value = client.code;
+        } else {
+          select.value = email;
+        }
+        // Also update dispatch button disabled state based on selection & queue
+        const dispatchBtn = document.getElementById('upload-dispatch-btn');
+        if (dispatchBtn) {
+          dispatchBtn.disabled = !select.value || uploadQueue.length === 0;
+        }
       }
     }
 
@@ -1571,7 +1840,7 @@
               <div class="w-full h-1.5 rounded-full bg-slate-900 overflow-hidden mt-1">
                 <div class="h-full bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full transition-all" style="width:${file.progress}%"></div>
               </div>` :
-            file.status === 'done' ? '<span class="text-[9px] text-emerald-400 font-bold">✓ UPLOADED</span>' :
+          file.status === 'done' ? '<span class="text-[9px] text-emerald-400 font-bold">✓ UPLOADED</span>' :
             ''}
           </div>
           <span class="text-[10px] text-slate-500 font-mono shrink-0">${formatFileSize(file.size)}</span>
@@ -1639,10 +1908,160 @@
     // ══════════════════════════════════
     //  PACKAGES & LIVE (existing)
     // ══════════════════════════════════
-    function savePackagePrice(id) {
-      const val = document.getElementById(`pkg-${id}-price`).value;
-      OBMStore.updatePackagePrice(id, val);
-      showToast('Rate Updated', `Package rate updated to ₹${parseInt(val).toLocaleString('en-IN')}`, 'gold');
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+    }
+
+    function renderPackageManagement() {
+      const container = document.getElementById('packages-editor-grid');
+      if (!container) return;
+      
+      const packages = OBMStore.data.packages;
+      
+      container.innerHTML = packages.map(p => {
+        let accentColorClass = 'text-slate-400';
+        let accentBg = 'bg-slate-500/10';
+        let borderClass = 'border-slate-800/80';
+        let iconName = 'tag';
+        
+        if (p.id === 'gold') {
+          accentColorClass = 'text-amber-400';
+          accentBg = 'bg-amber-500/10';
+          borderClass = 'border-amber-500/30';
+          iconName = 'flame';
+        } else if (p.id === 'platinum') {
+          accentColorClass = 'text-purple-400';
+          accentBg = 'bg-purple-500/10';
+          borderClass = 'border-purple-500/30';
+          iconName = 'gem';
+        } else if (p.id === 'imperial') {
+          accentColorClass = 'text-cyan-400';
+          accentBg = 'bg-cyan-500/10';
+          borderClass = 'border-cyan-500/30';
+          iconName = 'crown';
+        }
+        
+        const featuresHtml = (p.features || []).map((feat, fIdx) => `
+          <div class="flex items-center gap-2" id="feat-container-${p.id}-${fIdx}">
+            <input type="text" class="dash-input text-xs flex-1 pkg-feature-input" data-pkg-id="${p.id}" value="${escapeHtml(feat)}" placeholder="Highlight item...">
+            <button type="button" onclick="removeFeatureItem('${p.id}', ${fIdx})" class="p-2.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors" title="Delete Highlight">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        `).join('');
+        
+        return `
+          <div class="glass-panel-card space-y-4 flex flex-col justify-between ${borderClass} relative">
+            <div class="space-y-3">
+              <!-- Header -->
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-lg ${accentBg} ${accentColorClass} flex items-center justify-center">
+                    <i data-lucide="${iconName}" class="w-4.5 h-4.5"></i>
+                  </div>
+                  <input type="text" id="pkg-name-${p.id}" class="bg-transparent border-none text-sm font-black text-white focus:outline-none focus:ring-1 focus:ring-slate-700 rounded px-1.5 py-0.5 w-40" value="${escapeHtml(p.name)}" placeholder="Package Name">
+                </div>
+                <span class="text-[9px] font-mono opacity-40 uppercase">ID: ${p.id}</span>
+              </div>
+              
+              <!-- Price & Badge Row -->
+              <div class="grid grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="text-[9px] uppercase tracking-wider text-slate-500 font-bold">Price (₹ INR)</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500">₹</span>
+                    <input type="number" id="pkg-price-${p.id}" class="dash-input pl-6 text-xs font-bold text-white font-mono" value="${p.price}" placeholder="e.g. 65000">
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[9px] uppercase tracking-wider text-slate-500 font-bold">Pill Badge</label>
+                  <input type="text" id="pkg-badge-${p.id}" class="dash-input text-xs text-white" value="${escapeHtml(p.badge || '')}" placeholder="e.g. Cinematic & Drone">
+                </div>
+              </div>
+              
+              <!-- Description / Subtitle -->
+              <div class="space-y-1">
+                <label class="text-[9px] uppercase tracking-wider text-slate-500 font-bold">Subtitle Description</label>
+                <textarea id="pkg-desc-${p.id}" rows="2" class="dash-input text-xs text-slate-300 resize-none" placeholder="Ideal for traditional rituals...">${escapeHtml(p.desc || '')}</textarea>
+              </div>
+
+              <!-- Features list -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-[9px] uppercase tracking-wider text-slate-500 font-bold">Package Highlights</label>
+                  <button type="button" onclick="addFeatureItem('${p.id}')" class="text-[9px] uppercase font-black text-blue-400 flex items-center gap-1 hover:opacity-80 transition-opacity">
+                    <i data-lucide="plus" class="w-3 h-3"></i> Add Highlight
+                  </button>
+                </div>
+                <div class="space-y-2 max-h-48 overflow-y-auto pr-1" id="pkg-features-list-${p.id}">
+                  ${featuresHtml}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Save Button -->
+            <button type="button" onclick="savePackageData('${p.id}')" class="btn-primary w-full py-3 text-xs font-bold flex items-center justify-center gap-1.5 ${p.id === 'gold' ? 'btn-gold' : ''}">
+              <i data-lucide="save" class="w-4 h-4"></i> Save Package Details
+            </button>
+          </div>
+        `;
+      }).join('');
+      
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function addFeatureItem(pkgId) {
+      const list = document.getElementById(`pkg-features-list-${pkgId}`);
+      if (!list) return;
+      
+      const newIndex = list.children.length;
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'flex items-center gap-2';
+      itemDiv.id = `feat-container-${pkgId}-${newIndex}`;
+      itemDiv.innerHTML = `
+        <input type="text" class="dash-input text-xs flex-1 pkg-feature-input" data-pkg-id="${pkgId}" value="" placeholder="New highlight item...">
+        <button type="button" onclick="removeFeatureItem('${pkgId}', ${newIndex})" class="p-2.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors" title="Delete Highlight">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+        </button>
+      `;
+      list.appendChild(itemDiv);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function removeFeatureItem(pkgId, fIdx) {
+      const el = document.getElementById(`feat-container-${pkgId}-${fIdx}`);
+      if (el) el.remove();
+    }
+
+    function savePackageData(pkgId) {
+      const name = document.getElementById(`pkg-name-${pkgId}`).value.trim();
+      const price = parseInt(document.getElementById(`pkg-price-${pkgId}`).value) || 0;
+      const badge = document.getElementById(`pkg-badge-${pkgId}`).value.trim();
+      const desc = document.getElementById(`pkg-desc-${pkgId}`).value.trim();
+      
+      // Get all features inputs for this package
+      const featureInputs = document.querySelectorAll(`.pkg-feature-input[data-pkg-id="${pkgId}"]`);
+      const features = Array.from(featureInputs)
+                            .map(inp => inp.value.trim())
+                            .filter(val => val !== '');
+                            
+      OBMStore.updatePackage(pkgId, { name, price, badge, desc, features });
+      
+      renderPackageManagement();
+      showToast('Package Saved', `"${name}" details updated successfully.`, 'success');
+    }
+
+    function resetPackagesToDefault() {
+      if (confirm('Are you sure you want to reset all packages and rates back to the original studio defaults?')) {
+        OBMStore.resetPackages();
+        renderPackageManagement();
+        showToast('Reset Complete', 'All package details restored to original defaults.', 'gold');
+      }
     }
 
     function saveLiveEventSettings() {
@@ -1670,4 +2089,5 @@
     });
   </script>
 </body>
+
 </html>
