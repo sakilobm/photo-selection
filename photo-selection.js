@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDragAndDrop();
 
     // Set default theme from localStorage or default
-    const cachedTheme = localStorage.getItem('obm_theme') || 'sapphire';
+    const cachedTheme = localStorage.getItem('obm_theme') || 'white';
     setAppTheme(cachedTheme, null, true);
 
     // Setup swipe/slide event listeners
@@ -340,11 +340,32 @@ function loadClientWorkspace(email, username) {
 
                 // Render database logs
                 document.getElementById('clientNameDisplay').innerText = currentUser;
+                
+                // Bind client metadata to premium Hero Header
+                const client = clientDatabase.find(c => c.email.toLowerCase() === email.toLowerCase()) || {
+                    name: currentUser,
+                    sentAt: new Date().toISOString()
+                };
+                
+                const metaName = document.getElementById('clientMetaName');
+                const metaDate = document.getElementById('clientMetaDate');
+                const metaCode = document.getElementById('clientMetaCode');
+                
+                if (metaName) metaName.innerText = client.name || currentUser;
+                if (metaDate) {
+                    const formattedDate = client.sentAt ? new Date(client.sentAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : 'Dec 2025';
+                    metaDate.innerText = formattedDate;
+                }
+                if (metaCode) {
+                    // Pull code input or fallback to a standard passcode
+                    const codeVal = document.getElementById('authCode') ? document.getElementById('authCode').value : '';
+                    metaCode.innerText = codeVal || 'ADMIN2026';
+                }
+
                 refreshGallery();
                 initCarousel();
 
                 // Check if current user client is completed or flagged
-                const client = clientDatabase.find(c => c.email.toLowerCase() === email.toLowerCase());
                 if (client && (client.flagged || client.status === 'completed')) {
                     showClientSubmittedView(email, currentUser);
                     showToast('info', 'Selections Transmitted', `Welcome back, ${currentUser}. Your photo selections are locked & being processed by OBM Studio.`);
@@ -360,52 +381,11 @@ function loadClientWorkspace(email, username) {
 // CLIENT TAB SWITCHING & SUBMITTED SCREEN
 // ==========================================
 function switchTab(tabName) {
-    activeTab = tabName;
-    const galleryBtn = document.getElementById('tabBtn-gallery');
-    const dashboardBtn = document.getElementById('tabBtn-dashboard');
-    const carouselSection = document.getElementById('carouselSection');
-    const filtersSection = document.getElementById('filtersSection');
-    const gridSection = document.getElementById('gridSection');
-    const dashboardSection = document.getElementById('dashboardSection');
-    const submittedScreen = document.getElementById('clientSubmittedScreen');
-
-    const email = localStorage.getItem('obm_client_email') || 'priya@example.com';
-    const client = clientDatabase.find(c => c.email.toLowerCase() === email.toLowerCase());
-    const isSubmitted = client && (client.flagged || client.status === 'completed');
-
-    if (tabName === 'gallery') {
-        if (galleryBtn) galleryBtn.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 bg-[var(--theme-accent)] text-black shadow-lg";
-        if (dashboardBtn) dashboardBtn.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 text-gray-400 hover:text-white";
-
-        if (dashboardSection) dashboardSection.classList.add('hidden');
-
-        if (isSubmitted) {
-            showClientSubmittedView(email, currentUser);
-        } else {
-            if (submittedScreen) submittedScreen.classList.add('hidden');
-            if (carouselSection) carouselSection.classList.remove('hidden');
-            if (filtersSection) filtersSection.classList.remove('hidden');
-            if (gridSection) gridSection.classList.remove('hidden');
-        }
-        updateActionToolbar();
-    } else {
-        if (galleryBtn) galleryBtn.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 text-gray-400 hover:text-white";
-        if (dashboardBtn) dashboardBtn.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 bg-[var(--theme-accent)] text-black shadow-lg";
-
-        if (carouselSection) carouselSection.classList.add('hidden');
-        if (filtersSection) filtersSection.classList.add('hidden');
-        if (gridSection) gridSection.classList.add('hidden');
-        if (submittedScreen) submittedScreen.classList.add('hidden');
-
-        if (dashboardSection) dashboardSection.classList.remove('hidden');
-        refreshDashboard();
-    }
-
-    lucide.createIcons();
+    activeTab = 'gallery';
 }
 
 function refreshDashboard() {
-    switchDashTab(activeDashTab);
+    // No-op
 }
 
 async function submitSelections() {
@@ -547,7 +527,13 @@ function setAppTheme(themeName, event, skipRipple = false) {
     localStorage.setItem('obm_theme', themeName);
 
     // Sync global OBM Theme engine (aurora blobs + CSS vars across all pages)
-    if (window.OBMTheme) OBMTheme.apply(themeName);
+    if (window.OBMTheme) {
+        if (themeName === 'white') {
+            OBMTheme.setMode('light');
+        } else {
+            OBMTheme.set(themeName);
+        }
+    }
 
     // Redraw icons and highlights
     updateThemeIndicators();
@@ -2455,50 +2441,8 @@ function refreshDashboard() {
     else if (activeDashTab === 'status') refreshSelectionStatus();
 }
 
-// --- MAIN TAB SWITCH (Gallery ↔ Dashboard) ---
-function switchTab(tabId) {
-    activeTab = tabId;
-    const tabBtnGallery = document.getElementById('tabBtn-gallery');
-    const tabBtnDashboard = document.getElementById('tabBtn-dashboard');
-
-    const carouselSection = document.getElementById('carouselSection');
-    const filtersSection = document.getElementById('filtersSection');
-    const actionToolbar = document.getElementById('actionToolbar');
-    const gridSection = document.getElementById('gridSection');
-    const dashboardSection = document.getElementById('dashboardSection');
-
-    if (!tabBtnGallery || !tabBtnDashboard) return;
-
-    // Reset tab styling
-    tabBtnGallery.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 text-gray-400 hover:text-white";
-    tabBtnDashboard.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 text-gray-400 hover:text-white";
-
-    if (tabId === 'gallery') {
-        tabBtnGallery.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 bg-[var(--theme-accent)] text-black shadow-lg";
-        
-        if (carouselSection) carouselSection.classList.remove('hidden');
-        if (filtersSection) filtersSection.classList.remove('hidden');
-        if (gridSection) gridSection.classList.remove('hidden');
-        if (dashboardSection) dashboardSection.classList.add('hidden');
-        
-        updateActionToolbar();
-    } else {
-        tabBtnDashboard.className = "flex-grow sm:flex-initial py-2.5 px-5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 bg-[var(--theme-accent)] text-black shadow-lg";
-        
-        if (carouselSection) carouselSection.classList.add('hidden');
-        if (filtersSection) filtersSection.classList.add('hidden');
-        if (gridSection) gridSection.classList.add('hidden');
-        if (actionToolbar) {
-            actionToolbar.classList.add('hidden');
-            actionToolbar.classList.remove('flex');
-        }
-        if (dashboardSection) dashboardSection.classList.remove('hidden');
-
-        // Refresh all dashboard data
-        refreshDashboard();
-    }
-    lucide.createIcons();
-}
+// Duplicated switchTab stubbed out to maintain clean gallery-only workspace
+// switchTab is already defined at line 362
 
 function restoreFromDashboard(historyIndex) {
     if (historyIndex < 0 || historyIndex >= deletedPhotosHistory.length) return;

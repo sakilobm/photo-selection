@@ -644,3 +644,568 @@ h6 {
 body.modal-open {
     overflow: hidden;
 }
+
+/* ========================================== */
+/* DYNAMIC LIGHT THEME OVERRIDES FOR PORTAL   */
+/* ========================================== */
+html.theme-light body {
+    background: radial-gradient(circle at 50% -20%, #e2e8f0 0%, #f1f5f9 50%, #f8fafc 100%) !important;
+    color: #0f172a !important;
+}
+
+html.theme-light .glass-panel {
+    background: rgba(255, 255, 255, 0.75) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+html.theme-light .glass-card {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.theme-light .glass-card:hover {
+    border-color: rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1) !important;
+}
+
+html.theme-light .glass-card.selected {
+    border-color: var(--theme-accent) !important;
+    background: rgba(var(--theme-accent-rgb), 0.06) !important;
+    box-shadow: 0 0 25px rgba(var(--theme-accent-rgb), 0.2), 0 8px 32px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+html.theme-light .glass-input {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+}
+
+html.theme-light .glass-input:focus {
+    border-color: var(--theme-accent) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 0 15px rgba(var(--theme-accent-rgb), 0.1) !important;
+}
+
+html.theme-light .glass-input::placeholder {
+    color: #94a3b8 !important;
+}
+
+html.theme-light h1,
+html.theme-light h2,
+html.theme-light h3,
+html.theme-light h4,
+html.theme-light h5,
+html.theme-light h6 {
+    color: #0f172a !important;
+}
+
+html.theme-light .text-white {
+    color: #0f172a !important;
+}
+
+html.theme-light .bg-white\/5 {
+    background: rgba(0, 0, 0, 0.03) !important;
+}
+
+html.theme-light .border-white\/10 {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html.theme-light .border-white\/5 {
+    border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+html.theme-light .text-gray-400 {
+    color: #475569 !important;
+}
+
+html.theme-light .text-gray-300 {
+    color: #334155 !important;
+}
+
+html.theme-light .text-gray-200 {
+    color: #1e293b !important;
+}
+
+/* Handshake Loader and Loading Overlay overrides (Translucent frosted pearl glass) */
+html.theme-light #portalLoadingScreen,
+html.theme-light #loadingOverlay {
+    background: rgba(248, 250, 252, 0.84) !important;
+    backdrop-filter: blur(35px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(35px) saturate(180%) !important;
+}
+
+html.theme-light #portalLoadingScreen .text-white {
+    color: #0f172a !important;
+}
+
+html.theme-light #portalLoadingScreen .text-gray-400 {
+    color: #475569 !important;
+}
+
+html.theme-light #portalLoadingScreen .bg-white\/5 {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html.theme-light #portalLoadingScreen span {
+    color: #334155 !important;
+}
+
+html.theme-light #portalLoadingScreen .text-emerald-500 + span,
+html.theme-light #portalLoadingScreen .text-emerald-400 + span {
+    color: #059669 !important;
+    font-weight: 600;
+}
+
+html.theme-light #portalLoadingEmail {
+    color: var(--theme-accent) !important;
+}
+
+html.theme-light #portalProgressText {
+    color: #0f172a !important;
+}
+
+/* Category Filter Bar */
+html.theme-light .cat-pill {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+}
+
+html.theme-light .cat-pill:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+}
+
+html.theme-light .cat-pill.active {
+    background: var(--theme-accent) !important;
+    color: #ffffff !important;
+    border-color: var(--theme-accent) !important;
+}
+
+/* Action toolbars and indicators */
+html.theme-light .action-btn-secondary {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+}
+
+html.theme-light .action-btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+}
+
+/* Confirmation Dialog Modal overrides */
+html.theme-light .obm-modal-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15) !important;
+}
+
+html.theme-light .obm-modal-title {
+    color: #0f172a !important;
+}
+
+html.theme-light .obm-modal-message {
+    color: #475569 !important;
+}
+
+html.theme-light .obm-modal-btn-cancel {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+}
+
+html.theme-light .obm-modal-btn-cancel:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+}
+
+/* Client submitted final thank-you screen overrides */
+html.theme-light #clientSubmittedScreen .bg-white\/5 {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.theme-light #clientSubmittedScreen h2 {
+    color: #0f172a !important;
+}
+
+html.theme-light #clientSubmittedScreen p {
+    color: #475569 !important;
+}
+
+html.theme-light #clientSubmittedScreen .border-white\/10 {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Force bright white text color on top of dark image overlays (Carousel & Grid cards) in Light/White theme */
+html.theme-light .slider-wrapper *,
+html.theme-light #carouselTrack *,
+html.theme-light #imageGrid .group .absolute * {
+    color: #ffffff !important;
+}
+
+/* Maintain active tag badge dark contrast color */
+html.theme-light .slider-wrapper span.text-black,
+html.theme-light #carouselTrack span.text-black {
+    color: #000000 !important;
+}
+
+/* Loading Screen Console/Log Container overrides for Light Theme */
+html.theme-light #portalLoadingScreen div.bg-black\/30 {
+    background-color: rgba(15, 23, 42, 0.04) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+    color: #334155 !important;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+}
+
+/* Loading Screen progress status item checks overrides */
+html.theme-light #portalLoadingScreen .text-emerald-400 {
+    color: #047857 !important;
+    font-weight: 600 !important;
+}
+
+html.theme-light #portalLoadingScreen .text-emerald-500 {
+    color: #10b981 !important;
+}
+
+html.theme-light #portalLoadingScreen .text-white {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+html.theme-light #portalLoadingScreen .text-gray-400 {
+    color: #475569 !important;
+}
+
+html.theme-light #portalLoadingScreen .opacity-50 {
+    opacity: 0.65 !important;
+}
+
+/* Light Theme Lightbox Modal overrides (Frosted white-pearl backdrop + high-contrast light elements) */
+html.theme-light #lightboxModal {
+    background: rgba(248, 250, 252, 0.85) !important;
+    backdrop-filter: blur(40px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+}
+
+/* Lightbox Top Info Badge */
+html.theme-light #lightboxModal .absolute.top-6 .bg-black\/50 {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.theme-light #lightboxFilename {
+    color: #0f172a !important;
+}
+
+html.theme-light #lightboxIndex {
+    color: var(--theme-accent) !important;
+    font-weight: 700 !important;
+}
+
+/* Lightbox Navigation Side Buttons (chevron-left / chevron-right) */
+html.theme-light #lightboxModal button[onclick^="navigateLightbox"] {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.theme-light #lightboxModal button[onclick^="navigateLightbox"]:hover {
+    border-color: #0f172a !important;
+    background: #ffffff !important;
+}
+
+html.theme-light #lightboxModal button[onclick^="navigateLightbox"] svg {
+    stroke: #334155 !important;
+}
+
+/* Lightbox Bottom Thumbnails Bar */
+html.theme-light #lightboxThumbs {
+    background: rgba(255, 255, 255, 0.7) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.theme-light #lightboxThumbs button {
+    border-color: transparent !important;
+}
+
+html.theme-light #lightboxThumbs button.scale-105 {
+    border-color: var(--theme-accent) !important;
+    transform: scale(1.08) !important;
+    box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.25) !important;
+}
+
+/* Lightbox Bottom Controls Capsule */
+html.theme-light #lightboxModal .absolute.bottom-6.left-1\/2 {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06), 0 0 1px rgba(15, 23, 42, 0.1) !important;
+}
+
+/* Heart Select Button inside capsule */
+html.theme-light #lightboxSelectBtn {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+}
+
+html.theme-light #lightboxSelectBtn:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+}
+
+html.theme-light #lightboxSelectBtn svg {
+    stroke: #0f172a !important;
+}
+
+html.theme-light #lightboxSelectBtn svg.fill-white {
+    fill: #0f172a !important;
+    stroke: #0f172a !important;
+}
+
+/* Close & Next Buttons inside capsule */
+html.theme-light #lightboxModal .absolute.bottom-6.left-1\/2 button:not(#lightboxSelectBtn):not([onclick^="lightboxDeleteCurrent"]):not([onclick^="submitSelections"]) {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html.theme-light #lightboxModal .absolute.bottom-6.left-1\/2 button:not(#lightboxSelectBtn):not([onclick^="lightboxDeleteCurrent"]):not([onclick^="submitSelections"]):hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+}
+
+html.theme-light #lightboxModal .absolute.bottom-6.left-1\/2 button:not(#lightboxSelectBtn):not([onclick^="lightboxDeleteCurrent"]):not([onclick^="submitSelections"]) svg {
+    stroke: #475569 !important;
+}
+
+/* Delete Button inside capsule */
+html.theme-light #lightboxModal button[onclick^="lightboxDeleteCurrent"] {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: rgba(239, 68, 68, 0.2) !important;
+    color: #ef4444 !important;
+}
+
+html.theme-light #lightboxModal button[onclick^="lightboxDeleteCurrent"]:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+}
+
+html.theme-light #lightboxModal button[onclick^="lightboxDeleteCurrent"]:hover svg {
+    stroke: #ffffff !important;
+}
+
+html.theme-light #lightboxModal button[onclick^="lightboxDeleteCurrent"] svg {
+    stroke: #ef4444 !important;
+}
+
+/* Vertical divider inside capsule */
+html.theme-light #lightboxModal .absolute.bottom-6.left-1\/2 span.bg-white\/10 {
+    background-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+
+/* Premium Blurred Glass Overlay Backdrops (Lightbox and Loading Screens) */
+#lightboxModal,
+#portalLoadingScreen,
+#loadingOverlay {
+    background: rgba(10, 10, 15, 0.82) !important;
+    backdrop-filter: blur(35px) saturate(170%) !important;
+    -webkit-backdrop-filter: blur(35px) saturate(170%) !important;
+    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Premium Filter Pills and Upload dropzone Light Theme styling */
+html.theme-light #filtersSection {
+    background: rgba(255, 255, 255, 0.45) !important;
+    border-color: rgba(15, 23, 42, 0.06) !important;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-radius: 1rem !important; /* Restored previous rounded-2xl */
+}
+
+html.theme-light #categoryContainer button {
+    background: rgba(255, 255, 255, 0.6) !important;
+    border-color: rgba(15, 23, 42, 0.05) !important;
+    color: #475569 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-radius: 0.75rem !important; /* Restored previous rounded-xl */
+    padding: 8px 18px !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+html.theme-light #categoryContainer button:hover {
+    background: #ffffff !important;
+    border-color: rgba(15, 23, 42, 0.15) !important;
+    color: #0f172a !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.03) !important;
+}
+
+html.theme-light #categoryContainer button.bg-\[var\(--theme-accent\)\] {
+    background: var(--theme-accent) !important;
+    border-color: var(--theme-accent) !important;
+    color: #ffffff !important; /* Changed active text to white */
+    font-weight: 800 !important;
+    box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.25) !important;
+}
+
+html.theme-light #uploadDropzone {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1.5px dashed rgba(15, 23, 42, 0.12) !important;
+    border-radius: 0.75rem !important; /* Restored previous rounded-xl */
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+html.theme-light #uploadDropzone:hover {
+    border-color: var(--theme-accent) !important;
+    background: rgba(var(--theme-accent-rgb), 0.04) !important;
+    box-shadow: 0 4px 15px rgba(var(--theme-accent-rgb), 0.05) !important;
+}
+
+html.theme-light #uploadDropzone p.text-gray-200 {
+    color: #1e293b !important;
+    font-weight: 700 !important;
+}
+
+html.theme-light #uploadDropzone p.text-gray-400 {
+    color: #64748b !important;
+}
+
+html.theme-light #uploadDropzone i,
+html.theme-light #uploadDropzone svg {
+    color: var(--theme-accent) !important;
+    stroke: var(--theme-accent) !important;
+}
+
+/* Custom Cursor Light Theme overrides */
+html.theme-light #customCursor {
+    background-color: rgba(255, 255, 255, 0.75) !important;
+    border-color: rgba(15, 23, 42, 0.15) !important;
+    color: var(--theme-accent) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+html.theme-light #customCursor svg {
+    stroke: var(--theme-accent) !important;
+}
+
+/* Force white text/icon inside Finalize buttons in Light/White theme */
+html.theme-light button[onclick^="submitSelections"] {
+    color: #ffffff !important;
+}
+
+html.theme-light button[onclick^="submitSelections"] svg,
+html.theme-light button[onclick^="submitSelections"] i {
+    stroke: #ffffff !important;
+}
+
+/* Submit Modal & Success Overlay Light Theme Overrides */
+html.theme-light #submitModal,
+html.theme-light #successOverlay {
+    background: rgba(248, 250, 252, 0.85) !important;
+    backdrop-filter: blur(40px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+}
+
+html.theme-light #submitSelectedList {
+    background-color: rgba(15, 23, 42, 0.04) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+    color: #334155 !important;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.theme-light #submitSelectedList .bg-white\/5 {
+    background-color: rgba(15, 23, 42, 0.05) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.theme-light #submitSelectedList .text-gray-400 {
+    color: #475569 !important;
+}
+
+html.theme-light #submitSelectedList .border-white\/5 {
+    border-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+html.theme-light #submitSelectedList img.border-white\/10 {
+    border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+/* Action button overrides inside submitModal */
+html.theme-light #submitModal button.bg-\[var\(--theme-accent\)\] {
+    color: #ffffff !important;
+}
+
+html.theme-light #submitModal button.bg-white\/5 {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+}
+
+html.theme-light #submitModal button.bg-white\/5:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+}
+
+/* Primary buttons override in successOverlay */
+html.theme-light #successOverlay button {
+    background: var(--theme-accent) !important;
+    border-color: var(--theme-accent) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.25) !important;
+}
+
+html.theme-light #successOverlay button svg,
+html.theme-light #successOverlay button i {
+    stroke: #ffffff !important;
+}
+
+/* Action Toolbar (Bulk Selection) Light Theme Overrides */
+html.theme-light #actionToolbar {
+    background: rgba(255, 255, 255, 0.45) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+}
+
+html.theme-light #actionToolbar p.text-gray-300 {
+    color: #334155 !important;
+}
+
+html.theme-light #actionToolbar span#toolbarSelectedCount {
+    color: #0f172a !important;
+}
+
+html.theme-light #actionToolbar button:not([onclick^="bulkDelete"]) {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+}
+
+html.theme-light #actionToolbar button:not([onclick^="bulkDelete"]):hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+}
+
+html.theme-light #actionToolbar button[onclick^="bulkDelete"] {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: rgba(239, 68, 68, 0.2) !important;
+    color: #ef4444 !important;
+}
+
+html.theme-light #actionToolbar button[onclick^="bulkDelete"]:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+}

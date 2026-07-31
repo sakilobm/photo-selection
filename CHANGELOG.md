@@ -2,6 +2,15 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [2.4.0] - 2026-07-31
+
+### Changed — Client Portal Workspace Polish & Home Page Theme Adoption (`photo-selection.html`, `photo-selection.css`, `photo-selection.js`)
+- **Homepage White/Light Theme Adoption**: Redesigned the client photo selection portal to inherit the studio's premium light/white theme by default. Linked the core `styles.css` design system stylesheet and adopted the official animated aurora background mesh (`aurora-mesh`) for perfect visual parity with the home and packages pages.
+- **Removed Studio Nav Header Links**: Completely removed global site links (Home, Packages, Albums, Live, Admin) from the client view header to ensure absolute visual focus on photo selection.
+- **Removed Studio Dashboard Manager**: Removed the local "Studio Dashboard" management section (Overview, Deleted detection, Client directory, Disk upload panels) from the client interface, keeping it lightweight and client-facing.
+- **Dynamic Light Theme Stylesheet Overrides**: Appended high-contrast and soft gradient styling overrides inside `photo-selection.css` specifically for `html.theme-light`. Includes frosted white glass panels, shadow depth adjustments, and crisp text indicators. Forces all text, buttons, and icons inside the cinematic lightbox modal (`#lightboxModal`) and overlay cards to remain bright white, while transforming the custom hover zoom cursor (`#customCursor`) into a frosted white circle with a bright blue search icon.
+- **Cleaned JS State Handlers**: Removed legacy tab navigation switches and stubs in `photo-selection.js` to prevent runtime console errors from removed DOM selectors.
+
 ## [2.3.0] - 2026-07-31
 
 ### Added — Client Selection Status Tracker (`admin.html`, `photo-selection.js`)

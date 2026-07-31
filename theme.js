@@ -89,7 +89,7 @@
   };
 
   function getMode() {
-    return localStorage.getItem(MODE_KEY) || 'dark';
+    return localStorage.getItem(MODE_KEY) || 'light';
   }
 
   function getAccent() {
