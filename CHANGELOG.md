@@ -2,6 +2,18 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [2.3.0] - 2026-07-31
+
+### Added — Client Selection Status Tracker (`admin.html`, `photo-selection.js`)
+- **New Tab — Selection Tracker**: Added a dedicated dashboard tab focused exclusively on tracking live photo selection progress.
+  - **Dynamic Statistics Grid**: Displays cards showing Active Portals, Selections Completed, Average Progress %, and Pending Completion counts computed in real-time.
+  - **Stage filters**: Added quick filtering pills (`All`, `Unassigned`, `Not Started`, `In Progress`, `Completed`) with live counter tags.
+  - **Interactive Search**: Users can search for specific client portals by client name, email, or passcode.
+  - **Visual Progress & Previews**: Displays selection completion ratio progress bars, status labels, event date metadata, and a horizontal thumbnail strip of the first 6 approved photos.
+  - **Polished Card Divider**: Replaced the harsh `border-slate-800/80` dark divider line above "Approved Photo Selections Preview" with a custom `.selection-divider` class. Renders as a soft slate tint (`rgba(15, 23, 42, 0.08)`) in Light Theme and a subtle white tint (`rgba(255, 255, 255, 0.08)`) in Dark Theme to provide high-quality visual hierarchy without eye fatigue.
+  - **Action Group**: Allows admins to copy approved filenames as a newline list for Lightroom/Photoshop import, trigger simulated reminders, or force-finalize selections.
+- **Bi-directional Data Sync**: Integrated the client-side `photo-selection.js` engine to write choices back to the central `obm_admin_store_v1` LocalStorage database automatically during selection and final submission. Added a "Sync Portals" force sync option in the admin header.
+
 ## [2.2.0] - 2026-07-25
 
 ### Added — Studio Dashboard Full Feature Upgrade (`admin.html`, `admin-store.js`)

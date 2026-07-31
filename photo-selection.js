@@ -431,11 +431,42 @@ async function submitSelections() {
     const email = localStorage.getItem('obm_client_email') || 'priya@example.com';
     const client = clientDatabase.find(c => c.email.toLowerCase() === email.toLowerCase());
 
+    const selectedArr = Array.from(selectedPhotoIds);
+
     if (client) {
         client.status = 'completed';
         client.flagged = true;
-        client.selectedIds = Array.from(selectedPhotoIds);
+        client.selectedIds = selectedArr;
         saveClientDB();
+    }
+
+    // Central Admin Store Sync
+    try {
+        const adminStoreRaw = localStorage.getItem('obm_admin_store_v1');
+        if (adminStoreRaw) {
+            const adminStore = JSON.parse(adminStoreRaw);
+            const adminClient = adminStore.clientPortals.find(p => p.email.toLowerCase() === email.toLowerCase());
+            if (adminClient) {
+                adminClient.status = 'Completed';
+                adminClient.flag = 'COMPLETED';
+                adminClient.flagged = true;
+                adminClient.selectedPhotos = selectedArr.length;
+                
+                adminClient.photos.approved = selectedArr.map(id => {
+                    const photo = photoDatabase.find(p => p.id === id);
+                    return {
+                        name: photo ? photo.name : `OBM_Candid_Wedding_${String(id).padStart(3, '0')}.jpg`,
+                        category: photo ? photo.category.toUpperCase() : 'CANDID',
+                        size: '4.5 MB',
+                        thumb: photo ? photo.url : 'https://images.unsplash.com/photo-1519741497674-611481863552?w=80&h=80&fit=crop'
+                    };
+                });
+                
+                localStorage.setItem('obm_admin_store_v1', JSON.stringify(adminStore));
+            }
+        }
+    } catch (err) {
+        console.error('Error final-syncing selections to admin store', err);
     }
 
     triggerConfetti();
@@ -566,7 +597,44 @@ function updateThemeIndicators() {
 // ACTION HISTORY & PERSISTENCE
 // ==========================================
 function saveSelectionsToCache() {
-    localStorage.setItem('obm_selected_ids', JSON.stringify(Array.from(selectedPhotoIds)));
+    const selectedArr = Array.from(selectedPhotoIds);
+    localStorage.setItem('obm_selected_ids', JSON.stringify(selectedArr));
+    
+    // Sync selections back to the central OBM admin store
+    try {
+        const email = localStorage.getItem('obm_client_email');
+        if (email) {
+            const adminStoreRaw = localStorage.getItem('obm_admin_store_v1');
+            if (adminStoreRaw) {
+                const adminStore = JSON.parse(adminStoreRaw);
+                const adminClient = adminStore.clientPortals.find(p => p.email.toLowerCase() === email.toLowerCase());
+                if (adminClient) {
+                    adminClient.selectedPhotos = selectedArr.length;
+                    
+                    // Populate approved list
+                    adminClient.photos.approved = selectedArr.map(id => {
+                        const photo = photoDatabase.find(p => p.id === id);
+                        return {
+                            name: photo ? photo.name : `OBM_Candid_Wedding_${String(id).padStart(3, '0')}.jpg`,
+                            category: photo ? photo.category.toUpperCase() : 'CANDID',
+                            size: '4.5 MB',
+                            thumb: photo ? photo.url : 'https://images.unsplash.com/photo-1519741497674-611481863552?w=80&h=80&fit=crop'
+                        };
+                    });
+                    
+                    // Update status to 'In Progress' if not completed
+                    if (adminClient.status !== 'Completed' && adminClient.flag !== 'COMPLETED') {
+                        adminClient.status = selectedArr.length > 0 ? 'In Progress' : 'Pending';
+                        adminClient.flag = 'PENDING';
+                    }
+                    
+                    localStorage.setItem('obm_admin_store_v1', JSON.stringify(adminStore));
+                }
+            }
+        }
+    } catch (err) {
+        console.error('Error auto-syncing selections to admin store', err);
+    }
 }
 
 function loadSelectionsFromCache() {
@@ -575,9 +643,35 @@ function loadSelectionsFromCache() {
         try {
             const ids = JSON.parse(cached);
             selectedPhotoIds = new Set(ids);
+            return;
         } catch (e) {
             console.error("Selection cache load error", e);
         }
+    }
+    
+    // Fallback: Read approved selection IDs from the central OBM admin store if present
+    try {
+        const email = localStorage.getItem('obm_client_email');
+        if (email) {
+            const adminStoreRaw = localStorage.getItem('obm_admin_store_v1');
+            if (adminStoreRaw) {
+                const adminStore = JSON.parse(adminStoreRaw);
+                const adminClient = adminStore.clientPortals.find(p => p.email.toLowerCase() === email.toLowerCase());
+                if (adminClient && adminClient.photos && Array.isArray(adminClient.photos.approved)) {
+                    const ids = adminClient.photos.approved.map(photo => {
+                        const dbPhoto = photoDatabase.find(p => p.name === photo.name);
+                        return dbPhoto ? dbPhoto.id : null;
+                    }).filter(Boolean);
+                    
+                    if (ids.length > 0) {
+                        selectedPhotoIds = new Set(ids);
+                        localStorage.setItem('obm_selected_ids', JSON.stringify(ids));
+                    }
+                }
+            }
+        }
+    } catch (err) {
+        console.error('Error loading selections from admin store fallback', err);
     }
 }
 
