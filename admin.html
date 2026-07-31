@@ -1413,6 +1413,9 @@
         document.getElementById('admin-lock-screen').style.display = 'none';
         revealAllDashboard();
         renderAllData();
+        // Restore persisted active tab
+        const savedTab = localStorage.getItem('obm_admin_active_tab') || 'overview';
+        switchDashTab(savedTab);
       } else {
         document.getElementById('admin-lock-screen').style.display = 'flex';
       }
@@ -1438,6 +1441,9 @@
         showToast('Access Granted', 'Welcome to Studio Command Center', 'success');
         revealAllDashboard();
         renderAllData();
+        // Restore persisted active tab
+        const savedTab = localStorage.getItem('obm_admin_active_tab') || 'overview';
+        switchDashTab(savedTab);
       } else {
         document.getElementById('admin-auth-error').classList.remove('hidden');
         showToast('Auth Failed', 'Invalid passcode. Default: ADMIN2026', 'error');
@@ -1454,6 +1460,7 @@
     //  SCALABLE TAB SWITCHER
     // ══════════════════════════════════
     function switchDashTab(tabId, btn) {
+      localStorage.setItem('obm_admin_active_tab', tabId);
       document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active'));
 
       let targetBtn = btn;

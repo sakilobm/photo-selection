@@ -12,6 +12,7 @@ All notable changes to the `obm-new-version` project will be documented in this 
   - **Visual Progress & Previews**: Displays selection completion ratio progress bars, status labels, event date metadata, and a horizontal thumbnail strip of the first 6 approved photos.
   - **Polished Card Divider**: Replaced the harsh `border-slate-800/80` dark divider line above "Approved Photo Selections Preview" with a custom `.selection-divider` class. Renders as a soft slate tint (`rgba(15, 23, 42, 0.08)`) in Light Theme and a subtle white tint (`rgba(255, 255, 255, 0.08)`) in Dark Theme to provide high-quality visual hierarchy without eye fatigue.
   - **Action Group**: Allows admins to copy approved filenames as a newline list for Lightroom/Photoshop import, trigger simulated reminders, or force-finalize selections.
+- **Active Tab State Persistence**: Added automatic tab state persistence via LocalStorage (`obm_admin_active_tab`). The admin command center now remembers the last opened tab across page reloads and browser sessions, preventing reverting to the "Overview" tab by default.
 - **Bi-directional Data Sync**: Integrated the client-side `photo-selection.js` engine to write choices back to the central `obm_admin_store_v1` LocalStorage database automatically during selection and final submission. Added a "Sync Portals" force sync option in the admin header.
 
 ## [2.2.0] - 2026-07-25
