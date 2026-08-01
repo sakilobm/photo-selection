@@ -909,19 +909,30 @@ function refreshGallery() {
     }
 }
 
+let searchQuery = '';
+function handleSearch(val) {
+    searchQuery = val.toLowerCase().trim();
+    renderGrid();
+}
+
 function renderGrid() {
     const grid = document.getElementById('imageGrid');
     if (!grid) return;
-    const filteredData = selectedCategory === 'all'
+    let filteredData = selectedCategory === 'all'
         ? photoDatabase
         : photoDatabase.filter(p => p.category === selectedCategory);
 
+    if (searchQuery) {
+        filteredData = filteredData.filter(p => p.name.toLowerCase().includes(searchQuery));
+    }
+
     if (filteredData.length === 0) {
+        const isSearch = searchQuery !== '';
         grid.innerHTML = `
             <div class="col-span-full py-16 text-center glass-panel rounded-2xl border border-white/10 flex flex-col items-center justify-center p-8">
-                <i data-lucide="inbox" class="w-10 h-10 text-gray-500 mb-3"></i>
-                <p class="text-sm font-bold text-gray-300">Workspace slot is empty</p>
-                <p class="text-xs text-gray-500 mt-1 max-w-xs leading-relaxed">No photos found here. You can upload custom local photos inside the drag box to populate this folder.</p>
+                <i data-lucide="${isSearch ? 'search-code' : 'inbox'}" class="w-10 h-10 text-gray-500 mb-3"></i>
+                <p class="text-sm font-bold text-gray-300">${isSearch ? 'No matching photos found' : 'Workspace slot is empty'}</p>
+                <p class="text-xs text-gray-500 mt-1 max-w-xs leading-relaxed">${isSearch ? 'Try refining your keyword search terms.' : 'No photos found in this category slot.'}</p>
             </div>
         `;
         lucide.createIcons();

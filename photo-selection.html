@@ -301,16 +301,11 @@
                     <!-- Dynamically generated buttons -->
                 </div>
 
-                <!-- Dynamic Drag & Drop Upload Zone -->
-                <div id="uploadDropzone"
-                    class="flex-grow max-w-md border-2 border-dashed border-white/15 hover:border-[var(--theme-accent)] bg-white/5 hover:bg-[var(--theme-accent)]/5 rounded-xl px-4 py-2 flex items-center justify-center gap-3 cursor-pointer transition-all duration-300">
-                    <i data-lucide="upload-cloud"
-                        class="w-6 h-6 text-gray-400 group-hover:text-[var(--theme-accent)]"></i>
-                    <div class="text-left">
-                        <p class="text-xs font-bold text-gray-200">Drag & Drop client photos</p>
-                        <p class="text-[10px] text-gray-400">or click to browse local files</p>
-                    </div>
-                    <input type="file" id="fileUploadInput" multiple accept="image/*" class="hidden">
+                <!-- Live Search Input (Replacing the photographer-facing upload dropzone) -->
+                <div class="flex-grow max-w-md relative flex items-center">
+                    <input type="text" id="gallerySearchInput" oninput="handleSearch(this.value)" placeholder="Search photos by filename..." 
+                        class="w-full glass-input rounded-xl py-2.5 px-4 pl-10 text-white text-xs focus:outline-none focus:border-[var(--theme-accent)] transition-all">
+                    <i data-lucide="search" class="w-4.5 h-4.5 text-gray-400 absolute left-3.5 pointer-events-none"></i>
                 </div>
             </section>
 

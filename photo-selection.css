@@ -1057,34 +1057,25 @@ html.theme-light #categoryContainer button.bg-\[var\(--theme-accent\)\] {
     box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.25) !important;
 }
 
-html.theme-light #uploadDropzone {
-    background: rgba(255, 255, 255, 0.5) !important;
-    border: 1.5px dashed rgba(15, 23, 42, 0.12) !important;
-    border-radius: 0.75rem !important; /* Restored previous rounded-xl */
-    padding-left: 24px !important;
-    padding-right: 24px !important;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+html.theme-light #gallerySearchInput {
+    background: rgba(255, 255, 255, 0.6) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+    color: #0f172a !important;
 }
 
-html.theme-light #uploadDropzone:hover {
+html.theme-light #gallerySearchInput:focus {
     border-color: var(--theme-accent) !important;
-    background: rgba(var(--theme-accent-rgb), 0.04) !important;
-    box-shadow: 0 4px 15px rgba(var(--theme-accent-rgb), 0.05) !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.1) !important;
 }
 
-html.theme-light #uploadDropzone p.text-gray-200 {
-    color: #1e293b !important;
-    font-weight: 700 !important;
+html.theme-light #gallerySearchInput::placeholder {
+    color: #94a3b8 !important;
 }
 
-html.theme-light #uploadDropzone p.text-gray-400 {
-    color: #64748b !important;
-}
-
-html.theme-light #uploadDropzone i,
-html.theme-light #uploadDropzone svg {
-    color: var(--theme-accent) !important;
-    stroke: var(--theme-accent) !important;
+html.theme-light #filtersSection .absolute svg,
+html.theme-light #filtersSection .absolute i {
+    stroke: #64748b !important;
 }
 
 /* Custom Cursor Light Theme overrides */
