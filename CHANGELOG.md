@@ -2,6 +2,11 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [2.4.1] - 2026-08-02
+
+### Changed — Footer signature customization (`index.html`)
+- **Tribute Signature**: Custom-tailored the footer copyright note on the index page to display a family tribute: `"Crafted with ❤️ by their sons"`.
+
 ## [2.4.0] - 2026-07-31
 
 ### Changed — Client Portal Workspace Polish & Home Page Theme Adoption (`photo-selection.html`, `photo-selection.css`, `photo-selection.js`)
