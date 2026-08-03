@@ -1,0 +1,8 @@
+# Framework Project
+config.json
+config.json.template
+/htdocs/vendor/
+/node_modules/
+*.log
+.DS_Store
+Thumbs.db
