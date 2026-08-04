@@ -9,18 +9,62 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.lucide) lucide.createIcons();
 
   // ── NAV LINK ACTIVE STATE (scroll spy)
-  const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+  const navLinks = document.querySelectorAll('.nav-link[href*="#"]');
   const sections = document.querySelectorAll('section[id]');
   const observerNav = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        navLinks.forEach(l => l.classList.remove('active'));
-        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
-        if (active) active.classList.add('active');
+        navLinks.forEach(l => {
+          const href = l.getAttribute('href');
+          if (href && href.endsWith('#' + entry.target.id)) {
+            l.classList.add('active');
+          } else {
+            l.classList.remove('active');
+          }
+        });
       }
     });
   }, { threshold: 0.4 });
   sections.forEach(s => observerNav.observe(s));
+
+  // ── SMOOTH SCROLL FOR HASH LINKS ON HOME
+  const isHomepage = window.location.pathname === '/' || window.location.pathname === '/index' || window.location.pathname.endsWith('/index.php');
+  document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      const hashIndex = href.indexOf('#');
+      if (hashIndex !== -1) {
+        const hash = href.substring(hashIndex);
+        const target = document.querySelector(hash);
+        if (target && isHomepage) {
+          e.preventDefault();
+          const offset = 90;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+  });
+
+  // ── SMOOTH SCROLL ENTRANCE ON PAGE LOAD IF HASH EXISTS
+  if (window.location.hash && isHomepage) {
+    const hash = window.location.hash;
+    const target = document.querySelector(hash);
+    if (target) {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        const offset = 90;
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }, 300);
+    }
+  }
 
   // ── LOGIN MODAL LOGIC
   const modal = document.getElementById('login-modal');

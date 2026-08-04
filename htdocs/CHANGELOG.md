@@ -2,6 +2,13 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.1.3] - 2026-08-04
+
+### Changed — Smooth Scrolling & Active State Observer Updates (`portfolio.js`)
+- **Seamless Local Navigation**: Created custom anchor click interceptors inside `portfolio.js` that capture navigation clicks on local section anchors (Story, Services, Portfolio) and trigger smooth animation scroll transitions instead of loading page redirects.
+- **Dynamic Scroll Spy Active Highlighting**: Rebuilt navigation scroll spy logic to resolve target selectors using partial attributes (`href*="#"`), fixing active visual highlights that were broken by clean routing URL configurations.
+- **Page Load Section Transitions**: Added page load checking routines that smoothly scroll a visitor to targeted hashes after initial content painting, delivering high-end entrance animations when moving between separate subpages.
+
 ## [3.1.2] - 2026-08-04
 
 ### Fixed — Homepage Button Style Conflicts (`_templates/core/_head.php`)

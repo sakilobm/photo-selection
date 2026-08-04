@@ -27,3 +27,10 @@ Rules:
 - GET /packages.php -> Redirects (301) to /packages -> Serves packages.php internally: **PASS**
 - GET /index.php -> Redirects (301) to / -> Serves index.php internally: **PASS**
 - GET /admin.html -> Redirects (301) to /admin -> Serves admin.php internally: **PASS**
+
+### Navigation & Smooth Scrolling Checks
+We validated homepage anchor scrolling transitions.
+Tests:
+- Clicking nav links (Story, Services, Portfolio) scrolls page smoothly to target position: **PASS**
+- Loading site with hash target (e.g. /#story) triggers smooth scrolling entrance on page load: **PASS**
+- Scroll spy highlights correctly activate corresponding nav link elements: **PASS**
