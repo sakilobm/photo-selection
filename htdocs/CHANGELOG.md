@@ -2,6 +2,42 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.1.2] - 2026-08-04
+
+### Fixed — Homepage Button Style Conflicts (`_templates/core/_head.php`)
+- **Resolved Design System Override**: Excluded the `index.php` template from automatic dynamic stylesheet loading in `core/_head.php`. This prevents the legacy `assets/css/index.css` design system rules from implicitly overriding `.btn-primary` with orange rectangular colors, restoring the luxury round pill aesthetic and reactive theme accent properties on the homepage.
+
+## [3.1.1] - 2026-08-04
+
+### Changed — Dynamic Client Session UI Adaptations (`_templates/index.php`)
+- **Dynamic Homepage CTA buttons**: Programmed PHP session checks inside `_templates/index.php` so that all call-to-action buttons (Hero, Services list, Footer) dynamically render as direct link targets (`Go to Selection Workspace`) if the client has already signed in, eliminating redundant login prompts.
+
+## [3.1.0] - 2026-08-04
+
+### Changed — Professional Extensionless Routing & Canonical Redirections (`.htaccess`, `portfolio.js`)
+- **Canonical Address Bar Redirects**: Configured Apache `.htaccess` rewrite conditions using raw HTTP browser headers (`%{THE_REQUEST}`) to redirect requests with `.html` or `.php` extensions to their clean, extensionless counterparts (e.g., `/packages.html` -> `/packages`).
+- **Clean Index Redirects**: Added rules to redirect `/index`, `/index.php`, and `/index.html` to the clean root path `/`.
+- **Client redirection fix**: Updated client portal redirection inside `portfolio.js` to dispatch visitors to `/photo-selection` instead of the static `photo-selection.html` page.
+
+### Removed
+- **Static Homepage**: Deleted `index.html` in the document root to guarantee Apache defaults to processing the dynamic `index.php` controller.
+
+## [3.0.0] - 2026-08-04
+
+### Added — Private Administrator Authentication & Database Command Center (`admin.php`, `_templates/admin.php`, `admin-store.js`)
+- **Session Authentication Security**: Secured the Studio Command Center using native Aether framework `Session::ensureLogin()`. Unauthorized access triggers automatic redirects to the standard admin login screen.
+- **Dynamic Database Synchronization**: Integrated the admin panel metrics, package rates, live client directory list, and selection tracker tables to fetch data directly from MySQL database tables (`packages`, `client_portals`, `client_photos`, `live_event`) instead of client-side local mocks.
+- **Secure Logout Routing**: Implemented administrative session destruction by processing request flags (`/admin?logout=1`) to invalidate session tokens.
+- **Physical Upload Dispatcher**: Replaced Simulated Upload Queue with actual multi-part physical file uploading to `/api/admin/upload_photos`. File payloads are dynamically saved into the local `htdocs/uploads/` directory, and file path references are written to the `client_photos` database table.
+
+### Changed — Client Portal Authentication & Persistence (`photo-selection.js`, `photo-selection.php`)
+- **Interactive Database Authentication**: Connected client login forms to `/api/auth/client_login` API endpoints for real event code validations, populating $_SESSION client parameters on success.
+- **Live Selections persistence**: Converted selections submission handler in `photo-selection.js` to dispatch selections transactionally to `/api/photos/finalize_selections` instead of `localStorage`.
+- **Database Selection Loading**: Replaced mockup gallery lists with real photo entries returned by `/api/photos/get_client_photos`.
+
+### Removed
+- **Redundant Static Assets**: Removed static `.html` files (`admin.html`, `packages.html`, `photo-selection.html`, `digital-album.html`, `live-event.html`) to clean the workspace.
+
 ## [2.4.1] - 2026-08-02
 
 ### Changed — Footer signature customization (`index.html`)

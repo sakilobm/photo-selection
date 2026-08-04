@@ -1,0 +1,896 @@
+<?php use Aether\Session; ?>
+
+<style>
+  /* ═══ LIVE EVENT CUSTOM STYLES ═══ */
+  .code-input-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .code-char {
+    width: 56px;
+    height: 68px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    font-family: 'Outfit', monospace;
+    color: #fff;
+    caret-color: var(--theme-accent);
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .code-char:focus {
+    border-color: var(--theme-accent);
+    box-shadow: 0 0 30px rgba(var(--theme-accentRGB), 0.25), inset 0 0 20px rgba(var(--theme-accentRGB), 0.05);
+    background: rgba(var(--theme-accentRGB), 0.05);
+    transform: translateY(-3px);
+  }
+
+  .code-char.filled {
+    border-color: var(--theme-accent);
+    background: rgba(var(--theme-accentRGB), 0.08);
+  }
+
+  .code-char.error {
+    border-color: #f87171 !important;
+    animation: codeShake 0.5s ease;
+  }
+
+  @keyframes codeShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+
+  .live-pulse {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ef4444;
+    position: relative;
+  }
+
+  .live-pulse::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(239, 68, 68, 0.4);
+    animation: livePing 1.5s infinite;
+  }
+
+  @keyframes livePing {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+
+  .video-player-wrapper {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #000;
+    aspect-ratio: 16/9;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), 0 0 60px rgba(var(--theme-accentRGB), 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .video-player-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 30%),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 20%);
+    pointer-events: none;
+  }
+
+  .video-live-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(239, 68, 68, 0.9);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .video-viewer-count {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .chat-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: rgba(7, 13, 24, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 300px;
+    max-height: 400px;
+  }
+
+  .chat-messages::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+  }
+
+  .chat-msg {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    animation: chatSlideIn 0.3s ease forwards;
+  }
+
+  @keyframes chatSlideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chat-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .chat-bubble {
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    max-width: 85%;
+  }
+
+  .chat-bubble .chat-name {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .chat-bubble .chat-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.5;
+  }
+
+  .chat-bubble .chat-time {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 4px;
+  }
+
+  .chat-input-bar {
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .chat-input {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .chat-input:focus {
+    border-color: var(--theme-accent);
+  }
+
+  .chat-input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  .chat-send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    background: var(--theme-accent);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .chat-send-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 20px rgba(var(--theme-accentRGB), 0.4);
+  }
+
+  .reaction-bar {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .reaction-btn {
+    padding: 6px 12px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .reaction-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.15);
+  }
+
+  .reaction-btn span {
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .floating-reaction {
+    position: fixed;
+    bottom: 20%;
+    right: 15%;
+    font-size: 24px;
+    pointer-events: none;
+    z-index: 100;
+    animation: floatReaction 2s ease forwards;
+  }
+
+  @keyframes floatReaction {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    50% { opacity: 0.8; transform: translateY(-80px) scale(1.3); }
+    100% { opacity: 0; transform: translateY(-180px) scale(0.6); }
+  }
+
+  .gate-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+  }
+
+  .gate-card {
+    max-width: 480px;
+    width: 100%;
+    padding: 48px 40px;
+    background: rgba(7, 13, 24, 0.8);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 28px;
+    text-align: center;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 80px rgba(var(--theme-accentRGB), 0.08);
+  }
+
+  .stream-screen {
+    display: none;
+  }
+
+  .stream-screen.active {
+    display: block;
+  }
+
+  .event-info-card {
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.3s ease;
+  }
+
+  .event-info-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(var(--theme-accentRGB), 0.2);
+  }
+
+  @media (max-width: 768px) {
+    .code-char { width: 44px; height: 56px; font-size: 22px; }
+    .code-input-group { gap: 8px; }
+  }
+</style>
+
+<!-- ═══════════════════════════════════════════
+     GATE SCREEN — Enter Event Code
+═══════════════════════════════════════════ -->
+<div id="gate-screen" class="gate-screen">
+  <div class="gate-card" data-reveal="scale">
+    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-tr from-[var(--theme-accent)] via-purple-500 to-amber-400 flex items-center justify-center shadow-xl shadow-[var(--theme-accent)]/20 relative">
+      <i data-lucide="radio" class="w-9 h-9 text-slate-950"></i>
+      <div class="absolute inset-0 rounded-full border-2 border-[var(--theme-accent)]/30 animate-ping"></div>
+    </div>
+
+    <h1 class="text-2xl md:text-3xl font-black text-white font-['Outfit'] mb-2">Join Live Event</h1>
+    <p class="text-sm text-slate-400 mb-8">Enter the 6-digit event code shared by OBM Studio to access your private live stream.</p>
+
+    <!-- Code Input -->
+    <div class="code-input-group mb-6" id="code-inputs">
+      <input type="text" maxlength="1" class="code-char" data-index="0" autocomplete="off" inputmode="text">
+      <input type="text" maxlength="1" class="code-char" data-index="1" autocomplete="off" inputmode="text">
+      <input type="text" maxlength="1" class="code-char" data-index="2" autocomplete="off" inputmode="text">
+      <input type="text" maxlength="1" class="code-char" data-index="3" autocomplete="off" inputmode="text">
+      <input type="text" maxlength="1" class="code-char" data-index="4" autocomplete="off" inputmode="text">
+      <input type="text" maxlength="1" class="code-char" data-index="5" autocomplete="off" inputmode="text">
+    </div>
+
+    <p id="code-error" class="text-xs text-rose-400 mb-4 hidden">Invalid event code. Please check and try again.</p>
+
+    <button id="join-btn" onclick="validateCode()" class="btn-primary w-full justify-center py-3.5 text-sm font-bold mb-6" disabled>
+      <i data-lucide="play" class="w-4 h-4"></i> Join Live Stream
+    </button>
+
+    <!-- Demo hint -->
+    <div class="gate-demo-box p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+      <p class="text-[11px] text-slate-500 mb-2">Demo Event Code</p>
+      <div class="flex items-center justify-center gap-2">
+        <span class="font-mono text-lg font-black text-[var(--theme-accent)] tracking-[0.3em]"><?= htmlspecialchars($event['code'] ?? 'OBM026') ?></span>
+        <button onclick="fillDemoCode()" class="p-1.5 rounded-lg bg-[var(--theme-accent)]/10 hover:bg-[var(--theme-accent)]/20 text-[var(--theme-accent)] transition-colors" title="Auto-fill demo code">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Features below gate -->
+    <div class="grid grid-cols-3 gap-3 mt-8">
+      <div class="text-center">
+        <div class="w-8 h-8 mx-auto mb-2 rounded-lg bg-rose-500/10 border border-rose-400/20 flex items-center justify-center text-rose-400">
+          <i data-lucide="video" class="w-4 h-4"></i>
+        </div>
+        <p class="text-[10px] text-slate-500 font-medium">HD Live Stream</p>
+      </div>
+      <div class="text-center">
+        <div class="w-8 h-8 mx-auto mb-2 rounded-lg bg-purple-500/10 border border-purple-400/20 flex items-center justify-center text-purple-400">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+        </div>
+        <p class="text-[10px] text-slate-500 font-medium">Live Chat</p>
+      </div>
+      <div class="text-center">
+        <div class="w-8 h-8 mx-auto mb-2 rounded-lg bg-amber-500/10 border border-amber-400/20 flex items-center justify-center text-amber-400">
+          <i data-lucide="heart" class="w-4 h-4"></i>
+        </div>
+        <p class="text-[10px] text-slate-500 font-medium">Live Reactions</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     STREAM SCREEN — Live Video + Chat
+═══════════════════════════════════════════ -->
+<div id="stream-screen" class="stream-screen">
+  <!-- Stream Header -->
+  <section class="pt-28 pb-4 px-6 max-w-7xl mx-auto" data-reveal>
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="live-pulse"></div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-black text-white font-['Outfit']" id="event-title"><?= htmlspecialchars($event['title'] ?? 'Wedding Broadcast') ?></h1>
+          <p class="text-xs text-slate-400" id="event-subtitle"><?= htmlspecialchars($event['subtitle'] ?? 'Live Stream') ?></p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 border border-rose-400/30 text-rose-400 text-xs font-bold">
+          <div class="live-pulse" style="width:6px;height:6px"></div>
+          LIVE NOW
+        </div>
+        <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300 text-xs" id="viewer-count-header">
+          <i data-lucide="users" class="w-3.5 h-3.5"></i>
+          <span id="viewer-num"><?= (int)($event['viewers'] ?? 142) ?></span> watching
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video + Chat Grid -->
+  <section class="px-6 max-w-7xl mx-auto pb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <!-- VIDEO PLAYER (2 cols) -->
+      <div class="lg:col-span-2" data-reveal>
+        <div class="video-player-wrapper group">
+          <video id="live-video" muted loop playsinline poster="<?= get_config('base_path') . htmlspecialchars($event['stream_url'] ?? 'assets/wedding.jpg') ?>">
+            <source src="" type="video/mp4">
+          </video>
+
+          <div class="video-overlay"></div>
+          <div class="video-live-badge">
+            <div class="live-pulse" style="width:6px;height:6px"></div>
+            LIVE
+          </div>
+          <div class="video-viewer-count">
+            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+            <span id="vid-viewer-count"><?= (int)($event['viewers'] ?? 142) ?></span>
+          </div>
+
+          <div id="play-overlay" class="absolute inset-0 z-20 flex items-center justify-center cursor-pointer" onclick="startPlayback()">
+            <div class="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all hover:scale-110">
+              <i data-lucide="play" class="w-8 h-8 text-white ml-1"></i>
+            </div>
+          </div>
+
+          <div class="absolute bottom-0 left-0 right-0 z-20 p-4 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div class="flex items-center gap-3">
+              <button onclick="toggleMute()" class="p-2 rounded-lg bg-black/40 hover:bg-black/60 text-white transition-all" id="mute-btn">
+                <i data-lucide="volume-x" class="w-4 h-4" id="mute-icon"></i>
+              </button>
+              <button onclick="toggleQuality()" class="px-3 py-1.5 rounded-lg bg-black/40 hover:bg-black/60 text-white text-[10px] font-bold transition-all" id="quality-btn">
+                <?= htmlspecialchars($event['quality'] ?? '1080p') ?>
+              </button>
+            </div>
+            <div class="flex items-center gap-3">
+              <button onclick="togglePIP()" class="p-2 rounded-lg bg-black/40 hover:bg-black/60 text-white transition-all" title="Picture-in-Picture">
+                <i data-lucide="picture-in-picture-2" class="w-4 h-4"></i>
+              </button>
+              <button onclick="toggleVideoFullscreen()" class="p-2 rounded-lg bg-black/40 hover:bg-black/60 text-white transition-all" title="Fullscreen">
+                <i data-lucide="maximize" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between mt-3 glass-card px-4 py-3">
+          <div class="flex items-center gap-2">
+            <button onclick="sendReaction('heart')" class="reaction-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              </svg>
+              <span id="react-heart-count">24</span>
+            </button>
+            <button onclick="sendReaction('fire')" class="reaction-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+              </svg>
+              <span id="react-fire-count">18</span>
+            </button>
+            <button onclick="sendReaction('clap')" class="reaction-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+              <span id="react-clap-count">31</span>
+            </button>
+            <button onclick="sendReaction('party')" class="reaction-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5.8 11.3 2 22l10.7-3.79" />
+                <path d="M4 3h.01" />
+                <path d="M22 8h.01" />
+                <path d="M15 2h.01" />
+                <path d="M22 20h.01" />
+                <path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10" />
+                <path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22H17" />
+                <path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98v0C9.52 4.9 9 5.52 9 6.23V7" />
+                <path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z" />
+              </svg>
+              <span id="react-party-count">12</span>
+            </button>
+          </div>
+          <div class="text-[10px] text-slate-500 flex items-center gap-1.5">
+            <i data-lucide="clock" class="w-3 h-3"></i>
+            <span id="stream-duration">01:23:45</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE CHAT (1 col) -->
+      <div class="lg:col-span-1" data-reveal>
+        <div class="chat-panel">
+          <div class="chat-header">
+            <div class="flex items-center gap-2">
+              <i data-lucide="message-circle" class="w-4 h-4 text-[var(--theme-accent)]"></i>
+              <span class="text-sm font-bold text-white">Live Chat</span>
+            </div>
+            <span class="text-[10px] text-slate-500" id="chat-count">24 messages</span>
+          </div>
+
+          <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be injected by JS -->
+          </div>
+
+          <?php if (isset($event['chat_enabled']) && $event['chat_enabled']): ?>
+            <div class="chat-input-bar">
+              <input type="text" id="chat-input" class="chat-input" placeholder="Send a message..." maxlength="200" onkeydown="if(event.key==='Enter')sendChatMessage()">
+              <button onclick="sendChatMessage()" class="chat-send-btn" title="Send">
+                <i data-lucide="send" class="w-4 h-4"></i>
+              </button>
+            </div>
+          <?php else: ?>
+            <div class="chat-input-bar justify-center text-xs text-slate-500 italic py-4">
+              Chat has been disabled by the administrator.
+            </div>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Event Info Cards -->
+  <section class="px-6 max-w-7xl mx-auto pb-16">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4" data-reveal>
+      <div class="event-info-card">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-400/20 flex items-center justify-center text-amber-400">
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+          </div>
+          <span class="text-xs font-bold text-white">Event Date</span>
+        </div>
+        <p class="text-sm text-slate-300 font-semibold">July 24, 2026</p>
+        <p class="text-[10px] text-slate-500">Thursday Evening</p>
+      </div>
+      <div class="event-info-card">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-400/20 flex items-center justify-center text-rose-400">
+            <i data-lucide="map-pin" class="w-4 h-4"></i>
+          </div>
+          <span class="text-xs font-bold text-white">Venue</span>
+        </div>
+        <p class="text-sm text-slate-300 font-semibold">Grand Mahal Centre</p>
+        <p class="text-[10px] text-slate-500">Chennai, Tamil Nadu</p>
+      </div>
+      <div class="event-info-card">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 rounded-lg bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 flex items-center justify-center text-[var(--theme-accent)]">
+            <i data-lucide="camera" class="w-4 h-4"></i>
+          </div>
+          <span class="text-xs font-bold text-white">Production</span>
+        </div>
+        <p class="text-sm text-slate-300 font-semibold">OBM Studio</p>
+        <p class="text-[10px] text-slate-500">4K Multi-Camera Setup</p>
+      </div>
+      <div class="event-info-card">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
+            <i data-lucide="wifi" class="w-4 h-4"></i>
+          </div>
+          <span class="text-xs font-bold text-white">Stream Quality</span>
+        </div>
+        <p class="text-sm text-slate-300 font-semibold">1080p HD</p>
+        <p class="text-[10px] text-slate-500">Low Latency • 2s Delay</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // ─── LIVE EVENT ENGINE ───
+  const DYNAMIC_EVENT_CODE = '<?= htmlspecialchars($event['code'] ?? 'OBM026') ?>';
+  const VALID_CODES = [DYNAMIC_EVENT_CODE, 'DEMO26', 'LIVE24'];
+  let isMuted = true;
+  let currentQuality = '<?= htmlspecialchars($event['quality'] ?? '1080p') ?>';
+  let chatMessages = [];
+  let viewerCount = <?= (int)($event['viewers'] ?? 142) ?>;
+  let streamSeconds = 5025; // 01:23:45
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) lucide.createIcons();
+
+    // Scroll reveal
+    const ro = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('revealed'), i * 100);
+          ro.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('[data-reveal]').forEach(el => ro.observe(el));
+
+    // Code input behavior
+    setupCodeInputs();
+  });
+
+  // ── CODE INPUT LOGIC ──
+  function setupCodeInputs() {
+    const inputs = document.querySelectorAll('.code-char');
+    inputs.forEach((input, idx) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.toUpperCase();
+        e.target.value = val;
+        if (val) {
+          e.target.classList.add('filled');
+          if (idx < inputs.length - 1) inputs[idx + 1].focus();
+        } else {
+          e.target.classList.remove('filled');
+        }
+        checkCodeComplete();
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+          inputs[idx - 1].focus();
+          inputs[idx - 1].value = '';
+          inputs[idx - 1].classList.remove('filled');
+        }
+        if (e.key === 'Enter') validateCode();
+      });
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasted = (e.clipboardData.getData('text') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+        pasted.split('').forEach((ch, i) => {
+          if (inputs[i]) {
+            inputs[i].value = ch;
+            inputs[i].classList.add('filled');
+          }
+        });
+        if (pasted.length > 0) inputs[Math.min(pasted.length, inputs.length - 1)].focus();
+        checkCodeComplete();
+      });
+    });
+    inputs[0].focus();
+  }
+
+  function checkCodeComplete() {
+    const inputs = document.querySelectorAll('.code-char');
+    const code = Array.from(inputs).map(i => i.value).join('');
+    document.getElementById('join-btn').disabled = code.length < 6;
+  }
+
+  function getEnteredCode() {
+    return Array.from(document.querySelectorAll('.code-char')).map(i => i.value).join('');
+  }
+
+  function fillDemoCode() {
+    const inputs = document.querySelectorAll('.code-char');
+    DYNAMIC_EVENT_CODE.split('').forEach((ch, i) => {
+      if (inputs[i]) {
+        inputs[i].value = ch;
+        inputs[i].classList.add('filled');
+      }
+    });
+    checkCodeComplete();
+    showToast('Live Code Filled', `Code ${DYNAMIC_EVENT_CODE} entered. Click Join Stream.`, 'sapphire');
+  }
+
+  function validateCode() {
+    const code = getEnteredCode();
+    const isMatch = VALID_CODES.includes(code);
+
+    if (isMatch) {
+      document.getElementById('code-error').classList.add('hidden');
+      showToast('Access Granted!', 'Connecting to live stream...', 'success');
+      setTimeout(() => {
+        document.getElementById('gate-screen').style.display = 'none';
+        document.getElementById('stream-screen').classList.add('active');
+        if (window.lucide) lucide.createIcons();
+
+        const ro2 = new IntersectionObserver((entries) => {
+          entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+              setTimeout(() => e.target.classList.add('revealed'), i * 80);
+              ro2.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('#stream-screen [data-reveal]').forEach(el => ro2.observe(el));
+
+        loadInitialChat();
+        startStreamSimulation();
+      }, 800);
+    } else {
+      document.getElementById('code-error').classList.remove('hidden');
+      document.querySelectorAll('.code-char').forEach(i => {
+        i.classList.add('error');
+        setTimeout(() => i.classList.remove('error'), 600);
+      });
+      showToast('Invalid Code', 'The event code you entered is incorrect.', 'error');
+    }
+  }
+
+  // ── STREAM SIMULATION ──
+  function startStreamSimulation() {
+    setInterval(() => {
+      viewerCount += Math.floor(Math.random() * 7) - 3;
+      viewerCount = Math.max(80, viewerCount);
+      document.getElementById('viewer-num').textContent = viewerCount;
+      document.getElementById('vid-viewer-count').textContent = viewerCount;
+    }, 5000);
+
+    setInterval(() => {
+      streamSeconds++;
+      const h = String(Math.floor(streamSeconds / 3600)).padStart(2, '0');
+      const m = String(Math.floor((streamSeconds % 3600) / 60)).padStart(2, '0');
+      const s = String(streamSeconds % 60).padStart(2, '0');
+      document.getElementById('stream-duration').textContent = `${h}:${m}:${s}`;
+    }, 1000);
+
+    const botMessages = [
+      { name: 'Priya Aunty', text: 'Beautiful mandap decoration!', color: '#f43f5e' },
+      { name: 'Rahul Uncle', text: 'Congratulations to the couple! So happy for them!', color: '#a78bfa' },
+      { name: 'Sneha', text: 'The bride looks stunning!', color: '#f59e0b' },
+      { name: 'Karthik', text: 'Great camera work OBM Studio!', color: '#34d399' },
+      { name: 'Meena Mami', text: 'Watching from USA! So emotional', color: '#ec4899' },
+      { name: 'Arjun', text: 'The drone shots are incredible!', color: '#06b6d4' },
+      { name: 'Deepa', text: 'Can someone screenshot the muhurtham?', color: '#8b5cf6' },
+      { name: 'Vijay Anna', text: 'Production quality is top notch!', color: '#f97316' }
+    ];
+
+    let msgIdx = 0;
+    setInterval(() => {
+      const msg = botMessages[msgIdx % botMessages.length];
+      addChatMessage(msg.name, msg.text, msg.color, false);
+      msgIdx++;
+    }, 8000 + Math.random() * 7000);
+  }
+
+  // ── CHAT ──
+  function loadInitialChat() {
+    const initial = [
+      { name: 'OBM Studio', text: 'Welcome to the live stream! The ceremony is about to begin.', color: 'var(--theme-accent)', isHost: true },
+      { name: 'Lakshmi Aunty', text: 'Watching from Singapore! So beautiful!', color: '#f43f5e' },
+      { name: 'Suresh Uncle', text: 'Audio is clear! Great setup by OBM team.', color: '#34d399' },
+      { name: 'Divya', text: 'The couple looks so happy!', color: '#a78bfa' },
+    ];
+    initial.forEach(m => addChatMessage(m.name, m.text, m.color, m.isHost || false));
+  }
+
+  function addChatMessage(name, text, color, isHost) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return;
+    const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2);
+    const time = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+    const msgEl = document.createElement('div');
+    msgEl.className = 'chat-msg';
+    msgEl.innerHTML = `
+      <div class="chat-avatar" style="background:${color}">${initials}</div>
+      <div class="chat-bubble${isHost ? ' border-[var(--theme-accent)]/30' : ''}">
+        <div class="chat-name" style="color:${color}">${name}${isHost ? ' <span style="font-size:8px;background:var(--theme-accent);color:#000;padding:1px 5px;border-radius:4px;margin-left:4px;font-weight:800">HOST</span>' : ''}</div>
+        <div class="chat-text">${text}</div>
+        <div class="chat-time">${time}</div>
+      </div>
+    `;
+    container.appendChild(msgEl);
+    container.scrollTop = container.scrollHeight;
+    chatMessages.push({ name, text });
+    const countEl = document.getElementById('chat-count');
+    if (countEl) countEl.textContent = `${chatMessages.length} messages`;
+  }
+
+  function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    addChatMessage('You', text, 'var(--theme-accent)', false);
+    input.value = '';
+  }
+
+  // ── REACTIONS ──
+  function sendReaction(type) {
+    const countEl = document.getElementById(`react-${type}-count`);
+    if (countEl) countEl.textContent = parseInt(countEl.textContent) + 1;
+
+    const svgMap = {
+      heart: '<svg width="24" height="24" viewBox="0 0 24 24" fill="#f43f5e" stroke="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
+      fire: '<svg width="24" height="24" viewBox="0 0 24 24" fill="#f59e0b" stroke="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>',
+      clap: '<svg width="24" height="24" viewBox="0 0 24 24" fill="#a78bfa" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+      party: '<svg width="24" height="24" viewBox="0 0 24 24" fill="#34d399" stroke="none"><path d="M5.8 11.3 2 22l10.7-3.79M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>'
+    };
+
+    const el = document.createElement('div');
+    el.className = 'floating-reaction';
+    el.innerHTML = svgMap[type] || svgMap.heart;
+    el.style.right = (10 + Math.random() * 20) + '%';
+    el.style.bottom = (15 + Math.random() * 10) + '%';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  }
+
+  // ── VIDEO CONTROLS ──
+  function startPlayback() {
+    document.getElementById('play-overlay').style.display = 'none';
+    showToast('Stream Connected', 'Live feed is now playing. This is a demo preview.', 'success');
+  }
+
+  function toggleMute() {
+    const video = document.getElementById('live-video');
+    isMuted = !isMuted;
+    video.muted = isMuted;
+    const icon = document.getElementById('mute-icon');
+    if (icon) icon.setAttribute('data-lucide', isMuted ? 'volume-x' : 'volume-2');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function toggleQuality() {
+    const qualities = ['1080p', '720p', '480p', 'Auto'];
+    const idx = qualities.indexOf(currentQuality);
+    currentQuality = qualities[(idx + 1) % qualities.length];
+    const btn = document.getElementById('quality-btn');
+    if (btn) btn.textContent = currentQuality;
+    showToast('Quality Changed', `Stream quality set to ${currentQuality}`, 'sapphire', { duration: 2000 });
+  }
+
+  function togglePIP() {
+    const video = document.getElementById('live-video');
+    if (document.pictureInPictureElement) {
+      document.exitPictureInPicture();
+    } else if (video.requestPictureInPicture) {
+      video.requestPictureInPicture().catch(() => {
+        showToast('PiP Unavailable', 'Picture-in-Picture is not supported in this browser.', 'warning');
+      });
+    }
+  }
+
+  function toggleVideoFullscreen() {
+    const wrapper = document.querySelector('.video-player-wrapper');
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      wrapper.requestFullscreen().catch(() => {
+        showToast('Fullscreen Error', 'Could not enter fullscreen mode.', 'warning');
+      });
+    }
+  }
+</script>

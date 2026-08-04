@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('✅ Access Granted!', 'Welcome to your OBM Studio photo gallery', 'success', { duration: 3500 });
       closeModal();
       setTimeout(() => {
-        window.location.href = 'photo-selection.html?token=DEMO2026';
+        window.location.href = 'photo-selection?token=DEMO2026';
       }, 1200);
     } else {
       errorBox.textContent = 'Invalid passcode. Please contact your photographer for your unique event code.';

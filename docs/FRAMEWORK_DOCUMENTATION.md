@@ -263,8 +263,8 @@ If you are moving an existing web project into the Aether Catalyst structure, fo
 1. Setup your local environment file `.env` and `config.json` parameters:
    ```env
    DB_HOST=127.0.0.1
-   DB_USER=my_db_user
-   DB_PASS=my_secure_password
+   DB_USERNAME=my_db_user
+   DB_PASSWORD=my_secure_password
    DB_NAME=my_project_db
    ```
 

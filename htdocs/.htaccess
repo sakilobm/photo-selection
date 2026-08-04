@@ -8,6 +8,19 @@ ErrorDocument 500 /error.php
 RewriteEngine On
 RewriteBase /
 
+# --- Redirect rules for clean, professional URLs ---
+# 1. Redirect /index, /index.php, or /index.html to root /
+RewriteCond %{THE_REQUEST} \s/+index(?:\.php|\.html)?[\s?] [NC]
+RewriteRule ^ / [R=301,L]
+
+# 2. Redirect /pagename.html to /pagename
+RewriteCond %{THE_REQUEST} \s/+(.*?)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# 3. Redirect /pagename.php to /pagename (excluding framework gateways)
+RewriteCond %{THE_REQUEST} \s/+(?!(?:api|files)\.php)(.*?)\.php[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
 # --- Static asset pass-through ---
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

@@ -218,11 +218,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Developer login bypass
 function bypassLoginForTesting() {
-    const email = localStorage.getItem('obm_client_email') || 'sakil@obmstudio.com';
-    const name = localStorage.getItem('obm_client_name') || 'Sakil Dev';
-    
-    // Auto-login bypassing form, but still show the gorgeous loading sequence!
-    loadClientWorkspace(email, name);
+    const session = window.__OBM_CLIENT_SESSION;
+    if (session && session.email && session.name) {
+        // Auto-login bypassing form using active PHP session!
+        loadClientWorkspace(session.email, session.name);
+    } else {
+        const email = localStorage.getItem('obm_client_email');
+        const name = localStorage.getItem('obm_client_name');
+        if (email && name) {
+            loadClientWorkspace(email, name);
+        }
+    }
 }
 
 // Progressive asset allocation and workspace synchronization loader
@@ -274,6 +280,25 @@ function loadClientWorkspace(email, username) {
     }
     lucide.createIcons();
 
+    // Start loading database photos early
+    let apiPhotos = [];
+    let apiPortal = null;
+    let loadError = null;
+
+    fetch('/api/photos/get_client_photos')
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                apiPhotos = res.photos;
+                apiPortal = res.portal;
+            } else {
+                loadError = res.message || 'Unauthorized';
+            }
+        })
+        .catch(err => {
+            loadError = 'Failed to connect to API.';
+        });
+
     const interval = setInterval(() => {
         progress += 2;
         if (progressBar) progressBar.style.width = `${progress}%`;
@@ -312,7 +337,8 @@ function loadClientWorkspace(email, username) {
             // Check download
             if (stepDownload) {
                 stepDownload.className = "flex items-center gap-2 text-emerald-400 font-semibold";
-                stepDownload.innerHTML = `<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500"></i><span class="text-gray-300">Retrieved 8 high-res asset files</span>`;
+                const countText = apiPhotos.length > 0 ? `Retrieved ${apiPhotos.length} high-res asset files` : 'Retrieved assets metadata';
+                stepDownload.innerHTML = `<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500"></i><span class="text-gray-300">${countText}</span>`;
             }
 
             // Render workspace
@@ -324,6 +350,13 @@ function loadClientWorkspace(email, username) {
             lucide.createIcons();
         } else if (progress >= 100) {
             clearInterval(interval);
+
+            if (loadError) {
+                showToast('alert', 'Portal Sync Failed', loadError);
+                if (loadingScreen) loadingScreen.style.display = 'none';
+                if (loginView) loginView.classList.add('active');
+                return;
+            }
             
             if (stepRender) {
                 stepRender.className = "flex items-center gap-2 text-emerald-400 font-semibold";
@@ -331,42 +364,45 @@ function loadClientWorkspace(email, username) {
             }
             lucide.createIcons();
 
+            // Populate state from API response
+            if (apiPhotos.length > 0) {
+                photoDatabase = apiPhotos;
+            }
+            // Populate selectedPhotoIds from database selections
+            selectedPhotoIds.clear();
+            photoDatabase.forEach(p => {
+                if (p.selected) selectedPhotoIds.add(p.id);
+            });
+
             setTimeout(() => {
                 // Fade out loader screen
                 if (loadingScreen) loadingScreen.style.display = 'none';
                 if (galleryView) {
                     galleryView.classList.add('active');
+                    galleryView.classList.remove('hidden');
                 }
 
                 // Render database logs
-                document.getElementById('clientNameDisplay').innerText = currentUser;
-                
-                // Bind client metadata to premium Hero Header
-                const client = clientDatabase.find(c => c.email.toLowerCase() === email.toLowerCase()) || {
-                    name: currentUser,
-                    sentAt: new Date().toISOString()
-                };
+                document.getElementById('clientNameDisplay').innerText = apiPortal ? apiPortal.client_name : currentUser;
                 
                 const metaName = document.getElementById('clientMetaName');
                 const metaDate = document.getElementById('clientMetaDate');
                 const metaCode = document.getElementById('clientMetaCode');
                 
-                if (metaName) metaName.innerText = client.name || currentUser;
+                if (metaName) metaName.innerText = apiPortal ? apiPortal.client_name : currentUser;
                 if (metaDate) {
-                    const formattedDate = client.sentAt ? new Date(client.sentAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : 'Dec 2025';
-                    metaDate.innerText = formattedDate;
+                    metaDate.innerText = apiPortal ? new Date(apiPortal.event_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : 'Dec 2025';
                 }
                 if (metaCode) {
-                    // Pull code input or fallback to a standard passcode
-                    const codeVal = document.getElementById('authCode') ? document.getElementById('authCode').value : '';
-                    metaCode.innerText = codeVal || 'ADMIN2026';
+                    metaCode.innerText = apiPortal ? apiPortal.code : 'DEMO2026';
                 }
 
                 refreshGallery();
                 initCarousel();
+                updateCounter();
 
                 // Check if current user client is completed or flagged
-                if (client && (client.flagged || client.status === 'completed')) {
+                if (apiPortal && (apiPortal.status === 'Completed' || apiPortal.status === 'completed')) {
                     showClientSubmittedView(email, currentUser);
                     showToast('info', 'Selections Transmitted', `Welcome back, ${currentUser}. Your photo selections are locked & being processed by OBM Studio.`);
                 } else {
@@ -374,7 +410,7 @@ function loadClientWorkspace(email, username) {
                 }
             }, 600);
         }
-    }, 50); // ~2.5 seconds total load duration
+    }, 50);
 }
 
 // ==========================================
@@ -690,32 +726,59 @@ function switchAuthTab(mode) {
     }
 }
 
-function handleAuth(event) {
+async function handleAuth(event) {
     event.preventDefault();
     const nameInput = document.getElementById('authName').value || 'Premium Client';
     const emailInput = document.getElementById('authEmail').value || 'client@example.com';
     const codeInput = document.getElementById('authCode').value;
 
-    const username = currentAuthMode === 'signup' ? nameInput : (nameInput ? nameInput : 'Premium Client');
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
 
-    // Smooth loading sequence instead of instant view swap
-    loadClientWorkspace(emailInput, username);
+    try {
+        const response = await fetch('/api/auth/client_login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: codeInput })
+        });
+        const res = await response.json();
+        if (res.success) {
+            loadClientWorkspace(res.email || emailInput, res.name || nameInput);
+        } else {
+            showToast('alert', 'Access Denied', res.message || 'Invalid passcode.');
+        }
+    } catch (err) {
+        showToast('alert', 'Error', 'Server connection failed.');
+    } finally {
+        if (submitBtn) submitBtn.disabled = false;
+    }
 }
 
 function logout() {
-    currentUser = null;
-    selectedPhotoIds.clear();
-    localStorage.removeItem('obm_client_name');
-    localStorage.removeItem('obm_client_email');
-    localStorage.removeItem('obm_selected_ids');
+    fetch('/api/auth/client_logout', { method: 'POST' })
+        .then(() => {
+            currentUser = null;
+            selectedPhotoIds.clear();
+            localStorage.removeItem('obm_client_name');
+            localStorage.removeItem('obm_client_email');
+            localStorage.removeItem('obm_selected_ids');
 
-    document.getElementById('galleryView').classList.remove('active');
-    document.getElementById('authView').classList.add('active');
-    document.getElementById('authForm').reset();
-    switchAuthTab('login');
+            const galleryView = document.getElementById('galleryView');
+            const authView = document.getElementById('authView');
+            const submittedScreen = document.getElementById('clientSubmittedScreen');
 
-    showToast('info', 'Logged Out', 'Your local session was safely terminated.');
+            if (galleryView) galleryView.classList.remove('active');
+            if (galleryView) galleryView.classList.add('hidden');
+            if (submittedScreen) submittedScreen.classList.add('hidden');
+            if (authView) authView.classList.add('active');
+            
+            document.getElementById('authForm').reset();
+            switchAuthTab('login');
+
+            showToast('info', 'Logged Out', 'Your local session was safely terminated.');
+        });
 }
+
 
 // ==========================================
 // FEATURED CAROUSEL SLIDER ENGINE
@@ -1585,32 +1648,42 @@ function confirmSubmitChoice() {
     // Step-by-step sequential progressive simulation
     function uploadNextItem() {
         if (currentItemIndex >= selectionCount) {
-            // Upload completes
-            setTimeout(() => {
+            // Call API to finalize selections on server MySQL
+            fetch('/api/photos/finalize_selections', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ selected_ids: Array.from(selectedPhotoIds) })
+            })
+            .then(res => res.json())
+            .then(res => {
                 // Hide loading overlay
                 loadingOverlay.style.display = 'none';
 
-                // Show success overlay
-                const successOverlay = document.getElementById('successOverlay');
-                document.getElementById('successPhotoCount').innerText = selectionCount;
-                successOverlay.style.display = 'flex';
+                if (res.success) {
+                    // Show success overlay
+                    const successOverlay = document.getElementById('successOverlay');
+                    document.getElementById('successPhotoCount').innerText = selectionCount;
+                    successOverlay.style.display = 'flex';
 
-                // Trigger success confetti
-                triggerConfettiBurst(document.getElementById('successConfetti'));
+                    // Trigger success confetti
+                    triggerConfettiBurst(document.getElementById('successConfetti'));
 
-                // Clear selection stack
-                selectedPhotoIds.clear();
-                saveSelectionsToCache();
-                refreshGallery();
+                    // Clear selection stack
+                    selectedPhotoIds.clear();
+                    saveSelectionsToCache();
+                    refreshGallery();
 
-                // Close lightbox if it was open
-                closeLightbox();
-
-                // Make sure we update dashboard tab to select gallery workspace
-                switchTab('gallery');
-
+                    closeLightbox();
+                    switchTab('gallery');
+                } else {
+                    showToast('alert', 'Submission Failed', res.message || 'Failed to save selections.');
+                }
                 lucide.createIcons();
-            }, 800);
+            })
+            .catch(err => {
+                loadingOverlay.style.display = 'none';
+                showToast('alert', 'Error', 'Failed to connect to server.');
+            });
             return;
         }
 
