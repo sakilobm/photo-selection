@@ -8,6 +8,7 @@ use Aether\Traits\SQLGetterSetter;
  * Session Class
  * =============
  * PSR-4 Namespace: Aether\Session
+ * Manages active session caching, layout rendering engines, and routing URL helpers.
  */
 class Session
 {
@@ -43,9 +44,22 @@ class Session
     {
         if (!self::isAuthenticated()) {
             self::set('_redirect', $_SERVER['REQUEST_URI']);
-            header('Location: /login');
+            header('Location: ' . self::url('login'));
             exit;
         }
+    }
+
+    /**
+     * Generate a full URL using the configured base_path.
+     */
+    public static function url(string $path = ''): string
+    {
+        $base = get_config('base_path', '/');
+        // Ensure $base ends with /
+        $base = rtrim($base, '/') . '/';
+        $path = ltrim($path, '/');
+        
+        return $base . $path;
     }
 
     /**
@@ -59,12 +73,12 @@ class Session
     {
         extract($data);
         ob_start();
-        $viewPath = $_SERVER['DOCUMENT_ROOT'] . get_config('base_path') . "_templates/{$view}.php";
+        $viewPath = HTDOCS_ROOT . "/_templates/{$view}.php";
 
         if (is_file($viewPath)) {
             include $viewPath;
         } else {
-            include $_SERVER['DOCUMENT_ROOT'] . get_config('base_path') . "_templates/core/_error.php";
+            include HTDOCS_ROOT . "/_templates/core/_error.php";
         }
 
         $content = ob_get_clean();
@@ -79,13 +93,13 @@ class Session
     public static function loadTemplate(string $name, array $data = []): void
     {
         extract($data);
-        $script = $_SERVER['DOCUMENT_ROOT'] . get_config('base_path') . "_templates/{$name}.php";
+        $script = HTDOCS_ROOT . "/_templates/{$name}.php";
 
         if (is_file($script)) {
             include $script;
         } else {
             $errorMsg = "Template not found: {$name}";
-            include $_SERVER['DOCUMENT_ROOT'] . get_config('base_path') . '_templates/core/_error.php';
+            include HTDOCS_ROOT . '/_templates/core/_error.php';
         }
     }
 
@@ -101,7 +115,7 @@ class Session
 
     public static function getCurrentPageIdentifier(): string
     {
-        return $_GET['current_page'] ?? 'dashboard';
+        return $_GET['page'] ?? 'dashboard';
     }
 
     public static function countAllUsers(): int

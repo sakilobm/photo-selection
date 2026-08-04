@@ -10,6 +10,7 @@ use RuntimeException;
  * UserSession Class
  * =================
  * PSR-4 Namespace: Aether\UserSession
+ * Upgraded to use PDO database queries.
  */
 class UserSession
 {
@@ -18,6 +19,9 @@ class UserSession
     public string $token;
     public $conn;
 
+    /**
+     * Authenticate a user and construct a session token.
+     */
     public static function authenticate(string $user, string $password, ?string $fingerprint = null)
     {
         $username = User::login($user, $password);
@@ -27,18 +31,23 @@ class UserSession
 
         $userObj = new User($username);
         $conn    = Database::getConnection();
-        $ip      = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $ip      = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        
+        // Handle comma-separated lists of forwarded IPs
+        if (str_contains($ip, ',')) {
+            $parts = explode(',', $ip);
+            $ip = trim($parts[0]);
+        }
+
         $agent   = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
         $token   = md5(random_int(0, 9_999_999) . $ip . $agent . time());
 
-        $stmt = $conn->prepare(
-            "INSERT INTO `session` (`uid`, `token`, `login_time`, `ip`, `user_agent`, `active`, `fingerprint`)
-             VALUES (?, ?, NOW(), ?, ?, 1, ?)"
-        );
-        $stmt->bind_param('issss', $userObj->id, $token, $ip, $agent, $fingerprint);
+        $sql = "INSERT INTO `session` (`uid`, `token`, `login_time`, `ip`, `user_agent`, `active`, `fingerprint`)
+                VALUES (?, ?, NOW(), ?, ?, 1, ?)";
+        $stmt = $conn->prepare($sql);
 
         try {
-            if ($stmt->execute()) {
+            if ($stmt->execute([$userObj->id, $token, $ip, $agent, $fingerprint])) {
                 Session::set('session_token', $token);
                 Session::set('fingerprint', $fingerprint);
                 return $token;
@@ -50,22 +59,32 @@ class UserSession
         return false;
     }
 
+    /**
+     * Authorize access via active session token.
+     */
     public static function authorize(string $token): self
     {
         $session = new self($token);
 
-        $ip    = $_SERVER['REMOTE_ADDR']     ?? null;
+        $ip    = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? null;
         $agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
 
         if (!$ip || !$agent) {
-            throw new Exception("IP and User-Agent are required.");
+            throw new Exception("Identity metadata (IP/UA) missing from request.");
         }
+
+        if (str_contains($ip, ',')) {
+            $parts = explode(',', $ip);
+            $ip = trim($parts[0]);
+        }
+
         if (!$session->isValid() || !$session->isActive()) {
             $session->removeSession();
-            throw new Exception("Session expired or inactive.");
+            throw new Exception("Identity session expired or inactive.");
         }
+
         if ($ip !== $session->getIP()) {
-            throw new Exception("IP mismatch.");
+            throw new Exception("Protocol Mismatch: Identity origin changed ({$ip} vs {$session->getIP()}).");
         }
         if ($agent !== $session->getUserAgent()) {
             throw new Exception("User-Agent mismatch.");
@@ -75,23 +94,23 @@ class UserSession
         return $session;
     }
 
+    /**
+     * UserSession Constructor.
+     */
     public function __construct(string $token)
     {
         $this->token = $token;
         $this->conn  = Database::getConnection();
 
-        $stmt = $this->conn->prepare(
-            "SELECT * FROM `session` WHERE `token` = ? LIMIT 1"
-        );
-        $stmt->bind_param('s', $token);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt = $this->conn->prepare("SELECT * FROM `session` WHERE `token` = ? LIMIT 1");
+        $stmt->execute([$token]);
+        $row = $stmt->fetch();
 
-        if ($result->num_rows === 0) {
+        if (!$row) {
             throw new Exception("Session token is invalid.");
         }
 
-        $this->data = $result->fetch_assoc();
+        $this->data = $row;
         $this->uid  = (int)$this->data['uid'];
     }
 
@@ -121,8 +140,7 @@ class UserSession
     public function deactivate(): bool
     {
         $stmt = $this->conn->prepare("UPDATE `session` SET `active` = 0 WHERE `uid` = ?");
-        $stmt->bind_param('i', $this->uid);
-        return $stmt->execute();
+        return $stmt->execute([$this->uid]);
     }
 
     public function removeSession(): bool
@@ -130,7 +148,6 @@ class UserSession
         if (!isset($this->data['id'])) { return false; }
         $id   = (int)$this->data['id'];
         $stmt = $this->conn->prepare("DELETE FROM `session` WHERE `id` = ?");
-        $stmt->bind_param('i', $id);
-        return $stmt->execute();
+        return $stmt->execute([$id]);
     }
 }

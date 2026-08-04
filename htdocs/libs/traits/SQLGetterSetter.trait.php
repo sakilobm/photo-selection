@@ -7,7 +7,7 @@
  *
  * Requirements — the using class constructor MUST set:
  *   $this->id    — The DB row primary key
- *   $this->conn  — The MySQLi connection
+ *   $this->conn  — The PDO connection
  *   $this->table — The table name (string)
  *
  * Usage:
@@ -30,7 +30,7 @@ trait SQLGetterSetter
     public function __call(string $name, array $arguments)
     {
         // Convert CamelCase to snake_case column name
-        $column = preg_replace('/\B([A-Z])/', '_$1', substr($name, 3));
+        $column = preg_replace('/(?<=[a-z])([A-Z])/', '_$1', substr($name, 3));
         $column = strtolower(preg_replace('/[^0-9a-zA-Z_]/', '', $column));
 
         if (str_starts_with($name, 'get')) {
@@ -55,12 +55,11 @@ trait SQLGetterSetter
         }
 
         $stmt = $this->conn->prepare("SELECT `{$var}` FROM `{$this->table}` WHERE `id` = ? LIMIT 1");
-        $stmt->bind_param('i', $this->id);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt->execute([$this->id]);
+        $row = $stmt->fetch();
 
-        if ($result && $result->num_rows === 1) {
-            return $result->fetch_assoc()[$var];
+        if (is_array($row)) {
+            return $row[$var];
         }
 
         error_log(static::class . "::_get_data() → column '{$var}' not found for id={$this->id}");
@@ -85,18 +84,16 @@ trait SQLGetterSetter
             if ($data === 'INCREMENT') {
                 $sql = "UPDATE `{$this->table}` SET `{$var}` = `{$var}` + 1 WHERE `id` = ?";
                 $stmt = $this->conn->prepare($sql);
-                $stmt->bind_param('i', $this->id);
+                return $stmt->execute([$this->id]);
             } elseif ($data === 'DECREMENT') {
                 $sql = "UPDATE `{$this->table}` SET `{$var}` = `{$var}` - 1 WHERE `id` = ?";
                 $stmt = $this->conn->prepare($sql);
-                $stmt->bind_param('i', $this->id);
+                return $stmt->execute([$this->id]);
             } else {
                 $sql = "UPDATE `{$this->table}` SET `{$var}` = ? WHERE `id` = ?";
                 $stmt = $this->conn->prepare($sql);
-                $stmt->bind_param('si', $data, $this->id);
+                return $stmt->execute([$data, $this->id]);
             }
-
-            return $stmt->execute();
         } catch (\Exception $e) {
             throw new \RuntimeException(static::class . "::_set_data() → {$var}: " . $e->getMessage());
         }
@@ -115,8 +112,7 @@ trait SQLGetterSetter
 
         try {
             $stmt = $this->conn->prepare("DELETE FROM `{$this->table}` WHERE `id` = ?");
-            $stmt->bind_param('i', $this->id);
-            return $stmt->execute();
+            return $stmt->execute([$this->id]);
         } catch (\Exception $e) {
             throw new \RuntimeException(static::class . "::delete() failed: " . $e->getMessage());
         }

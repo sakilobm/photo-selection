@@ -9,6 +9,7 @@ use Exception;
  * User Class
  * ==========
  * PSR-4 Namespace: Aether\User
+ * Upgraded to use PDO database calls and Transactions.
  */
 class User
 {
@@ -16,27 +17,49 @@ class User
 
     public int $id;
     public string $username;
+    public string $email;
     public string $table = 'auth';
     public $conn;
 
+    /**
+     * Signup a new user.
+     */
     public static function signup(string $username, string $password, string $email, string $phone): bool
     {
         $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
         $conn = Database::getConnection();
 
-        $stmt = $conn->prepare(
-            "INSERT INTO `auth` (`username`, `password`, `email`, `phone`, `active`) VALUES (?, ?, ?, ?, 1)"
-        );
-        $stmt->bind_param('ssss', $username, $hash, $email, $phone);
-
         try {
-            return $stmt->execute();
+            $conn->beginTransaction();
+
+            // 1. Insert into auth
+            $stmt = $conn->prepare(
+                "INSERT INTO `auth` (`username`, `password`, `email`, `phone`, `active`) VALUES (?, ?, ?, ?, 1)"
+            );
+            $stmt->execute([$username, $hash, $email, $phone]);
+
+            $id = $conn->lastInsertId();
+
+            // 2. Insert default profile (maps to `users` profile table in skeleton schema)
+            $stmt = $conn->prepare(
+                "INSERT INTO `users` (`id`, `firstname`, `lastname`, `created_at`) VALUES (?, ?, ?, NOW())"
+            );
+            $stmt->execute([$id, $username, '']);
+
+            $conn->commit();
+            return true;
         } catch (Exception $e) {
+            if ($conn->inTransaction()) {
+                $conn->rollBack();
+            }
             error_log('User::signup() error: ' . $e->getMessage());
             return false;
         }
     }
 
+    /**
+     * Basic login verification.
+     */
     public static function login(string $user, string $password)
     {
         $conn = Database::getConnection();
@@ -44,13 +67,10 @@ class User
             "SELECT `username`, `password`, `active`, `blocked` FROM `auth`
              WHERE `username` = ? OR `email` = ? LIMIT 1"
         );
-        $stmt->bind_param('ss', $user, $user);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt->execute([$user, $user]);
+        $row = $stmt->fetch();
 
-        if ($result->num_rows === 1) {
-            $row = $result->fetch_assoc();
-
+        if ($row) {
             if ((int)$row['blocked'] === 1) {
                 return false;
             }
@@ -65,26 +85,28 @@ class User
         return false;
     }
 
+    /**
+     * User Constructor.
+     */
     public function __construct($identifier)
     {
         $this->table = 'auth';
         $this->conn  = Database::getConnection();
 
         $stmt = $this->conn->prepare(
-            "SELECT `id`, `username` FROM `auth`
+            "SELECT `id`, `username`, `email` FROM `auth`
              WHERE `username` = ? OR `email` = ? OR `id` = ? LIMIT 1"
         );
-        $id = (int)$identifier;
-        $stmt->bind_param('ssi', $identifier, $identifier, $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $id = is_numeric($identifier) ? (int)$identifier : -1;
+        $stmt->execute([$identifier, $identifier, $id]);
+        $row = $stmt->fetch();
 
-        if ($result->num_rows === 0) {
+        if (!$row) {
             throw new Exception("User '{$identifier}' does not exist.");
         }
 
-        $row            = $result->fetch_assoc();
         $this->id       = (int)$row['id'];
         $this->username = $row['username'];
+        $this->email    = $row['email'];
     }
 }

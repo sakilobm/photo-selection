@@ -6,8 +6,20 @@
  * Bootstraps the framework using Composer autoloader.
  */
 
+// Define absolute path to project root
+define('HTDOCS_ROOT', __DIR__ . '/..');
+
 // Load Composer autoloader (PSR-4 + Dependencies)
 $loader = require_once __DIR__ . '/../vendor/autoload.php';
+
+// --- Vendor-style Class Aliasing (Global access) ---
+class_alias('Aether\Session', 'Session');
+class_alias('Aether\User', 'User');
+class_alias('Aether\UserSession', 'UserSession');
+class_alias('Aether\Database', 'Database');
+class_alias('Aether\WebAPI', 'WebAPI');
+class_alias('Aether\SupabaseClient', 'SupabaseClient');
+class_alias('Aether\Mailer', 'Mailer');
 
 // Global config singleton (Legacy support)
 global $__site_config;
@@ -47,5 +59,5 @@ function get_config(string $key, $default = null)
  */
 function load_template(string $name): void
 {
-    include $_SERVER['DOCUMENT_ROOT'] . get_config('base_path') . "_templates/{$name}.php";
+    include HTDOCS_ROOT . "/_templates/{$name}.php";
 }

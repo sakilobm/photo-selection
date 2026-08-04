@@ -6,6 +6,7 @@ namespace Aether;
  * REST Class
  * ==========
  * PSR-4 Namespace: Aether\REST
+ * Upgraded with payload JSON parsing, automated serialization, and selective inputs cleaning.
  */
 class REST
 {
@@ -15,12 +16,35 @@ class REST
 
     public function __construct() { $this->inputs(); }
 
-    public function response(string $data, int $status): void
+    public function response($data, int $status = 200): void
     {
         $this->_code = $status;
         $this->setHeaders();
-        echo $data;
+        if (is_array($data) || is_object($data)) {
+            echo json_encode($data);
+        } else {
+            echo $data;
+        }
         exit;
+    }
+
+    /**
+     * Get JSON payload from request body.
+     */
+    public function getJsonPayload(): array
+    {
+        $input = file_get_contents('php://input');
+        return json_decode($input, true) ?? [];
+    }
+
+    /**
+     * Require the user to be authenticated.
+     */
+    public function requireAuth(): void
+    {
+        if (!\Aether\Session::isAuthenticated()) {
+            $this->response(['error' => 'Authentication required'], 401);
+        }
     }
 
     public function get_request_method(): string { return strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET'); }
@@ -45,11 +69,26 @@ class REST
         }
     }
 
-    private function cleanInputs($data)
+    /**
+     * Clean inputs recursively.
+     * Skips strip_tags for sensitive fields like passwords, tokens, or fingerprints.
+     */
+    private function cleanInputs($data, $key = null)
     {
         if (is_array($data)) {
-            return array_map([$this, 'cleanInputs'], $data);
+            $cleaned = [];
+            foreach ($data as $k => $v) {
+                $cleaned[$k] = $this->cleanInputs($v, $k);
+            }
+            return $cleaned;
         }
+
+        // Sensitive fields that should NOT be strip_tagged
+        $skipStrip = ['password', 'fingerprint', 'token'];
+        if (in_array($key, $skipStrip)) {
+            return trim($data);
+        }
+
         return trim(strip_tags($data));
     }
 

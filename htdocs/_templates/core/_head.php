@@ -15,7 +15,7 @@
 
 <!-- Page-specific CSS (auto-loaded if /assets/css/{pagename}.css exists) -->
 <?php
-$pageCss = $_SERVER['DOCUMENT_ROOT'] . get_config('base_path') . 'assets/css/' . Session::currentScript() . '.css';
+$pageCss = HTDOCS_ROOT . '/assets/css/' . Session::currentScript() . '.css';
 if (file_exists($pageCss)): ?>
 <link rel="stylesheet" href="<?= get_config('base_path') ?>assets/css/<?= Session::currentScript() ?>.css">
 <?php endif; ?>
