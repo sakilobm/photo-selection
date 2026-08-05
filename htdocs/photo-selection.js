@@ -254,6 +254,77 @@ function loadClientWorkspace(email, username) {
     // Setup initial text
     if (loadingEmail) loadingEmail.innerText = email;
     if (loginView) loginView.classList.remove('active');
+
+    // Start loading database photos early
+    let apiPhotos = [];
+    let apiPortal = null;
+    let loadError = null;
+
+    // Check if already analyzed in this session to skip loader entirely
+    const alreadyAnalyzed = sessionStorage.getItem('obm_portal_analyzed') === 'true';
+
+    fetch('/api/photos/get_client_photos')
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                apiPhotos = res.photos;
+                apiPortal = res.portal;
+            } else {
+                loadError = res.message || 'Unauthorized';
+            }
+        })
+        .catch(err => {
+            loadError = 'Failed to connect to API.';
+        });
+
+    if (alreadyAnalyzed) {
+        // Skip loader animation: wait for fetch to complete, then transition instantly
+        const checkDone = setInterval(() => {
+            if (apiPhotos.length > 0 || loadError) {
+                clearInterval(checkDone);
+                if (loadError) {
+                    showToast('alert', 'Portal Sync Failed', loadError);
+                    if (loginView) loginView.classList.add('active');
+                    return;
+                }
+                // Populate state
+                photoDatabase = apiPhotos;
+                selectedPhotoIds.clear();
+                photoDatabase.forEach(p => {
+                    if (p.selected) selectedPhotoIds.add(p.id);
+                });
+                
+                // Show gallery view immediately
+                if (loadingScreen) loadingScreen.style.display = 'none';
+                if (galleryView) {
+                    galleryView.classList.add('active');
+                    galleryView.classList.remove('hidden');
+                }
+                
+                // Populate meta
+                document.getElementById('clientNameDisplay').innerText = apiPortal ? apiPortal.client_name : currentUser;
+                const metaName = document.getElementById('clientMetaName');
+                const metaDate = document.getElementById('clientMetaDate');
+                const metaCode = document.getElementById('clientMetaCode');
+                if (metaName) metaName.innerText = apiPortal ? apiPortal.client_name : currentUser;
+                if (metaDate) {
+                    metaDate.innerText = apiPortal ? new Date(apiPortal.event_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : 'Dec 2025';
+                }
+                if (metaCode) metaCode.innerText = apiPortal ? apiPortal.code : 'DEMO2026';
+
+                refreshGallery();
+                initCarousel();
+                updateCounter();
+
+                if (apiPortal && (apiPortal.status === 'Completed' || apiPortal.status === 'completed')) {
+                    showClientSubmittedView(email, currentUser);
+                }
+            }
+        }, 30);
+        return;
+    }
+
+    // First time loading: show accelerated dynamic loader (completed in ~400ms)
     if (loadingScreen) loadingScreen.style.display = 'flex';
 
     // Reset log layout classes and icons
@@ -280,32 +351,13 @@ function loadClientWorkspace(email, username) {
     }
     lucide.createIcons();
 
-    // Start loading database photos early
-    let apiPhotos = [];
-    let apiPortal = null;
-    let loadError = null;
-
-    fetch('/api/photos/get_client_photos')
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
-                apiPhotos = res.photos;
-                apiPortal = res.portal;
-            } else {
-                loadError = res.message || 'Unauthorized';
-            }
-        })
-        .catch(err => {
-            loadError = 'Failed to connect to API.';
-        });
-
     const interval = setInterval(() => {
-        progress += 2;
+        progress += 10; // Faster step increments
         if (progressBar) progressBar.style.width = `${progress}%`;
         if (progressText) progressText.innerText = `${progress}%`;
 
         // Step triggers
-        if (progress === 26) {
+        if (progress === 30) {
             // Check Handshake
             if (stepConnect) {
                 stepConnect.className = "flex items-center gap-2 text-emerald-400 font-semibold";
@@ -319,7 +371,7 @@ function loadClientWorkspace(email, username) {
             }
             if (loadingStatus) loadingStatus.innerText = "Querying allocated client assets";
             lucide.createIcons();
-        } else if (progress === 50) {
+        } else if (progress === 60) {
             // Check query
             if (stepQuery) {
                 stepQuery.className = "flex items-center gap-2 text-emerald-400 font-semibold";
@@ -333,7 +385,7 @@ function loadClientWorkspace(email, username) {
             }
             if (loadingStatus) loadingStatus.innerText = "Downloading assets metadata";
             lucide.createIcons();
-        } else if (progress === 76) {
+        } else if (progress === 90) {
             // Check download
             if (stepDownload) {
                 stepDownload.className = "flex items-center gap-2 text-emerald-400 font-semibold";
@@ -368,11 +420,13 @@ function loadClientWorkspace(email, username) {
             if (apiPhotos.length > 0) {
                 photoDatabase = apiPhotos;
             }
-            // Populate selectedPhotoIds from database selections
             selectedPhotoIds.clear();
             photoDatabase.forEach(p => {
                 if (p.selected) selectedPhotoIds.add(p.id);
             });
+
+            // Set session analyzed flag
+            sessionStorage.setItem('obm_portal_analyzed', 'true');
 
             setTimeout(() => {
                 // Fade out loader screen
@@ -408,9 +462,9 @@ function loadClientWorkspace(email, username) {
                 } else {
                     showToast('success', 'Portal Connected', `Synchronized workspace allocations for ${email}.`);
                 }
-            }, 600);
+            }, 300); // Reduced delay to 300ms
         }
-    }, 50);
+    }, 40); // Faster interval (40ms)
 }
 
 // ==========================================

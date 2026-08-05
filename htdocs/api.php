@@ -19,11 +19,24 @@ $api->addMiddleware(function ($api, $next) {
     return $next();
 });
 
-// 2. Auth Middleware – Protect all endpoints except 'auth' namespace
+// 2. Auth Middleware – Protect endpoints based on namespace permissions
 $api->addMiddleware(function ($api, $next) {
     $namespace = $_GET['namespace'] ?? '';
-    if ($namespace !== 'auth' && !Session::isAuthenticated()) {
-        $api->response($api->json(['error' => 'Unauthorized Access']), 401);
+    if ($namespace === 'admin') {
+        // Only admin user sessions allowed
+        if (!Session::isAuthenticated()) {
+            $api->response($api->json(['error' => 'Unauthorized Administrator Access']), 401);
+        }
+    } elseif ($namespace === 'photos') {
+        // Admin or active authenticated client allowed
+        if (!Session::isAuthenticated() && !Session::isset('client_id')) {
+            $api->response($api->json(['error' => 'Unauthorized Client Access']), 401);
+        }
+    } elseif ($namespace !== 'auth') {
+        // Protect all other namespaces for admin only
+        if (!Session::isAuthenticated()) {
+            $api->response($api->json(['error' => 'Unauthorized Access']), 401);
+        }
     }
     return $next();
 });

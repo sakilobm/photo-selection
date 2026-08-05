@@ -2,6 +2,18 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.2.0] - 2026-08-05
+
+### Added
+- **Debugging & Learning Journal**: Created [docs/DEBUGGING_JOURNAL.md](file:///var/www/html/obm-new-version/docs/DEBUGGING_JOURNAL.md) in the workspace directory to serve as a study resource, documenting CLI commands, curl options, and testing routines.
+
+### Fixed — API Authorization Access & Client Login Issues (`api.php`)
+- **Authorized Client APIs**: Updated the API middleware layer in `api.php` to enable active client sessions (with valid passcode validations) to access endpoints under the `photos` namespace, fixing the 401 Unauthorized block that broke client portal workspace lookups.
+
+### Changed — Smart Accelerated Loading Screens (`photo-selection.js`)
+- **First-Time Loader Acceleration**: Sped up the workspace initialization progress ticks 5x (running in ~400ms total) to load resources quickly without slowing down page navigation.
+- **Session Analysis Bypass**: Implemented session storage cached status checks (`sessionStorage.getItem('obm_portal_analyzed')`) to completely skip loading animations on subsequent page reloads or navigations, rendering the workspace instantly.
+
 ## [3.1.3] - 2026-08-04
 
 ### Changed — Smooth Scrolling & Active State Observer Updates (`portfolio.js`)

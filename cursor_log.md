@@ -34,3 +34,15 @@ Tests:
 - Clicking nav links (Story, Services, Portfolio) scrolls page smoothly to target position: **PASS**
 - Loading site with hash target (e.g. /#story) triggers smooth scrolling entrance on page load: **PASS**
 - Scroll spy highlights correctly activate corresponding nav link elements: **PASS**
+
+### Client Portal API Authorization & Loader Speed Check
+We validated client portal session authentication and loader speed modifications.
+Tests:
+- Client authentication with DEMO2026/vikram@example.com is authorized on photos namespace endpoints: **PASS**
+- First-time loading screen reaches 100% in ~400ms: **PASS**
+- Repeated navigations/reloads in same session bypass loading screen entirely: **PASS**
+
+### Debugging & Learning Journal
+We initialized the living study ledger.
+Checks:
+- docs/DEBUGGING_JOURNAL.md created containing detailed definitions of CLI and curl flags: **PASS**
