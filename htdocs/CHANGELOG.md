@@ -2,6 +2,12 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.2.1] - 2026-08-05
+
+### Fixed — Client Photo Schema Mappings & Selections Saving (`get_client_photos.php`, `finalize_selections.php`)
+- **JSON Field Schema Corrections**: Mapped the database columns `filename` and `thumb_url` to JS model properties `name` and `url` inside `get_client_photos.php`, resolving empty values that caused image loading issues.
+- **Selection State Persistence**: Mapped selection queries to the correct database column `selection_status` (setting/checking values `'APPROVED'` and `'PENDING'`) instead of the non-existent `selected` column inside both API controllers, ensuring client selections save successfully.
+
 ## [3.2.0] - 2026-08-05
 
 ### Added

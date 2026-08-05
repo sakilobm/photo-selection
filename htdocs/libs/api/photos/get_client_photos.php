@@ -25,11 +25,11 @@ $get_client_photos = function () {
     $mappedPhotos = array_map(function ($p) {
         return [
             'id' => (int)$p['id'],
-            'name' => $p['name'],
-            'category' => strtolower($p['category']),
-            'url' => $p['url'],
-            'selected' => (int)$p['selected'] === 1,
-            'deleted' => (int)$p['deleted'] === 1
+            'name' => $p['filename'] ?? '',
+            'category' => strtolower($p['category'] ?? 'candid'),
+            'url' => $p['thumb_url'] ?? '',
+            'selected' => (strtoupper($p['selection_status'] ?? '') === 'APPROVED'),
+            'deleted' => false
         ];
     }, $photos);
 

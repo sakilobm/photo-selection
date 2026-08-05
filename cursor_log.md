@@ -17,6 +17,8 @@ Results:
 - htdocs/libs/api/admin/upload_photos.php: **PASS**
 - htdocs/_templates/index.php: **PASS**
 - htdocs/_templates/core/_head.php: **PASS**
+- htdocs/libs/api/photos/get_client_photos.php: **PASS**
+- htdocs/libs/api/photos/finalize_selections.php: **PASS**
 
 
 

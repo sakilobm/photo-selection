@@ -69,3 +69,40 @@ curl --resolve obmstudio.in:443:127.0.0.1 -k -b /tmp/cookies.txt -i https://obms
 
 #### Why we used it
 PHP sessions rely on the browser storing a session ID in a cookie and sending it along on every subsequent API call. By writing the cookie from the login response to `/tmp/cookies.txt` and reading it during the photos fetch call, we simulated a browser session. This revealed that the API gateway was throwing a `401 Unauthorized` block on client session lookups, allowing us to patch `api.php`.
+
+---
+
+## [ENTRY 2] - 2026-08-05
+### Concept: Schema Mappings in API Integration (Unmatched JSON/DB Keys)
+
+#### The Problem
+After logging in, the client workspace loaded, but all client images returned as `null` or failed to load. The console showed that properties like `name` and `url` inside the fetched `photos` array were `null` or missing, even though photos exist in the database.
+
+#### Diagnostic Steps
+1. **DB Column Audit**: Ran a MySQL select query directly inside the workspace database:
+   ```bash
+   mysql -u happysb -pSBk@55376 -e "SELECT * FROM \`obm-new-version\`.client_photos WHERE portal_id = 1"
+   ```
+   This showed columns: `id`, `portal_id`, `filename`, `category`, `thumb_url`, `selection_status`.
+2. **API Logic Verification**: Audited the PHP mapper inside `get_client_photos.php`.
+   We observed that the mapper was looking for:
+   - `$p['name']` (instead of `$p['filename']`)
+   - `$p['url']` (instead of `$p['thumb_url']`)
+   - `$p['selected']` (instead of checking `selection_status === 'APPROVED'`)
+
+#### Why it occurred (Root Cause)
+The API gateway templates were written assuming standard object property keys (like `name`, `url`, `selected`), whereas the custom database schema used specialized enterprise column names (`filename`, `thumb_url`, `selection_status`). This mismatch returned empty fields to the frontend.
+Similarly, `finalize_selections.php` attempted to write selections to a non-existent column named `selected` instead of `selection_status`.
+
+#### The Fix
+1. **API Mapping Translation**: Updated [get_client_photos.php](file:///var/www/html/obm-new-version/htdocs/libs/api/photos/get_client_photos.php) to translate database columns to frontend model keys:
+   ```php
+   'name' => $p['filename'] ?? '',
+   'url' => $p['thumb_url'] ?? '',
+   'selected' => (strtoupper($p['selection_status'] ?? '') === 'APPROVED')
+   ```
+2. **Database Update Corrections**: Updated [finalize_selections.php](file:///var/www/html/obm-new-version/htdocs/libs/api/photos/finalize_selections.php) to save choices back to the correct column:
+   ```php
+   $stmt = $db->prepare("UPDATE `client_photos` SET `selection_status` = 'APPROVED' WHERE `portal_id` = ? AND `id` IN ($placeholders)");
+   ```
+

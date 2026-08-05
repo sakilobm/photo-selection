@@ -35,16 +35,16 @@ $finalize_selections = function () {
     try {
         $db->beginTransaction();
 
-        // 1. Reset all photos of this portal to unselected
-        $stmt = $db->prepare("UPDATE `client_photos` SET `selected` = 0 WHERE `portal_id` = ?");
+        // 1. Reset all photos of this portal to unselected (PENDING)
+        $stmt = $db->prepare("UPDATE `client_photos` SET `selection_status` = 'PENDING' WHERE `portal_id` = ?");
         $stmt->execute([$clientId]);
 
-        // 2. Mark the selected photos as selected
+        // 2. Mark the selected photos as selected (APPROVED)
         if (!empty($selectedIds)) {
             // Clean/convert each id to integer
             $cleanIds = array_map('intval', $selectedIds);
             $placeholders = implode(',', array_fill(0, count($cleanIds), '?'));
-            $stmt = $db->prepare("UPDATE `client_photos` SET `selected` = 1 WHERE `portal_id` = ? AND `id` IN ($placeholders)");
+            $stmt = $db->prepare("UPDATE `client_photos` SET `selection_status` = 'APPROVED' WHERE `portal_id` = ? AND `id` IN ($placeholders)");
             $stmt->execute(array_merge([$clientId], $cleanIds));
         }
 
