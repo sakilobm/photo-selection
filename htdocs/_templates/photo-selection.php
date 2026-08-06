@@ -122,6 +122,10 @@ $clientCode = Session::get('client_code', '');
     <header class="glass-panel sticky top-4 z-40 mx-4 md:mx-6 my-4 rounded-2xl border border-white/10 shadow-lg px-6 py-4 transition-all duration-300">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
+                <!-- Return to Website Home Link -->
+                <a href="<?= Session::url('index') ?>" class="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:text-[var(--theme-accent)] text-gray-300 transition-colors cursor-pointer flex items-center justify-center shrink-0 custom-cursor-hide" title="Return to Website">
+                    <i data-lucide="home" class="w-5 h-5"></i>
+                </a>
                 <div class="p-2 rounded-xl bg-white/5 border border-white/10 shrink-0">
                     <i data-lucide="aperture" class="w-6 h-6 text-[var(--theme-accent)] animate-spin-slow transition-colors"></i>
                 </div>
@@ -165,8 +169,8 @@ $clientCode = Session::get('client_code', '');
                         <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Selected</span>
                         <span id="selectionCounter" class="text-sm font-extrabold text-[var(--theme-accent)] transition-colors">0 / 0</span>
                     </div>
-                    <button onclick="submitSelections()" class="bg-[var(--theme-accent)] hover:shadow-[0_0_15px_rgba(var(--theme-accent-rgb),0.4)] text-white font-extrabold text-xs px-3.5 py-2 rounded-lg transition-all flex items-center gap-1.5">
-                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                    <button onclick="submitSelections()" class="bg-[var(--theme-accent)] hover:shadow-[0_0_15px_rgba(var(--theme-accent-rgb),0.4)] text-white-force font-extrabold text-xs px-3.5 py-2 rounded-lg transition-all flex items-center gap-1.5">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5 text-white-force"></i>
                         Finalize
                     </button>
                 </div>
@@ -336,8 +340,8 @@ $clientCode = Session::get('client_code', '');
 
         <span class="w-px h-5 bg-white/10"></span>
 
-        <button onclick="submitSelections()" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-extrabold bg-[var(--theme-accent)] text-white hover:opacity-90 active:scale-95 transition-all shadow-md" title="Finalize selections">
-            <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
+        <button onclick="submitSelections()" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-extrabold bg-[var(--theme-accent)] text-white-force hover:opacity-90 active:scale-95 transition-all shadow-md" title="Finalize selections">
+            <i data-lucide="check-circle" class="w-4 h-4 text-white-force"></i>
             <span>Finalize</span>
         </button>
 

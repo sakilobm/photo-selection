@@ -236,6 +236,7 @@ function loadClientWorkspace(email, username, forceShowLoader = false) {
     currentUser = username;
     localStorage.setItem('obm_client_name', currentUser);
     localStorage.setItem('obm_client_email', email);
+    document.documentElement.classList.add('portal-active');
 
     const loginView = document.getElementById('authView');
     const galleryView = document.getElementById('galleryView');
@@ -817,6 +818,7 @@ function logout() {
             localStorage.removeItem('obm_client_email');
             localStorage.removeItem('obm_selected_ids');
             sessionStorage.removeItem('obm_portal_analyzed');
+            document.documentElement.classList.remove('portal-active');
 
             const galleryView = document.getElementById('galleryView');
             const authView = document.getElementById('authView');

@@ -147,6 +147,7 @@ Similarly, `finalize_selections.php` attempted to write selections to a non-exis
    }
    ```
    We replaced `text-white` with `text-white-force` on active tab states and primary submit buttons to guarantee white text on both themes.
+   Additionally, we mapped this specificity-preserving class onto both the gallery workspace header "Finalize" counter button and the lightbox selection toolbar "Finalize" button, ensuring their text and icons remain crisp white in light mode templates.
 
 ---
 
@@ -176,3 +177,36 @@ The session storage flag `obm_portal_analyzed` persists throughout the entire br
    - For auto-login on page load: Called `loadClientWorkspace(email, username)` (uses default `forceShowLoader = false`, keeping it smart).
    - For form submissions in `handleAuth`: Called `loadClientWorkspace(email, username, true)` (ignores cache, displaying the animation).
 4. **Session Reset**: Added `sessionStorage.removeItem('obm_portal_analyzed')` inside the `logout` function to clear state parameters when logging out.
+
+---
+
+## [ENTRY 5] - 2026-08-06
+### Concept: Dynamic State Toggles & Viewport Space Optimization (Navbar Replacement)
+
+#### The Problem
+When the client is active in the selection workspace gallery, both the main website navigation bar and the client portal workspace header bar render stacked on top of each other. This creates significant visual clutter, duplicates logos/controls, and reduces the active vertical grid viewport area for photo grids.
+
+#### Diagnostic Steps
+1. **Nav Distribution Inspection**: Inspected `_master.php` and verified that the website's primary floating navbar `_nav.php` is injected globally outside of individual controller views.
+2. **Overlap Evaluation**: Observed that the workspace header is sticky to the top of `#galleryView`. When `#galleryView` is displayed, both headers occupy the same top screen area.
+
+#### Why it occurred (Root Cause)
+The master layout always renders the global header `floating-nav-container`, while the individual client workspace also defines a portal-specific header, causing them to stack on top of each other.
+
+#### The Fix
+1. **Dynamic HTML State Flag**: Modified `loadClientWorkspace` inside `photo-selection.js` to append a CSS hook to the document element when the portal is active, and remove it inside `logout`:
+   ```javascript
+   document.documentElement.classList.add('portal-active');
+   ```
+2. **Conditional CSS Suppression**: Wrote a targeting display rule inside `photo-selection.css` to hide the main floating header when the workspace state flag is active:
+   ```css
+   html.portal-active .floating-nav-container {
+       display: none !important;
+   }
+   ```
+3. **Workspace Portal Home Navigation Shortcut**: Added a home link shortcut icon to the client portal header in `photo-selection.php` mapped to `Session::url('index')` so users can easily return to the main site portfolio pages:
+   ```html
+   <a href="<?= Session::url('index') ?>" class="..." title="Return to Website">
+       <i data-lucide="home" class="w-5 h-5"></i>
+   </a>
+   ```

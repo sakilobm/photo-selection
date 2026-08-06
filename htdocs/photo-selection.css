@@ -1204,3 +1204,8 @@ html.theme-light #actionToolbar button[onclick^="bulkDelete"]:hover {
     border-color: #ef4444 !important;
     color: #ffffff !important;
 }
+
+/* Hide main website header navbar when workspace is active */
+html.portal-active .floating-nav-container {
+    display: none !important;
+}

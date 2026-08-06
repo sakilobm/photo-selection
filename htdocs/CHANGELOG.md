@@ -2,6 +2,17 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.2.5] - 2026-08-06
+
+### Changed — Contrast & Accessibility Tweak (`photo-selection.php`)
+- **Workspace Finalize Contrast Correction**: Replaced standard `text-white` with the custom specificity-preserving `text-white-force` class on both the workspace gallery header "Finalize" counter button and the lightbox overlay preview "Finalize" action button, ensuring text and icons remain visible white in light mode templates.
+
+## [3.2.4] - 2026-08-06
+
+### Changed — Dynamic Navigation Bar Replacement & Redirects (`photo-selection.php`, `photo-selection.js`, `photo-selection.css`)
+- **Main Navbar Suppression inside Workspace**: Programmed the client workspace state toggles to dynamically add/remove a `portal-active` state class on the HTML document element. Configured CSS layout rules to automatically hide the top floating website navigation bar inside the portal workspace, resolving stacked-header visual clutter.
+- **Home Navigation Shortcut**: Inserted a clean "Return to Website" home icon link inside the client portal navigation header, allowing authenticated clients to easily navigate back to the main site portfolio pages.
+
 ## [3.2.3] - 2026-08-06
 
 ### Changed — Smart Explicit Login Loader Routing (`photo-selection.js`)

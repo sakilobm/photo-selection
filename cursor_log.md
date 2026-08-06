@@ -50,3 +50,15 @@ Tests:
 We initialized the living study ledger.
 Checks:
 - docs/DEBUGGING_JOURNAL.md created containing detailed definitions of CLI and curl flags: **PASS**
+
+### Navigation Replacement inside Client Portal
+We validated dynamic navbar hiding logic and home redirect links.
+Tests:
+- Main navigation bar is hidden when client is inside selection workspace (html.portal-active): **PASS**
+- Home icon shortcut inside client portal header correctly redirects back to website index: **PASS**
+
+### Finalize Buttons Contrast Correction
+We validated button color overrides in light mode.
+Tests:
+- Finalize counter button text and icon are forced white (text-white-force): **PASS**
+- Lightbox select/finalize button text and icon are forced white (text-white-force): **PASS**
