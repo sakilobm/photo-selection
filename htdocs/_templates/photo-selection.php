@@ -71,7 +71,7 @@ $clientCode = Session::get('client_code', '');
 
         <!-- Tab Switchers -->
         <div class="flex p-1.5 bg-white/5 rounded-xl border border-white/5 mb-6">
-            <button id="tabLogin" class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-[var(--theme-accent)] text-black" onclick="switchAuthTab('login')">Client Login</button>
+            <button id="tabLogin" class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-[var(--theme-accent)] text-white-force" onclick="switchAuthTab('login')">Client Login</button>
             <button id="tabSignup" class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-400 hover:text-white" onclick="switchAuthTab('signup')">New Account</button>
         </div>
 
@@ -79,7 +79,7 @@ $clientCode = Session::get('client_code', '');
             <div id="nameField" class="hidden">
                 <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 pl-1">Your Full Name</label>
                 <div class="relative">
-                    <i data-lucide="user" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    <i data-lucide="user" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 z-10 pointer-events-none"></i>
                     <input type="text" id="authName" class="w-full glass-input rounded-xl py-3 pl-11 pr-4 text-white focus:outline-none text-sm" placeholder="Enter full name...">
                 </div>
             </div>
@@ -87,7 +87,7 @@ $clientCode = Session::get('client_code', '');
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 pl-1">Client Email Address</label>
                 <div class="relative">
-                    <i data-lucide="mail" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    <i data-lucide="mail" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 z-10 pointer-events-none"></i>
                     <input type="email" id="authEmail" required class="w-full glass-input rounded-xl py-3 pl-11 pr-4 text-white focus:outline-none text-sm" placeholder="Enter email (e.g., client@example.com)">
                 </div>
             </div>
@@ -95,14 +95,14 @@ $clientCode = Session::get('client_code', '');
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 pl-1">Passcode / Portal Key</label>
                 <div class="relative">
-                    <i data-lucide="key-round" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    <i data-lucide="key-round" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 z-10 pointer-events-none"></i>
                     <input type="text" id="authCode" required class="w-full glass-input rounded-xl py-3 pl-11 pr-4 text-white focus:outline-none text-sm" placeholder="Enter key (e.g., OBM-2026)">
                 </div>
             </div>
 
-            <button type="submit" class="w-full bg-[var(--theme-accent)] text-black font-bold py-3.5 rounded-xl transition-all duration-300 hover:shadow-[0_0_25px_rgba(var(--theme-accent-rgb),0.45)] hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 mt-4">
+            <button type="submit" class="w-full bg-[var(--theme-accent)] text-white-force font-bold py-3.5 rounded-xl transition-all duration-300 hover:shadow-[0_0_25px_rgba(var(--theme-accent-rgb),0.45)] hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 mt-4">
                 <span id="authBtnText">Unlock My Gallery</span>
-                <i data-lucide="arrow-right" class="w-4 h-4 text-black"></i>
+                <i data-lucide="arrow-right" class="w-4 h-4 text-white-force"></i>
             </button>
         </form>
         <div class="mt-6 text-center">
@@ -165,7 +165,7 @@ $clientCode = Session::get('client_code', '');
                         <span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold">Selected</span>
                         <span id="selectionCounter" class="text-sm font-extrabold text-[var(--theme-accent)] transition-colors">0 / 0</span>
                     </div>
-                    <button onclick="submitSelections()" class="bg-[var(--theme-accent)] hover:shadow-[0_0_15px_rgba(var(--theme-accent-rgb),0.4)] text-black font-extrabold text-xs px-3.5 py-2 rounded-lg transition-all flex items-center gap-1.5">
+                    <button onclick="submitSelections()" class="bg-[var(--theme-accent)] hover:shadow-[0_0_15px_rgba(var(--theme-accent-rgb),0.4)] text-white font-extrabold text-xs px-3.5 py-2 rounded-lg transition-all flex items-center gap-1.5">
                         <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
                         Finalize
                     </button>
@@ -336,8 +336,8 @@ $clientCode = Session::get('client_code', '');
 
         <span class="w-px h-5 bg-white/10"></span>
 
-        <button onclick="submitSelections()" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-extrabold bg-[var(--theme-accent)] text-black hover:opacity-90 active:scale-95 transition-all shadow-md" title="Finalize selections">
-            <i data-lucide="check-circle" class="w-4 h-4 text-black"></i>
+        <button onclick="submitSelections()" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-extrabold bg-[var(--theme-accent)] text-white hover:opacity-90 active:scale-95 transition-all shadow-md" title="Finalize selections">
+            <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
             <span>Finalize</span>
         </button>
 
@@ -370,7 +370,7 @@ $clientCode = Session::get('client_code', '');
         </div>
 
         <div class="space-y-3 mt-4">
-            <button onclick="confirmSubmitChoice()" class="w-full bg-[var(--theme-accent)] text-black font-extrabold py-3.5 rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(var(--theme-accent-rgb),0.3)] hover:scale-[1.01] active:scale-[0.99] custom-cursor-hide">Send Selections to OBM Studio</button>
+            <button onclick="confirmSubmitChoice()" class="w-full bg-[var(--theme-accent)] text-white font-extrabold py-3.5 rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(var(--theme-accent-rgb),0.3)] hover:scale-[1.01] active:scale-[0.99] custom-cursor-hide">Send Selections to OBM Studio</button>
             <button onclick="closeSubmitModal()" class="w-full bg-white/5 border border-white/10 text-gray-300 hover:text-white font-semibold py-3 rounded-xl transition-colors custom-cursor-hide">Go Back &amp; Edit Selection</button>
         </div>
     </div>

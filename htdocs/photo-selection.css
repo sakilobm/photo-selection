@@ -320,9 +320,13 @@ h6 {
 }
 
 .dashboard-tab.active {
-    color: black !important;
+    color: #fff !important;
     background-color: var(--theme-accent);
     box-shadow: 0 4px 14px rgba(var(--theme-accent-rgb), 0.3);
+}
+
+.text-white-force {
+    color: #ffffff !important;
 }
 
 /* Glassmorphic Input Fields */

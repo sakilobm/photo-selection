@@ -232,7 +232,7 @@ function bypassLoginForTesting() {
 }
 
 // Progressive asset allocation and workspace synchronization loader
-function loadClientWorkspace(email, username) {
+function loadClientWorkspace(email, username, forceShowLoader = false) {
     currentUser = username;
     localStorage.setItem('obm_client_name', currentUser);
     localStorage.setItem('obm_client_email', email);
@@ -277,7 +277,7 @@ function loadClientWorkspace(email, username) {
             loadError = 'Failed to connect to API.';
         });
 
-    if (alreadyAnalyzed) {
+    if (alreadyAnalyzed && !forceShowLoader) {
         // Skip loader animation: wait for fetch to complete, then transition instantly
         const checkDone = setInterval(() => {
             if (apiPhotos.length > 0 || loadError) {
@@ -766,13 +766,13 @@ function switchAuthTab(mode) {
     tabSignup.className = "flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-400 hover:text-white";
 
     if (mode === 'login') {
-        tabLogin.className = "flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-[var(--theme-accent)] text-black font-medium";
+        tabLogin.className = "flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-[var(--theme-accent)] text-white-force font-medium";
         nameField.classList.add('hidden');
         document.getElementById('authName').removeAttribute('required');
         authBtnText.innerText = "Unlock My Gallery";
         authSubtitle.innerText = "SELECT & PERSONALIZE YOUR SHOTS";
     } else {
-        tabSignup.className = "flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-[var(--theme-accent)] text-black font-medium";
+        tabSignup.className = "flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-[var(--theme-accent)] text-white-force font-medium";
         nameField.classList.remove('hidden');
         document.getElementById('authName').setAttribute('required', 'true');
         authBtnText.innerText = "Create Client Portal";
@@ -797,7 +797,7 @@ async function handleAuth(event) {
         });
         const res = await response.json();
         if (res.success) {
-            loadClientWorkspace(res.email || emailInput, res.name || nameInput);
+            loadClientWorkspace(res.email || emailInput, res.name || nameInput, true);
         } else {
             showToast('alert', 'Access Denied', res.message || 'Invalid passcode.');
         }
@@ -816,6 +816,7 @@ function logout() {
             localStorage.removeItem('obm_client_name');
             localStorage.removeItem('obm_client_email');
             localStorage.removeItem('obm_selected_ids');
+            sessionStorage.removeItem('obm_portal_analyzed');
 
             const galleryView = document.getElementById('galleryView');
             const authView = document.getElementById('authView');

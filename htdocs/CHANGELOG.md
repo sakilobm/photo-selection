@@ -2,6 +2,19 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.2.3] - 2026-08-06
+
+### Changed — Smart Explicit Login Loader Routing (`photo-selection.js`)
+- **Explicit Login Loader Action**: Modified workspace initialization parameters to ignore the session cache flag and force display the loader screen whenever a user explicitly submits the login passcode form, maintaining the progressive transition experience.
+- **Smart Session Recovery Bypass**: Preserved loader-bypass cache on direct page reloads and state restoration, preventing repetitive and annoying animations for already-connected sessions.
+- **Session Reset on Logout**: Added cleanup triggers that remove the `obm_portal_analyzed` session cache flag when users click logout, ensuring the loader starts fresh for new client sessions.
+
+## [3.2.2] - 2026-08-06
+
+### Changed — Contrast & Accessibility Upgrades (`photo-selection.php`, `photo-selection.js`, `photo-selection.css`)
+- **Active UI Contrast Restorations**: Changed the text color on active switcher tabs and primary action buttons (Unlock My Gallery, Create Client Portal, Finalize Selections) from black to white to maximize readability against the theme accent color backgrounds.
+- **Input Icon Focus Preservation**: Added `z-10` and `pointer-events-none` styling properties to input field absolute icons, preventing them from being visually obscured by opaque white backgrounds when inputs are focused.
+
 ## [3.2.1] - 2026-08-05
 
 ### Fixed — Client Photo Schema Mappings & Selections Saving (`get_client_photos.php`, `finalize_selections.php`)

@@ -106,3 +106,73 @@ Similarly, `finalize_selections.php` attempted to write selections to a non-exis
    $stmt = $db->prepare("UPDATE `client_photos` SET `selection_status` = 'APPROVED' WHERE `portal_id` = ? AND `id` IN ($placeholders)");
    ```
 
+---
+
+## [ENTRY 3] - 2026-08-06
+### Concept: CSS Visual Stacking Contexts and Contrast accessibility (z-index & text colors)
+
+#### The Problem
+1. **Vanishing Icons**: When clicking or focusing on any of the input fields (Name, Email, Passcode) inside the Client Portal authentication screen, the absolute positioned icons (user, mail, key) completely vanished.
+2. **Low Text Contrast**: In light mode, active tabs and action buttons rendered with black text on orange/amber backgrounds, reducing the professional design aesthetic.
+
+#### Diagnostic Steps
+1. **Visual Inspections (Stacking Order)**: By inspecting the input elements in Developer Tools, we noticed that focusing on `.glass-input` in light mode changed its background opacity from semi-transparent (`rgba(0, 0, 0, 0.03)`) to almost fully opaque white (`rgba(255, 255, 255, 0.9)`).
+2. **HTML DOM Evaluation**: Audited the DOM structure in `photo-selection.php`:
+   ```html
+   <i class="absolute left-3.5 top-1/2 -translate-y-1/2 ..."></i>
+   <input class="glass-input ...">
+   ```
+   Because the `<i>` tag is placed before `<input>` in the DOM and both use default z-indexes, focusing or painting the input covers the preceding icon under opaque backgrounds.
+
+#### Why it occurred (Root Cause)
+- **Vanishing Icons**: The opaque background color of the focused input covers up the icon positioned beneath it.
+- Low Contrast / Specificity Override: We found that `photo-selection.css` has a global light mode override:
+  ```css
+  html.theme-light .text-white {
+      color: #0f172a !important;
+  }
+  ```
+  This is used to map standard dark mode text layers into dark slate (`#0f172a`) in light mode. However, this rule overrides utility classes like `text-white` on button and active tab backgrounds, forcing them to render black.
+
+#### The Fix
+1. **Adding Stacking Contexts**: Added `z-10` and `pointer-events-none` to all preceding input absolute icons:
+   ```html
+   <i class="absolute left-3.5 top-1/2 -translate-y-1/2 ... z-10 pointer-events-none"></i>
+   ```
+   `z-10` forces the icon to stay on top of the input's white focused background. `pointer-events-none` ensures clicks pass through the icon to focus the input text block.
+2. **Restoring Contrast with Specificity Force**: Defined a new styling rule `.text-white-force` inside `photo-selection.css` that bypasses the light-mode override:
+   ```css
+   .text-white-force {
+       color: #ffffff !important;
+   }
+   ```
+   We replaced `text-white` with `text-white-force` on active tab states and primary submit buttons to guarantee white text on both themes.
+
+---
+
+## [ENTRY 4] - 2026-08-06
+### Concept: Conditional Session Cache & Routing (Smart Loader Bypassing vs. Explicit Action Flags)
+
+#### The Problem
+After implementing sessionStorage cache bypass (`obm_portal_analyzed = 'true'`) to prevent the loading animation from running on page reloads, the loader screen was skipped *all* the time—even when users manually logged out and logged back in with a passcode. The screen never showed up again, which made form submissions feel abrupt.
+
+#### Diagnostic Steps
+1. **Application State Verification**: Checked the login submission handler (`handleAuth`) and observed that it called `loadClientWorkspace(email, username)`.
+2. **Flag Evaluation**: Inspected the loader function and saw it checked `sessionStorage.getItem('obm_portal_analyzed') === 'true'` unconditionally, bypassing the animation regardless of the trigger event (explicit form submission vs. automatic session restore on page load).
+
+#### Why it occurred (Root Cause)
+The session storage flag `obm_portal_analyzed` persists throughout the entire browser tab session. Since the logout routine did not clear this flag, and the login routine did not differentiate between a page load reload and a user clicking "Unlock My Gallery", the loader animation remained locked in bypass mode.
+
+#### The Fix
+1. **Differentiating Routing Triggers**: Modified `loadClientWorkspace` to accept a boolean parameter `forceShowLoader`:
+   ```javascript
+   function loadClientWorkspace(email, username, forceShowLoader = false)
+   ```
+2. **Conditional Evaluation**: Updated the bypass check to skip the animation *only* if the session is cached AND we are not forcing the loader:
+   ```javascript
+   if (alreadyAnalyzed && !forceShowLoader) { // skip loader }
+   ```
+3. **Trigger Alignments**:
+   - For auto-login on page load: Called `loadClientWorkspace(email, username)` (uses default `forceShowLoader = false`, keeping it smart).
+   - For form submissions in `handleAuth`: Called `loadClientWorkspace(email, username, true)` (ignores cache, displaying the animation).
+4. **Session Reset**: Added `sessionStorage.removeItem('obm_portal_analyzed')` inside the `logout` function to clear state parameters when logging out.

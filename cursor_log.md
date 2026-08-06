@@ -19,6 +19,7 @@ Results:
 - htdocs/_templates/core/_head.php: **PASS**
 - htdocs/libs/api/photos/get_client_photos.php: **PASS**
 - htdocs/libs/api/photos/finalize_selections.php: **PASS**
+- htdocs/_templates/photo-selection.php: **PASS**
 
 
 
@@ -42,6 +43,7 @@ We validated client portal session authentication and loader speed modifications
 Tests:
 - Client authentication with DEMO2026/vikram@example.com is authorized on photos namespace endpoints: **PASS**
 - First-time loading screen reaches 100% in ~400ms: **PASS**
+- Explicit login submissions force display the loader screen: **PASS**
 - Repeated navigations/reloads in same session bypass loading screen entirely: **PASS**
 
 ### Debugging & Learning Journal
