@@ -803,7 +803,7 @@ html.theme-light .action-btn-secondary:hover {
 }
 
 /* Confirmation Dialog Modal overrides */
-html.theme-light .obm-modal-card {
+html.theme-light .obm-modal-container {
     background: rgba(255, 255, 255, 0.95) !important;
     border-color: rgba(0, 0, 0, 0.1) !important;
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15) !important;

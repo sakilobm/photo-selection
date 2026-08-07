@@ -2,6 +2,11 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.3.2] - 2026-08-07
+
+### Changed — Light Theme Confirmation Dialog Color Fix (`photo-selection.css`)
+- **Corrected Modal Card Class Selector**: Replaced the mismatched `.obm-modal-card` selector override with `.obm-modal-container` inside the light-theme CSS blocks, allowing the reusable confirmation dialog's background to correctly render as white/translucent in light mode rather than remaining stuck as dark charcoal.
+
 ## [3.3.1] - 2026-08-07
 
 ### Removed — Client Self-Registration Flow (`photo-selection.php`, `photo-selection.js`, `client_signup.php`)

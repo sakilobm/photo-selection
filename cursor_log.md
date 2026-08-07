@@ -77,3 +77,9 @@ Tests:
 - Unused JavaScript variables (currentAuthMode, switchAuthTab) are cleaned up: **PASS**
 - Public client_signup.php registration API is disabled and removed: **PASS**
 - Login submissions show connecting state toasts and success/error feedbacks: **PASS**
+
+### Light Theme Confirmation Modal Override
+We validated modal dialog style changes in light mode.
+Tests:
+- Selector mismatch is corrected (.obm-modal-card -> .obm-modal-container): **PASS**
+- Dialog container background is properly overridden to light white/translucent: **PASS**

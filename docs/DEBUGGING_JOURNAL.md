@@ -274,3 +274,32 @@ The client portal self-signup flow is deprecated by business design constraints;
 1. **Template Cleanups**: Removed the tab switcher container and the hidden name input field from `photo-selection.php`, displaying only the email and passcode input fields on the entry card.
 2. **Script Simplification**: Deleted the unused variables and handlers (`currentAuthMode`, `switchAuthTab`) from `photo-selection.js`, routing form submissions directly to `client_login` validation.
 3. **Endpoint Disabling**: Deleted the public controller `client_signup.php` to prevent unauthenticated POST requests from inserting new portals in the database.
+
+---
+
+## [ENTRY 9] - 2026-08-07
+### Concept: CSS Selector Specificity Mismatches in Theme Systems
+
+#### The Problem
+In the light theme, the background container of the custom confirmation dialog ("Reset Entire Workspace?") remained dark charcoal/black, while its text turned dark slate, making it illegible.
+
+#### Diagnostic Steps
+1. **HTML Inspection**: Checked the markup inside `photo-selection.php` around the confirmation modal container card. The container element had the class `obm-modal-container`.
+2. **CSS Inspection**: Searched the light-theme overrides in `photo-selection.css`. Found that the style rule for changing the modal background in light theme was targeting `.obm-modal-card` instead of `.obm-modal-container`:
+   ```css
+   html.theme-light .obm-modal-card { ... }
+   ```
+
+#### Why it occurred (Root Cause)
+The selector class name `.obm-modal-card` inside the light theme stylesheet did not match the class name `.obm-modal-container` in the HTML markup.
+
+#### The Fix
+Replaced the selector `.obm-modal-card` with `.obm-modal-container` in [photo-selection.css](file:///var/www/html/obm-new-version/htdocs/photo-selection.css):
+```css
+html.theme-light .obm-modal-container {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15) !important;
+}
+```
+This allows the dialog container to correctly render as white/translucent in light mode.
