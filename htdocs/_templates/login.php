@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — <?= htmlspecialchars(get_config('project_title', 'App')) ?></title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= get_config('base_path') ?>assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= get_config('base_path') ?>assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= get_config('base_path') ?>assets/favicon/favicon-16x16.png">
+    <link rel="shortcut icon" href="<?= get_config('base_path') ?>favicon.ico">
+
     <link rel="stylesheet" href="<?= get_config('base_path') ?>assets/css/index.css">
     <link rel="stylesheet" href="<?= get_config('base_path') ?>assets/css/toastv3.css">
 </head>
@@ -40,10 +47,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="module">
-        import FingerprintJS from 'https://openfpcdn.io/fingerprintjs/v3';
-        const fp = await FingerprintJS.load();
-        const r  = await fp.get();
-        document.cookie = `fingerprint=${r.visitorId}; path=/; SameSite=None; Secure`;
+        try {
+            const { default: FingerprintJS } = await import('https://openfpcdn.io/fingerprintjs/v3');
+            const fp = await FingerprintJS.load();
+            const r  = await fp.get();
+            document.cookie = `fingerprint=${r.visitorId}; path=/; SameSite=None; Secure`;
+        } catch (err) {
+            console.warn("FingerprintJS load bypassed (blocked by browser tracking protection):", err);
+        }
     </script>
     <script src="<?= get_config('base_path') ?>assets/js/toastv3.js"></script>
     <script src="<?= get_config('base_path') ?>assets/js/ball.js"></script>

@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account — <?= htmlspecialchars(get_config('project_title', 'App')) ?></title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= get_config('base_path') ?>assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= get_config('base_path') ?>assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= get_config('base_path') ?>assets/favicon/favicon-16x16.png">
+    <link rel="shortcut icon" href="<?= get_config('base_path') ?>favicon.ico">
+
     <link rel="stylesheet" href="<?= get_config('base_path') ?>assets/css/index.css">
     <link rel="stylesheet" href="<?= get_config('base_path') ?>assets/css/toastv3.css">
 </head>

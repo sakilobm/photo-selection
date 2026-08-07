@@ -2,6 +2,30 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.5.2] - 2026-08-07
+
+### Fixed — Deep Contrast Light Theme Overrides & Reusable Modal Styling (`admin.php`)
+- **Deep Light Theme Typography Overrides**: Mapped `html.theme-light .text-white`, `.text-slate-300`, and `.text-slate-400` to high-contrast slate shades (`#0f172a`, `#334155`, `#64748b`) across ratio cards, category breakdowns, and header titles.
+- **Progress Bar Track Contrast**: Remapped progress bar container tracks (`.bg-slate-900`) in Light Mode to soft slate-gray (`#e2e8f0`).
+- **Confirmation Modal Styles**: Added complete fixed-overlay modal CSS rules for `#obmModal` (`.obm-modal-overlay`, `.obm-modal-container`, `.obm-modal-backdrop`), hiding unstyled raw modal text from displaying at the bottom-left of the viewport.
+
+## [3.5.1] - 2026-08-07
+
+### Fixed — Admin Dashboard Layout Wrapper, Bimodal Theme Adaptivity, and PHP Warnings (`admin.php`, `_masterForAdmin.php`, `admin/_head.php`)
+- **Document Shell Integration**: Modified `_templates/admin.php` to define the standard HTML document shell and wrapped the view layout inside proper `<head>` and `<body>` structures.
+- **Enabled Header Engines**: Loaded Tailwind CSS, Lucide Icons, Google Font 'Outfit', and the global `theme.js` script inside `admin/_head.php` and `_templates/admin.php` to restore layout grids and icons on the dashboard.
+- **Removed Layout Hardcoding**: Removed the hardcoded `.dark-mode` class inside `_masterForAdmin.php` to allow bimodal theme changes, defaulting to Light Mode (white theme).
+- **Added Bimodal Style Overrides**: Embedded comprehensive light mode CSS overrides inside the local style block in `_templates/admin.php` to correctly style top navbar elements, hero cards, tab switches, KPI cards, and custom user input fields under the white theme.
+- **Resolved PHP Syntax Warning**: Corrected Javascript `Math.round` calls to PHP standard `round()` function at line 574 of `_templates/admin.php` to resolve undefined constant parser warnings.
+
+## [3.5.0] - 2026-08-07
+
+### Fixed — Assets 404 Resolution, Multi-Device Favicon Meta Tags, and Graceful Fingerprint Failures
+- **Resolved toastv3.css 404**: Created the missing `assets/css/toastv3.css` stylesheet file populated with core toast styling and progression animation declarations to resolve HTTP 404 failures on auth pages.
+- **Resolved favicon.ico 404**: Copied `favicon.ico` from the assets folder directly to the web root `htdocs/` directory to resolve browser-native favicon lookups.
+- **Favicon Meta Tags Integration**: Injected responsive apple-touch-icon, safari-pinned-tab, and android manifest link tags inside `_head.php`, `admin/_head.php`, `login.php`, and `signup.php`.
+- **Safe Dynamic Fingerprint Loading**: Wrapped FingerprintJS loading in `login.php` using a dynamic import block enclosed in a `try-catch` scope to prevent console crashes when tracking blockers block the external script.
+
 ## [3.4.9] - 2026-08-07
 
 ### Fixed — Toast Notification Rendering Engine & Layout Displacement (`toastv3.js`, `_toastv3.php`)

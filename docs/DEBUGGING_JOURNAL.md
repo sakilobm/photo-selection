@@ -662,3 +662,75 @@ Clicking the Favorite or Note buttons inside the Digital Album view failed to sh
 1. **Toast Container Layout**: Updated `_toastv3.php` to use classes `.toast-container` and `.toast-pos-bottom-right`. This positions the container as a fixed floating box, preventing layout displacement.
 2. **Polymorphic Parameter Normalizer**: Integrated an argument-reordering detector in [toastv3.js](file:///var/www/html/obm-new-version/htdocs/assets/js/toastv3.js) that checks if the first parameter matches a list of known style keys. If not, it automatically swaps variables to handle legacy layouts.
 3. **Engine Upgrade**: Refactored the DOM builder inside the script to create correct modern elements, trigger transition classes (`.toast-show` / `.toast-hide`), render Lucide icons, and manage the auto-dismiss timer.
+
+---
+
+## [ENTRY 26] - 2026-08-07
+### Concept: Resource 404 Mappings & Dynamic Blocking Guardrails
+
+#### The Problem
+1. The login, signup, and admin dashboard pages returned a browser HTTP 404 error trying to load `/assets/css/toastv3.css`.
+2. The browser returned a favicon.ico 404 error on automatic requests to `/favicon.ico`.
+3. In browser clients with Enhanced Tracking Protection (or content blocking) turned on, loading FingerprintJS from the external CDN (`openfpcdn.io`) failed with a CORS network exception, throwing an uncaught console error that blocked user interactions.
+
+#### Diagnostic Steps
+1. **Directory Auditing**: Checked `htdocs/assets/css/`. Confirmed that `toastv3.css` was missing from the folder. All toast styles were instead residing inside `styles.css`.
+2. **Favicon Path Check**: Observed that all favicon assets (including `favicon.ico`) were placed in a subfolder `assets/favicon/`, leaving the web root without a root `favicon.ico` file.
+3. **CORS Security Blocking**: Verified that Enhanced Tracking Protection blocks script imports from known tracking domains like FingerprintJS. Because it was loaded using a static ES `import` statement in a module block, the script immediately crashed without graceful fallback options.
+
+#### The Fix
+1. **Created toastv3.css**: Extracted all modern toast notification styling rules and keyframe animations from `styles.css` and wrote them to [toastv3.css](file:///var/www/html/obm-new-version/htdocs/assets/css/toastv3.css).
+2. **Mapped Favicon**: Copied `favicon.ico` from the assets folder directly to the web root `htdocs/` directory. Added multi-device apple-touch-icon, safari-pinned-tab, and android manifest link tags inside [_head.php](file:///var/www/html/obm-new-version/htdocs/_templates/core/_head.php) and other templates.
+3. **Safe Dynamic Import Guardrail**: Replaced the static `import FingerprintJS` inside [login.php](file:///var/www/html/obm-new-version/htdocs/_templates/login.php) with a dynamic `import()` statement enclosed inside a `try-catch` scope:
+   ```javascript
+   try {
+       const { default: FingerprintJS } = await import('https://openfpcdn.io/fingerprintjs/v3');
+       const fp = await FingerprintJS.load();
+       const r  = await fp.get();
+       document.cookie = `fingerprint=${r.visitorId}; path=/; SameSite=None; Secure`;
+   } catch (err) {
+       console.warn("FingerprintJS load bypassed (blocked by browser tracking protection):", err);
+   }
+   ```
+
+---
+
+## [ENTRY 27] - 2026-08-07
+### Concept: Layout Wrappers, Bimodal Theme Decoupling & PHP Parser Warnings
+
+#### The Problem
+1. The Admin Dashboard UI layout was unaligned; the statistics cards (KPI cards) stacked vertically in a single column instead of rendering side-by-side. Icons inside them did not display, and toggling light mode failed or was ignored.
+2. An undefined constant parser warning `Use of undefined constant 'Math'` was raised during dashboard compilation.
+
+#### Diagnostic Steps
+1. **Layout Inheritance Audit**: Verified that `htdocs/admin.php` renders the view using the `_empty` layout. This layout outputs only the template file without injecting html, head, scripts, or assets.
+2. **Missing Engines**: Because the document shell was missing, Tailwind CSS, Lucide Icons, Google Font 'Outfit', and the global `theme.js` script were completely absent from the final markup. This broke grids (Tailwind), icons (Lucide), and theme functions (`theme.js`).
+3. **Hardcoded Body Classes**: Noticed that `_masterForAdmin.php` had a hardcoded `class="dark-mode"` body class which blocked style adaptivity.
+4. **PHP Parser Check**: Pinpointed line 574. The calculation used Javascript-specific `Math.round(...)` syntax inside a PHP statement, causing the parser to treat `Math` as an undefined global constant.
+
+#### The Fix
+1. **Document Shell Wrapper**: Modified [admin.php](file:///var/www/html/obm-new-version/htdocs/_templates/admin.php) to declare a standard HTML5 shell, introducing headers, favicons, Google Fonts, and the Lucide/Tailwind engines.
+2. **Bimodal decoupling**:
+   - Removed the hardcoded `.dark-mode` class from [_masterForAdmin.php](file:///var/www/html/obm-new-version/htdocs/_templates/_masterForAdmin.php) to let `theme.js` govern body classes.
+   - Added comprehensive light-mode overrides inside the style block of [admin.php](file:///var/www/html/obm-new-version/htdocs/_templates/admin.php), converting dark glass cards, headers, switcher pills, inputs, and gradients to crisp white glass components with dark slate text in Light Mode.
+3. **Corrected Math function**: Swapped `Math.round` inside the PHP tag with the standard PHP `round()` function.
+4. **Toast Path Update**: Mapped the admin toast script to `assets/js/toastv3.js` and appended the `#toast-container` element.
+
+---
+
+## [ENTRY 28] - 2026-08-07
+### Concept: Deep Utility Color Overrides & Fixed Overlay Dialogs
+
+#### The Problem
+1. In Light Mode, several text labels (Selection Ratio heading, ratio percentage, Active Category Breakdown header, category list titles) remained styled as white text (`.text-white`, `.text-slate-300`, `.text-slate-400`), rendering them invisible against the light card backgrounds.
+2. The Confirmation Modal (`#obmModal`) lacked CSS layout rules, causing unstyled modal text (`Are you sure? This action is irreversible. Cancel Confirm`) to display in raw HTML at the bottom-left corner of the viewport.
+
+#### Diagnostic Steps
+1. **Utility Specificity Audit**: Found that utility classes like `.text-white`, `.text-slate-300`, `.text-slate-400`, and `.bg-slate-900` overrode default element inheritance without high-specificity selectors under `html.theme-light`.
+2. **Modal Rules Review**: Checked stylesheet definitions for `#obmModal`. Confirmed `.obm-modal-overlay` and `.obm-modal-container` lacked position and opacity rules.
+
+#### The Fix
+Added local CSS overrides in [admin.php](file:///var/www/html/obm-new-version/htdocs/_templates/admin.php):
+- **Deep Contrast Rules**: Overrode `.text-white` to `#0f172a`, `.text-slate-300` to `#334155`, and `.text-slate-400` to `#64748b` in Light Mode.
+- **Track Color Override**: Swapped `.bg-slate-900` progress bar containers to soft slate-gray (`#e2e8f0`).
+- **Modal Fixed Overlay System**: Created full CSS definitions for `.obm-modal-overlay`, `.obm-modal-container`, and `.obm-modal-backdrop` with `opacity: 0` and `pointer-events: none` when inactive, positioning the modal as a floating glass card when `.active`.

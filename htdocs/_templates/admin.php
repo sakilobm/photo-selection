@@ -94,7 +94,34 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
     'quality' => '1080p',
     'status' => 'LIVE'
 ];
-?>
+?><!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Command Center | OBM Studio</title>
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= get_config('base_path') ?>assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= get_config('base_path') ?>assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= get_config('base_path') ?>assets/favicon/favicon-16x16.png">
+    <link rel="shortcut icon" href="<?= get_config('base_path') ?>favicon.ico">
+
+    <!-- Tailwind CSS -->
+    <script>(function () { var w = console.warn; console.warn = function () { if (arguments[0] && typeof arguments[0] === 'string' && arguments[0].includes('cdn.tailwindcss.com')) return; w.apply(console, arguments); }; })();</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Global Theme Engine -->
+    <script src="<?= get_config('base_path') ?>theme.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Toast Styling -->
+    <link rel="stylesheet" href="<?= get_config('base_path') ?>assets/css/toastv3.css">
 
 <script>
   // Pass MySQL datasets directly to front-end JS variables
@@ -378,7 +405,368 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
     color: #000;
     font-weight: 800;
   }
+  html.theme-light body {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .top-glass-bar {
+    background: rgba(255, 255, 255, 0.75) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  html.theme-light .top-glass-bar a,
+  html.theme-light .top-glass-bar span,
+  html.theme-light .top-glass-bar p,
+  html.theme-light .top-glass-bar h3 {
+    color: #0f172a !important;
+  }
+
+  html.theme-light .hero-banner-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html.theme-light .hero-banner-card h1,
+  html.theme-light .hero-banner-card h2,
+  html.theme-light .hero-banner-card h3 {
+    color: #0f172a !important;
+  }
+
+  html.theme-light .hero-banner-card p {
+    color: #475569 !important;
+  }
+
+  html.theme-light .dashboard-nav-bar {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  html.theme-light .dash-tab-btn {
+    color: #475569 !important;
+  }
+
+  html.theme-light .dash-tab-btn:hover {
+    color: #0f172a !important;
+    background: rgba(0, 0, 0, 0.03) !important;
+  }
+
+  html.theme-light .dash-tab-btn.active {
+    background: var(--theme-accent, #3b82f6) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+  }
+
+  html.theme-light .kpi-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-color: rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html.theme-light .kpi-card:hover {
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06) !important;
+  }
+
+  html.theme-light .kpi-card h3 {
+    color: #0f172a !important;
+  }
+
+  html.theme-light .kpi-card span {
+    color: #475569 !important;
+  }
+
+  html.theme-light .mode-toggle-btn {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+  }
+
+  html.theme-light .mode-toggle-btn:hover {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .mode-toggle-btn.active {
+    background: var(--theme-accent, #3b82f6) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+  }
+
+  html.theme-light .cm-filter-pill {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border-color: rgba(0, 0, 0, 0.06) !important;
+    color: #475569 !important;
+  }
+
+  html.theme-light .cm-filter-pill:hover,
+  html.theme-light .cm-filter-pill.active {
+    background: rgba(0, 0, 0, 0.06) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .cm-filter-pill.active {
+    background: var(--theme-accent) !important;
+    color: #ffffff !important;
+  }
+
+  html.theme-light .glass-panel-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-color: rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html.theme-light .glass-panel-card:hover {
+    border-color: rgba(0, 0, 0, 0.12) !important;
+  }
+
+  html.theme-light .glass-panel-card h4,
+  html.theme-light .glass-panel-card span.font-black,
+  html.theme-light .glass-panel-card span.text-sm {
+    color: #0f172a !important;
+  }
+
+  html.theme-light .glass-panel-card p {
+    color: #475569 !important;
+  }
+
+  html.theme-light .dash-input {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .dash-input:focus {
+    border-color: var(--theme-accent, #3b82f6) !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.15) !important;
+  }
+
+  html.theme-light .client-card-completed {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.04) 0%, #ffffff 100%) !important;
+  }
+  html.theme-light .client-card-flagged {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, #ffffff 100%) !important;
+  }
+  html.theme-light .client-card-pending {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.04) 0%, #ffffff 100%) !important;
+  }
+  html.theme-light .client-card-unassigned {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.04) 0%, #ffffff 100%) !important;
+  }
+  html.theme-light .client-card-blocked {
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.05) 0%, #ffffff 100%) !important;
+  }
+
+  /* ═══ REUSABLE MODAL DIALOG STYLES ═══ */
+  .obm-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .obm-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .obm-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.75);
+    backdrop-filter: blur(16px);
+  }
+
+  .obm-modal-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 440px;
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+  }
+
+  .obm-modal-overlay.active .obm-modal-container {
+    transform: scale(1);
+  }
+
+  .obm-modal-icon-ring {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .obm-modal-icon-circle {
+    position: relative;
+    z-index: 2;
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #f59e0b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .obm-modal-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+
+  .obm-modal-message {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .obm-modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .obm-modal-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 14px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+  }
+
+  .obm-modal-btn-cancel {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+  }
+
+  .obm-modal-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+  }
+
+  .obm-modal-btn-confirm {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.35);
+  }
+
+  .obm-modal-btn-confirm:hover {
+    background: #dc2626;
+  }
+
+  /* Modal Light Theme Overrides */
+  html.theme-light .obm-modal-backdrop {
+    background: rgba(248, 250, 252, 0.8) !important;
+  }
+
+  html.theme-light .obm-modal-container {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  html.theme-light .obm-modal-title {
+    color: #0f172a !important;
+  }
+
+  html.theme-light .obm-modal-message {
+    color: #475569 !important;
+  }
+
+  html.theme-light .obm-modal-btn-cancel {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+  }
+
+  html.theme-light .obm-modal-btn-cancel:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+  }
+
+  /* ═══ DEEP LIGHT MODE CONTRAST FIXES ═══ */
+  html.theme-light .text-white {
+    color: #0f172a !important;
+  }
+
+  html.theme-light .text-slate-300 {
+    color: #334155 !important;
+  }
+
+  html.theme-light .text-slate-400 {
+    color: #64748b !important;
+  }
+
+  html.theme-light .bg-slate-900 {
+    background: #e2e8f0 !important;
+  }
+
+  html.theme-light .border-white\/5,
+  html.theme-light .border-white\/10,
+  html.theme-light .border-white\/20 {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  html.theme-light .bg-white\/5 {
+    background: rgba(0, 0, 0, 0.04) !important;
+  }
+
+  html.theme-light .bg-white\/10 {
+    background: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  html.theme-light .theme-mode-toggle {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  html.theme-light .view-toggle-pill {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  html.theme-light .view-toggle-btn {
+    color: #475569 !important;
+  }
+
+  html.theme-light .view-toggle-btn.active {
+    background: var(--theme-accent, #3b82f6) !important;
+    color: #ffffff !important;
+  }
 </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-slate-950 overflow-x-hidden">
 
 <!-- ══════ FLOATING LIQUID AURORA BACKGROUND ══════ -->
 <div class="dashboard-aurora-bg">
@@ -544,7 +932,7 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
         <div class="space-y-2">
           <div class="text-4xl font-black text-white font-['Outfit'] flex items-baseline gap-2">
             <?php
-            $ratio = $totalAllocatedPhotos > 0 ? Math.round(($totalSelectedPhotos / $totalAllocatedPhotos) * 100) : 0;
+            $ratio = $totalAllocatedPhotos > 0 ? round(($totalSelectedPhotos / $totalAllocatedPhotos) * 100) : 0;
             echo $ratio;
             ?>% <span class="text-xs text-slate-400 font-normal">of photos selected</span>
           </div>
@@ -810,7 +1198,7 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
   </div>
 </div>
 
-<script src="<?= get_config('base_path') ?>toast.js"></script>
+<script src="<?= get_config('base_path') ?>assets/js/toastv3.js"></script>
 <script>
   let uploadQueue = [];
   let cmCurrentFilter = 'all';
@@ -1543,3 +1931,7 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
       }
   });
 </script>
+
+<div class="toast-container toast-pos-bottom-right" id="toast-container"></div>
+</body>
+</html>

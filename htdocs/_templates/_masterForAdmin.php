@@ -4,7 +4,7 @@
 <head>
     <?php Session::loadTemplate('admin/_head'); ?>
 </head>
-<body class="dark-mode">
+<body class="antialiased selection:bg-cyan-500 selection:text-slate-950 overflow-x-hidden">
 
     <!-- Admin Sidebar -->
     <?php Session::loadTemplate('admin/_nav'); ?>
