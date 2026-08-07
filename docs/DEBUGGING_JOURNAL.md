@@ -364,3 +364,62 @@ Replaced the array-length check with an explicit request status completion boole
    }
    ```
 This guarantees the page initializes and displays the selection dashboard correctly even if the database has no photos allocated yet.
+
+---
+
+## [ENTRY 12] - 2026-08-07
+### Concept: UI Cleanups & Dynamic Page Layout Placeholders (Workspace Empty States)
+
+#### The Problem
+When a client portal database record has no photos assigned yet, displaying an empty selection dashboard (with categories, search bars, slideshow structures, and selection toolbars) looks cluttered, broken, and confusing.
+
+#### Diagnostic Steps
+1. **Layout Verification**: Evaluated the UI when `photoDatabase` is empty. The page layout displayed all headers, slide controls, and search items, but had an empty image grid, which feels unpolished.
+2. **Behavior Verification**: Checked if clients need custom contact or logout shortcuts when their portal workspace is still preparing.
+
+#### Why it occurred (Root Cause)
+The selection workspace did not differentiate between a populated photo catalogue and a newly created, uninitialized portal, displaying empty versions of all controls by default.
+
+#### The Fix
+1. **Empty State Placeholder Container**: Inserted a premium `#emptyWorkspaceState` card inside [photo-selection.php](file:///var/www/html/obm-new-version/htdocs/_templates/photo-selection.php) that contains an informative message advising that OBM Studio is currently preparing their photo list, alongside contact and logout shortcuts.
+2. **Dynamic UI Toggling**: Added the `checkWorkspaceEmpty()` checker function inside [photo-selection.js](file:///var/www/html/obm-new-version/htdocs/photo-selection.js) and hooked it into `refreshGallery()`. If `photoDatabase.length === 0`:
+   - It displays the `#emptyWorkspaceState` card.
+   - It hides the slideshow carousel, filter bar, categories selection, meta headers, and main grid.
+
+---
+
+## [ENTRY 13] - 2026-08-07
+### Concept: UI Polishing and Luxury Styling Refinement
+
+#### The Problem
+The default empty workspace placeholder state card looked flat and basic, lacking interactive components, background styling depth, and premium animations.
+
+#### The Fix
+Restyled the empty workspace view with glassmorphism overlays and ambient glows, added animated ping and bounce icons, and integrated an interactive status timeline depicting secure handshake progress.
+
+---
+
+## [ENTRY 14] - 2026-08-07
+### Concept: Light Theme CSS Contrast Mappings
+
+#### The Problem
+In Light Theme mode, the newly added workspace lifecycle timeline card background (styled with `.bg-black/40` overlay class) remained dark gray, causing the remapped dark charcoal text elements inside it to have extremely poor, illegible color contrast.
+
+#### Diagnostic Steps
+1. **Theme Verification**: Inspected the rendered DOM when active theme is set to `white`. Verified that `html` is assigned class `html.theme-light`.
+2. **CSS Inspection**: Confirmed that `.bg-black/40` and `.text-gray-500` were not overridden under `html.theme-light`, leaving the background dark and text faded.
+
+#### The Fix
+Added target remapping rules under `html.theme-light` in [photo-selection.css](file:///var/www/html/obm-new-version/htdocs/photo-selection.css):
+```css
+html.theme-light .bg-black\/40 {
+    background: rgba(0, 0, 0, 0.03) !important;
+}
+html.theme-light .bg-black\/50 {
+    background: rgba(0, 0, 0, 0.04) !important;
+}
+html.theme-light .text-gray-500 {
+    color: #64748b !important;
+}
+```
+This forces the timeline card container to render as a soft light-gray translucent box, creating optimal readability for dark text.

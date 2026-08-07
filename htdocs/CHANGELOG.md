@@ -2,6 +2,23 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.3.8] - 2026-08-07
+
+### Fixed — Light Mode Color Contrast Overrides (`photo-selection.css`)
+- **Remapped Overlay Classes**: Added CSS overrides for `.bg-black/40` and `.bg-black/50` under `html.theme-light`, translating dark glass overlays to soft translucent pearl gray layers.
+- **Contrast Typography Remappings**: Remapped `.text-gray-500` under light mode to guarantee legible color contrast hierarchy across the workspace lifecycle timeline tracking lists.
+
+## [3.3.7] - 2026-08-07
+
+### Changed — Premium Empty Workspace Aesthetic Overhaul (`photo-selection.php`)
+- **Luxury UI Polishing**: Restyled the empty workspace view with glassmorphism overlays, radial glows behind content zones, micro-animations (bounce loaders, pulse indicators, and hover displacements), and an interactive status tracker timeline depicting workspace milestones.
+
+## [3.3.6] - 2026-08-07
+
+### Added — Premium Empty Workspace Placeholder State (`photo-selection.php`, `photo-selection.js`)
+- **Empty Workspace Handler**: Designed and integrated a styled empty state card (`#emptyWorkspaceState`) with Lucide status indicators, info guides, support email redirections, and logout controls.
+- **Dynamic Layout Visibility Toggles**: Added the `checkWorkspaceEmpty` helper in the selection UI to dynamically suppress all dashboards, search bars, category sliders, action panels, and photo grids when a client logs into a newly allocated workspace that has 0 assigned photos.
+
 ## [3.3.5] - 2026-08-07
 
 ### Changed — Zero-Photo Workspace Restoration Fix (`photo-selection.js`)

@@ -997,7 +997,33 @@ function filterCategory(category) {
     renderGrid();
 }
 
+function checkWorkspaceEmpty() {
+    const isEmpty = photoDatabase.length === 0;
+    const emptyState = document.getElementById('emptyWorkspaceState');
+    const metaHeader = document.getElementById('workspaceMetaHeader');
+    const carouselSec = document.getElementById('carouselSection');
+    const filtersSec = document.getElementById('filtersSection');
+    const gridSec = document.getElementById('gridSection');
+    const actionToolbar = document.getElementById('actionToolbar');
+
+    if (isEmpty) {
+        if (emptyState) emptyState.classList.remove('hidden');
+        if (metaHeader) metaHeader.classList.add('hidden');
+        if (carouselSec) carouselSec.classList.add('hidden');
+        if (filtersSec) filtersSec.classList.add('hidden');
+        if (gridSec) gridSec.classList.add('hidden');
+        if (actionToolbar) actionToolbar.classList.add('hidden');
+    } else {
+        if (emptyState) emptyState.classList.add('hidden');
+        if (metaHeader) metaHeader.classList.remove('hidden');
+        if (carouselSec) carouselSec.classList.remove('hidden');
+        if (filtersSec) filtersSec.classList.remove('hidden');
+        if (gridSec) gridSec.classList.remove('hidden');
+    }
+}
+
 function refreshGallery() {
+    checkWorkspaceEmpty();
     renderGrid();
     updateCounter();
     renderCategories();

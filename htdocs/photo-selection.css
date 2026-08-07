@@ -713,12 +713,24 @@ html.theme-light .bg-white\/5 {
     background: rgba(0, 0, 0, 0.03) !important;
 }
 
+html.theme-light .bg-black\/40 {
+    background: rgba(0, 0, 0, 0.03) !important;
+}
+
+html.theme-light .bg-black\/50 {
+    background: rgba(0, 0, 0, 0.04) !important;
+}
+
 html.theme-light .border-white\/10 {
     border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 html.theme-light .border-white\/5 {
     border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+html.theme-light .text-gray-500 {
+    color: #64748b !important;
 }
 
 html.theme-light .text-gray-400 {
