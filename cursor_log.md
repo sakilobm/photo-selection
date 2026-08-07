@@ -145,3 +145,5 @@ Tests:
 - Injected comprehensive Light Mode style overrides inside admin template stylesheet block: **PASS**
 - Overrode .text-white, .text-slate-300, and .text-slate-400 classes under Light Mode for deep contrast legibility: **PASS**
 - Added full CSS overlay rules for #obmModal to eliminate unstyled modal text at the bottom left: **PASS**
+- Audited all 6 dashboard tabs and added deep Light Mode overrides for selects, options, textareas, transparent inputs, and dropzones: **PASS**
+- Remapped Tailwind accent colors (300/400 shades) to vibrant 600/700 shades under Light Mode for punchy legibility: **PASS**

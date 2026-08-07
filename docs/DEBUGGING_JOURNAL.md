@@ -734,3 +734,54 @@ Added local CSS overrides in [admin.php](file:///var/www/html/obm-new-version/ht
 - **Deep Contrast Rules**: Overrode `.text-white` to `#0f172a`, `.text-slate-300` to `#334155`, and `.text-slate-400` to `#64748b` in Light Mode.
 - **Track Color Override**: Swapped `.bg-slate-900` progress bar containers to soft slate-gray (`#e2e8f0`).
 - **Modal Fixed Overlay System**: Created full CSS definitions for `.obm-modal-overlay`, `.obm-modal-container`, and `.obm-modal-backdrop` with `opacity: 0` and `pointer-events: none` when inactive, positioning the modal as a floating glass card when `.active`.
+
+---
+
+## [ENTRY 29] - 2026-08-07
+### Concept: Universal All-Tabs Light Theme Audit & Form Input Overrides
+
+#### The Problem
+1. When switching across the 6 dashboard tabs (Packages & Rates, Client Directory, Selection Tracker, Live Broadcast, Upload & Send) under Light Mode, several interactive elements remained dark or low-contrast:
+   - Dynamic package title inputs (`input.bg-transparent`) had white text on transparent backgrounds.
+   - Dropdown options inside `<select>` tags retained dark option backgrounds.
+   - Subtitle textareas (`textarea.dash-input`) retained dark backgrounds.
+   - The upload dropzone border (`#upload-dropzone`) used `border-white/15` which was hard to see on light mode cards.
+   - Action buttons (`.w-9.h-9`, `.btn-ghost`) lacked distinct hover contrast.
+
+#### Diagnostic Steps
+1. **Multi-Pane Visual Audit**: Systematically inspected each tab's rendered markup in `admin.php`:
+   - Packages & Rates: Title input had `class="bg-transparent text-white"`.
+   - Live Broadcast: Stream quality dropdown options lacked explicit light mode background colors.
+   - Upload & Send: Dashed container border used `border-white/15`.
+
+#### The Fix
+Added targeted all-tabs CSS overrides in [admin.php](file:///var/www/html/obm-new-version/htdocs/_templates/admin.php):
+- **Form Controls**: Added `html.theme-light select.dash-input`, `select option`, `textarea.dash-input`, and `input.bg-transparent` rules setting solid white backgrounds and `#0f172a` text colors.
+- **Placeholders**: Set `::placeholder` color to `#94a3b8`.
+- **Upload Zone**: Overrode `#upload-dropzone` to use `border-color: rgba(0, 0, 0, 0.15)` with `#0f172a` primary text.
+- **Action & Ghost Buttons**: Overrode `.btn-ghost` and `.w-9.h-9.bg-white/5` elements for high contrast on light cards.
+
+---
+
+## [ENTRY 30] - 2026-08-07
+### Concept: Vibrant Accent Color Mapping for Bimodal Interfaces
+
+#### The Problem
+Small text accents, icons, and pill badges using Tailwind 300/400 shade utilities (e.g., `text-blue-300`, `text-cyan-400`, `text-purple-400`, `text-amber-400`, `text-emerald-400`, `text-rose-400`) were designed for dark mode backgrounds. When rendered against white glass cards in Light Mode, these light pastels appeared low-contrast.
+
+#### Diagnostic Steps
+Inspected utility classes on badges, header pills, and tab icons:
+- `text-blue-300` on hero banner card tag (`STUDIO COMMAND CENTER`).
+- `text-cyan-400` / `text-purple-400` on ratio and breakdown headers.
+- `text-slate-500` on photo count details and subtexts.
+
+#### The Fix
+Added CSS specificity overrides in [admin.php](file:///var/www/html/obm-new-version/htdocs/_templates/admin.php) under `html.theme-light`:
+- `text-blue-300` -> `#2563eb` (vibrant blue)
+- `text-cyan-400` -> `#0891b2` (vibrant cyan)
+- `text-purple-400` -> `#7e22ce` (vibrant purple)
+- `text-amber-400` -> `#d97706` (vibrant amber)
+- `text-emerald-400` -> `#059669` (vibrant emerald)
+- `text-rose-400` -> `#e11d48` (vibrant rose)
+- `text-slate-500` -> `#475569` (deep slate)
+- `.kpi-icon-box` -> `background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.08);`

@@ -2,6 +2,19 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.5.4] - 2026-08-07
+
+### Fixed — Vibrant Light Mode Accent Color Mapping (`admin.php`)
+- **Accent Color Remapping**: Added high-contrast color mappings for `.text-blue-300`, `.text-cyan-400`, `.text-purple-400`, `.text-amber-400`, `.text-emerald-400`, `.text-rose-400`, and `.text-slate-500` under `html.theme-light` so small tags, icons, badges, and tab indicators retain vibrant punchiness without washing out on white card backgrounds.
+- **KPI Icon Boxes**: Overrode `.kpi-icon-box` container fills and borders in Light Mode to maintain visual distinction.
+
+## [3.5.3] - 2026-08-07
+
+### Fixed — Universal All-Tabs Light Theme Styling Audit (`admin.php`)
+- **Interactive Form Inputs**: Mapped `<select>`, `<option>`, and `<textarea>` elements under `html.theme-light` to solid white backgrounds with dark slate text (`#0f172a`), fixing contrast in Live Broadcast & Package Manager.
+- **Dynamic Package Titles & Placeholders**: Overrode transparent input text colors (`input.bg-transparent`) and placeholder text (`::placeholder`) to ensure package titles and search inputs remain high-contrast in Light Mode.
+- **Upload Dropzone & Action Buttons**: Remapped dashed dropzone borders (`#upload-dropzone`), action icon buttons (`.w-9.h-9`), and ghost buttons (`.btn-ghost`) for clean contrast across Client Directory, Selection Tracker, and Upload tabs.
+
 ## [3.5.2] - 2026-08-07
 
 ### Fixed — Deep Contrast Light Theme Overrides & Reusable Modal Styling (`admin.php`)

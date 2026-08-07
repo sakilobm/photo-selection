@@ -764,6 +764,113 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
     background: var(--theme-accent, #3b82f6) !important;
     color: #ffffff !important;
   }
+
+  /* ═══ ALL TABS COMPLETE DEEP LIGHT MODE OVERRIDES ═══ */
+  html.theme-light input.bg-transparent {
+    color: #0f172a !important;
+  }
+
+  html.theme-light select.dash-input {
+    background-color: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light select.dash-input option {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light textarea.dash-input {
+    background-color: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light input.dash-input::placeholder,
+  html.theme-light textarea.dash-input::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  html.theme-light .border-slate-800\/80 {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  html.theme-light #upload-dropzone {
+    border-color: rgba(0, 0, 0, 0.15) !important;
+    background: rgba(0, 0, 0, 0.02) !important;
+  }
+
+  html.theme-light #upload-dropzone:hover {
+    border-color: var(--theme-accent, #3b82f6) !important;
+    background: rgba(0, 0, 0, 0.04) !important;
+  }
+
+  html.theme-light #upload-dropzone p.text-white {
+    color: #0f172a !important;
+  }
+
+  html.theme-light .btn-ghost {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #334155 !important;
+  }
+
+  html.theme-light .btn-ghost:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .w-9.h-9.bg-white\/5 {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+  }
+
+  html.theme-light .w-9.h-9.bg-white\/5:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .bg-black {
+    background-color: #f1f5f9 !important;
+  }
+
+  html.theme-light label.text-slate-300 {
+    color: #334155 !important;
+  }
+
+  html.theme-light label.text-slate-400,
+  html.theme-light span.text-slate-500 {
+    color: #64748b !important;
+  }
+
+  /* ═══ VIBRANT LIGHT MODE COLOR ACCENTS ═══ */
+  html.theme-light .text-blue-300 {
+    color: #2563eb !important;
+  }
+  html.theme-light .text-cyan-400 {
+    color: #0891b2 !important;
+  }
+  html.theme-light .text-purple-400 {
+    color: #7e22ce !important;
+  }
+  html.theme-light .text-amber-400 {
+    color: #d97706 !important;
+  }
+  html.theme-light .text-emerald-400 {
+    color: #059669 !important;
+  }
+  html.theme-light .text-rose-400 {
+    color: #e11d48 !important;
+  }
+  html.theme-light .text-slate-500 {
+    color: #475569 !important;
+  }
+  html.theme-light .kpi-icon-box {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
 </style>
 </head>
 <body class="antialiased selection:bg-cyan-500 selection:text-slate-950 overflow-x-hidden">
