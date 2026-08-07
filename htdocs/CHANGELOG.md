@@ -2,6 +2,13 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.3.1] - 2026-08-07
+
+### Removed — Client Self-Registration Flow (`photo-selection.php`, `photo-selection.js`, `client_signup.php`)
+- **Self-Signup Elimination**: Removed switcher tabs, name fields, and self-registration UI elements from the portal entry view to ensure that only administrators can configure workspace slots and allocate client credentials.
+- **Simplified Dispatcher**: Cleaned up the frontend javascript state variables and handlers (`currentAuthMode`, `switchAuthTab`), focusing the submit button purely on login passcode validation with async toast messages.
+- **Removed Stub Controller**: Deleted `client_signup.php` to prevent unauthenticated client insertions into the database.
+
 ## [3.3.0] - 2026-08-07
 
 ### Added — Public Client Workspace Registration Endpoint (`client_signup.php`)

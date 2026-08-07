@@ -69,20 +69,7 @@ $clientCode = Session::get('client_code', '');
             <p class="text-xs text-gray-400 font-light mt-2 uppercase tracking-widest" id="authSubtitle">Select & Personalize Your Shots</p>
         </div>
 
-        <!-- Tab Switchers -->
-        <div class="flex p-1.5 bg-white/5 rounded-xl border border-white/5 mb-6">
-            <button id="tabLogin" class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-[var(--theme-accent)] text-white-force" onclick="switchAuthTab('login')">Client Login</button>
-            <button id="tabSignup" class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-400 hover:text-white" onclick="switchAuthTab('signup')">New Account</button>
-        </div>
-
         <form id="authForm" onsubmit="handleAuth(event)" class="space-y-5">
-            <div id="nameField" class="hidden">
-                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 pl-1">Your Full Name</label>
-                <div class="relative">
-                    <i data-lucide="user" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 z-10 pointer-events-none"></i>
-                    <input type="text" id="authName" class="w-full glass-input rounded-xl py-3 pl-11 pr-4 text-white focus:outline-none text-sm" placeholder="Enter full name...">
-                </div>
-            </div>
 
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 pl-1">Client Email Address</label>

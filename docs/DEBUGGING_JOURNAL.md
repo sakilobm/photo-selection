@@ -254,3 +254,23 @@ The client self-registration flow was not completed on the API gateway controlle
 2. **State-Driven Routing**: Updated `handleAuth` inside [photo-selection.js](file:///var/www/html/obm-new-version/htdocs/photo-selection.js) to inspect `currentAuthMode` and dynamically route requests:
    - **`login`**: Shows an information toast ("Connecting..."), queries `/api/auth/client_login`, and triggers success/error notifications accordingly.
    - **`signup`**: Shows an information toast ("Submitting..."), queries `/api/auth/client_signup`, displays success toast, resets the inputs, and automatically switches the view back to the login tab.
+
+---
+
+## [ENTRY 8] - 2026-08-07
+### Concept: UI Cleanups & Authorization Constraint Alignment (Feature Disabling)
+
+#### The Problem
+The client requested the removal of the client portal self-registration workflow ("New Account" tab) from the entry page, because client portals and select allocations must be configured strictly by administrators.
+
+#### Diagnostic Steps
+1. **Scope Verification**: Audited `photo-selection.php` layout and confirmed that self-registration switches and signup fields occupied visual real estate on the entry layout.
+2. **Access Control Alignment**: Confirmed that self-creation of portals bypasses admin review and allows unmonitored database insertions.
+
+#### Why it occurred (Root Cause)
+The client portal self-signup flow is deprecated by business design constraints; registration is strictly administrative.
+
+#### The Fix
+1. **Template Cleanups**: Removed the tab switcher container and the hidden name input field from `photo-selection.php`, displaying only the email and passcode input fields on the entry card.
+2. **Script Simplification**: Deleted the unused variables and handlers (`currentAuthMode`, `switchAuthTab`) from `photo-selection.js`, routing form submissions directly to `client_login` validation.
+3. **Endpoint Disabling**: Deleted the public controller `client_signup.php` to prevent unauthenticated POST requests from inserting new portals in the database.

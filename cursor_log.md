@@ -70,9 +70,10 @@ Tests:
 - Lightbox container expands vertically to utilize screen space (max-h-[80vh]): **PASS**
 - Unsplash width query parameters are swapped dynamically to load HD sources in lightbox (w=1600): **PASS**
 
-### Client Signup API & Toast Feedback
-We validated the self-registration workflow and loader toast triggers.
+### Client Login & Toast Feedback
+We validated the simplified login card workflow and loader toast triggers.
 Tests:
-- /api/auth/client_signup registers new portals in database: **PASS**
-- Signup submissions show info state toasts and auto-switch back to login: **PASS**
+- Self-registration switcher tab and name fields are removed: **PASS**
+- Unused JavaScript variables (currentAuthMode, switchAuthTab) are cleaned up: **PASS**
+- Public client_signup.php registration API is disabled and removed: **PASS**
 - Login submissions show connecting state toasts and success/error feedbacks: **PASS**

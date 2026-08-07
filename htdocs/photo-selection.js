@@ -1,5 +1,4 @@
 // --- CENTRALIZED APP STATE ---
-let currentAuthMode = 'login';
 let currentUser = null;
 let selectedCategory = 'all';
 let activeLightboxIndex = null;
@@ -755,85 +754,32 @@ function loadSelectionsFromCache() {
 // ==========================================
 // AUTHENTICATION LOGIC
 // ==========================================
-function switchAuthTab(mode) {
-    currentAuthMode = mode;
-    const tabLogin = document.getElementById('tabLogin');
-    const tabSignup = document.getElementById('tabSignup');
-    const nameField = document.getElementById('nameField');
-    const authBtnText = document.getElementById('authBtnText');
-    const authSubtitle = document.getElementById('authSubtitle');
-
-    tabLogin.className = "flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-400 hover:text-white";
-    tabSignup.className = "flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-400 hover:text-white";
-
-    if (mode === 'login') {
-        tabLogin.className = "flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-[var(--theme-accent)] text-white-force font-medium";
-        nameField.classList.add('hidden');
-        document.getElementById('authName').removeAttribute('required');
-        authBtnText.innerText = "Unlock My Gallery";
-        authSubtitle.innerText = "SELECT & PERSONALIZE YOUR SHOTS";
-    } else {
-        tabSignup.className = "flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-[var(--theme-accent)] text-white-force font-medium";
-        nameField.classList.remove('hidden');
-        document.getElementById('authName').setAttribute('required', 'true');
-        authBtnText.innerText = "Create Client Portal";
-        authSubtitle.innerText = "INITIALIZE SECURE DISK SPACE";
-    }
-}
-
 async function handleAuth(event) {
     event.preventDefault();
-    const nameInput = document.getElementById('authName').value.trim();
     const emailInput = document.getElementById('authEmail').value.trim();
     const codeInput = document.getElementById('authCode').value.trim();
 
     const submitBtn = event.target.querySelector('button[type="submit"]');
     if (submitBtn) submitBtn.disabled = true;
 
-    if (currentAuthMode === 'login') {
-        showToast('info', 'Connecting', 'Validating access passcode...');
-        try {
-            const response = await fetch('/api/auth/client_login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: codeInput })
-            });
-            const res = await response.json();
-            if (res.success) {
-                showToast('success', 'Access Granted', res.message || 'Logged in successfully!');
-                loadClientWorkspace(res.email || emailInput, res.name || nameInput, true);
-            } else {
-                showToast('alert', 'Access Denied', res.message || 'Invalid passcode.');
-            }
-        } catch (err) {
-            showToast('alert', 'Connection Failed', 'Unable to reach authentication server.');
-        } finally {
-            if (submitBtn) submitBtn.disabled = false;
+    showToast('info', 'Connecting', 'Validating access passcode...');
+    try {
+        const response = await fetch('/api/auth/client_login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: codeInput })
+        });
+        const res = await response.json();
+        if (res.success) {
+            showToast('success', 'Access Granted', res.message || 'Logged in successfully!');
+            loadClientWorkspace(res.email || emailInput, res.name || 'Premium Client', true);
+        } else {
+            showToast('alert', 'Access Denied', res.message || 'Invalid passcode.');
         }
-    } else {
-        showToast('info', 'Submitting', 'Initializing secure workspace...');
-        try {
-            const response = await fetch('/api/auth/client_signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: nameInput, email: emailInput, code: codeInput })
-            });
-            const res = await response.json();
-            if (res.success) {
-                showToast('success', 'Workspace Registered', res.message || 'Secure portal registered!');
-                // Auto-switch to login tab and populate fields
-                document.getElementById('authForm').reset();
-                document.getElementById('authEmail').value = emailInput;
-                document.getElementById('authCode').value = codeInput;
-                switchAuthTab('login');
-            } else {
-                showToast('alert', 'Registration Failed', res.message || 'Check your registration details.');
-            }
-        } catch (err) {
-            showToast('alert', 'Connection Failed', 'Unable to reach registration server.');
-        } finally {
-            if (submitBtn) submitBtn.disabled = false;
-        }
+    } catch (err) {
+        showToast('alert', 'Connection Failed', 'Unable to reach authentication server.');
+    } finally {
+        if (submitBtn) submitBtn.disabled = false;
     }
 }
 
