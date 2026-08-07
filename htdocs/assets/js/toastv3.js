@@ -1,57 +1,90 @@
 /**
  * toastv3.js — Toast Notification System
  * ========================================
- * Creates animated, auto-dismissing toast messages.
+ * Creates animated, auto-dismissing toast messages matching styles.css specifications.
  *
- * Requires: jQuery
- * HTML:     <div class="toast-panel" id="toast-container"></div>
- *
- * @example
- *   showToast('success', 'Saved!', 'Your post has been published.');
- *   showToast('error', 'Failed', 'Something went wrong. Try again.');
- *   showToast('warning', 'Warning', 'This action cannot be undone.');
- *   showToast('help', 'Info', 'Use the sidebar to navigate.');
- *
- * Types: 'success' | 'error' | 'warning' | 'help'
+ * Requires: jQuery, Lucide Icons
  */
 
-/**
- * showToast — Display a toast notification.
- *
- * @param {'success'|'error'|'warning'|'help'} type  Toast variant
- * @param {string} title   Bold heading text
- * @param {string} message Body/description text
- * @param {number} [duration=4000] Auto-dismiss delay in ms
- */
 function showToast(type, title, message, duration = 4000) {
-    var lowerType  = type.toLowerCase();
-    var $panel     = $('#toast-container');
+    var knownTypes = ['success', 'error', 'warning', 'info', 'help', 'sapphire', 'gold', 'purple', 'alert', 'action'];
+    
+    // Smart parameter format detector for backward compatibility:
+    // If the first argument is not a known type (e.g. it is a custom title), swap parameters.
+    if (typeof type === 'string' && knownTypes.indexOf(type.toLowerCase()) === -1) {
+        var actualType = (typeof message === 'string' && knownTypes.indexOf(message.toLowerCase()) !== -1) ? message : 'info';
+        var actualTitle = type;
+        var actualMessage = title;
+        
+        type = actualType;
+        title = actualTitle;
+        message = actualMessage;
+    }
 
+    var lowerType = type ? type.toLowerCase() : 'info';
+    // Map 'help' to 'sapphire'
+    if (lowerType === 'help') lowerType = 'sapphire';
+
+    var $panel = $('#toast-container');
     if (!$panel.length) {
         console.warn('toastv3: #toast-container not found in DOM.');
         return;
     }
 
-    var $item = $('<div class="toast-item ' + lowerType + '"></div>');
+    // Map variant type to appropriate Lucide icon name
+    var iconName = 'bell';
+    if (lowerType === 'success') iconName = 'check-circle-2';
+    else if (lowerType === 'error' || lowerType === 'alert') iconName = 'alert-triangle';
+    else if (lowerType === 'warning') iconName = 'alert-circle';
+    else if (lowerType === 'sapphire' || lowerType === 'info') iconName = 'info';
+    else if (lowerType === 'gold') iconName = 'star';
+    else if (lowerType === 'purple') iconName = 'message-square';
+
+    // Generate toast item with modern styling classes matching styles.css
+    var $item = $('<div class="toast-item toast-theme-' + lowerType + '"></div>');
     var $toast = $(
-        '<div class="toast ' + lowerType + '">' +
-        '  <label class="close" title="Dismiss"></label>' +
-        '  <h3>' + title + '</h3>' +
-        '  <p>'  + message + '</p>' +
-        '</div>'
+        '<div class="toast-body">' +
+        '  <div class="toast-icon-box">' +
+        '    <i data-lucide="' + iconName + '" class="w-5 h-5"></i>' +
+        '  </div>' +
+        '  <div class="toast-content">' +
+        '    <h4 class="toast-title">' + title + '</h4>' +
+        '    <p class="toast-msg">' + message + '</p>' +
+        '  </div>' +
+        '  <button class="toast-close-btn" title="Dismiss">&times;</button>' +
+        '</div>' +
+        '<div class="toast-progress-bar" style="animation-duration: ' + duration + 'ms"></div>'
     );
 
     $item.append($toast);
     $panel.append($item);
 
-    // Close button
-    $item.find('.close').on('click', function () {
-        $item.fadeOut(300, function () { $(this).remove(); });
-    });
+    // Reinitialize Lucide icons inside the new toast
+    if (window.lucide) {
+        lucide.createIcons();
+    }
 
-    // Auto-dismiss
+    // Trigger the slide-in transition animation
     setTimeout(function () {
-        $item.fadeOut(400, function () { $(this).remove(); });
+        $item.addClass('toast-show');
+    }, 15);
+
+    // Close function helper
+    function closeToast() {
+        $item.removeClass('toast-show').addClass('toast-hide');
+        setTimeout(function () {
+            $item.remove();
+        }, 350);
+    }
+
+    // Close button trigger
+    $item.find('.toast-close-btn').on('click', closeToast);
+
+    // Auto-dismiss trigger
+    setTimeout(function () {
+        if ($item.parent().length) {
+            closeToast();
+        }
     }, duration);
 }
 
@@ -60,5 +93,5 @@ const toast = {
     success: (t, m, d) => showToast('success', t, m, d),
     error:   (t, m, d) => showToast('error',   t, m, d),
     warning: (t, m, d) => showToast('warning', t, m, d),
-    info:    (t, m, d) => showToast('help',    t, m, d),
+    info:    (t, m, d) => showToast('sapphire', t, m, d),
 };

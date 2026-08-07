@@ -126,3 +126,13 @@ Tests:
 - Replaced text-white with text-white-force on page-title overlays to preserve color contrast: **PASS**
 - Increased CSS specificity of .text-white-force to override global light mode heading overrides: **PASS**
 - Added :not(.text-white-force) filters to styles.css light theme overrides to exclude force white targets: **PASS**
+- Overrode .album-book background, borders, and shadows under Light Mode for bimodal adaptive theme rendering: **PASS**
+- Explicitly set 2px solid light-mode border outlines on the adaptive book frame: **PASS**
+- Rendered album border on a separate overlay container (.album-border-overlay) to bypass image stacking covers: **PASS**
+- Overrode fullscreen overlay backdrop (.album-fullscreen) and controls (Exit, Prev, Next buttons) under Light Mode: **PASS**
+- Renamed inline fullscreen method scopes to obmEnterFullscreen/obmExitFullscreen to avoid native naming collisions: **PASS**
+- Attached backdrop click listener to dismiss the fullscreen overlay: **PASS**
+- Refactored fullscreen UI to feature premium floating navigation arrows on the left/right screen edges: **PASS**
+- Added rotating close X badge and encapsulated progress indicators inside a floating glass capsule: **PASS**
+- Fixed toast notification container layout positioning classes in _toastv3.php: **PASS**
+- Upgraded JavaScript toast engine and added signature re-ordering argument normalizer in toastv3.js: **PASS**

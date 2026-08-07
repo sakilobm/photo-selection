@@ -11,13 +11,22 @@
     position: relative;
     border-radius: 20px;
     overflow: hidden;
-    border: 2px solid rgba(255, 255, 255, 0.08);
     background: #0a0e18;
     box-shadow:
       0 40px 100px rgba(0, 0, 0, 0.8),
       0 0 60px rgba(var(--theme-accentRGB), 0.12),
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
     transition: box-shadow 0.5s ease, transform 0.5s ease;
+  }
+
+  .album-border-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+    z-index: 25;
+    transition: border-color 0.3s ease;
   }
 
   .album-book:hover {
@@ -90,9 +99,20 @@
   }
 
   @keyframes pageTurn3D {
-    0% { opacity: 0.2; transform: scale(0.95) rotateY(8deg); }
-    50% { opacity: 0.8; transform: scale(0.98) rotateY(-2deg); }
-    100% { opacity: 1; transform: scale(1) rotateY(0deg); }
+    0% {
+      opacity: 0.2;
+      transform: scale(0.95) rotateY(8deg);
+    }
+
+    50% {
+      opacity: 0.8;
+      transform: scale(0.98) rotateY(-2deg);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1) rotateY(0deg);
+    }
   }
 
   .chapter-btn-active {
@@ -129,13 +149,18 @@
     transition: all 0.3s ease;
   }
 
-  .thumb-card.active, .thumb-card:hover {
+  .thumb-card.active,
+  .thumb-card:hover {
     opacity: 1;
     border-color: var(--theme-accent);
     transform: scale(1.02);
   }
 
-  .thumb-card img { width: 100%; height: 100%; object-fit: cover; }
+  .thumb-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   .thumb-label {
     position: absolute;
@@ -214,6 +239,59 @@
     color: #ffffff !important;
   }
 
+  /* Adaptive light mode overrides for album book card frame */
+  html.theme-light .album-book {
+    background: #ffffff !important;
+    box-shadow: 
+      0 40px 100px rgba(0, 0, 0, 0.08), 
+      0 0 60px rgba(var(--theme-accentRGB), 0.06), 
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  html.theme-light .album-border-overlay {
+    border: 2px solid rgba(0, 0, 0, 0.12) !important;
+  }
+
+  html.theme-light .album-book:hover {
+    box-shadow:
+      0 50px 120px rgba(0, 0, 0, 0.12),
+      0 0 80px rgba(var(--theme-accentRGB), 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  /* Fullscreen overlay light mode overrides */
+  html.theme-light .album-fullscreen {
+    background: rgba(248, 250, 252, 0.98) !important;
+  }
+
+  html.theme-light .album-fullscreen .bg-white\/10 {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .album-fullscreen .bg-white\/10:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  html.theme-light .album-fullscreen .bg-slate-900\/40 {
+    background: rgba(255, 255, 255, 0.75) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .album-fullscreen .bg-slate-900\/40:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .album-fullscreen .text-white\/80 {
+    color: #475569 !important;
+  }
+
+  html.theme-light .album-fullscreen .hover\:text-white:hover {
+    color: #0f172a !important;
+  }
+
   .album-fullscreen {
     position: fixed;
     inset: 0;
@@ -248,17 +326,44 @@
   }
 
   @media (max-width: 768px) {
-    .album-page { min-height: 280px; }
-    .album-book::after { width: 20px; }
-    .thumb-card { width: 100px; height: 56px; }
+    .album-page {
+      min-height: 280px;
+    }
+
+    .album-book::after {
+      width: 20px;
+    }
+
+    .thumb-card {
+      width: 100px;
+      height: 56px;
+    }
   }
 </style>
 
 <!-- ══════ FULLSCREEN ALBUM OVERLAY ══════ -->
 <div id="album-fullscreen" class="album-fullscreen">
-  <button onclick="exitFullscreen()" class="absolute top-6 right-6 p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all z-50" title="Exit Fullscreen (Esc)">
-    <i data-lucide="minimize-2" class="w-5 h-5"></i>
+  <!-- Circular frosted glass exit close button -->
+  <button onclick="obmExitFullscreen()"
+    class="absolute top-6 right-6 p-3.5 rounded-full bg-slate-900/40 backdrop-blur-md border border-white/10 text-white/80 hover:text-white hover:scale-110 hover:bg-slate-900/60 transition-all duration-300 z-50 flex items-center justify-center shadow-lg hover:shadow-cyan-500/10 group"
+    title="Exit Fullscreen (Esc)">
+    <i data-lucide="x" class="w-5 h-5 transition-transform duration-300 group-hover:rotate-90"></i>
   </button>
+
+  <!-- LEFT FLOATING ARROW -->
+  <button onclick="prevSpread()" 
+    class="absolute left-8 top-1/2 -translate-y-1/2 p-4 rounded-full bg-slate-900/40 backdrop-blur-md border border-white/10 text-white/80 hover:text-white hover:scale-115 hover:bg-slate-900/60 hover:shadow-cyan-500/10 transition-all duration-300 z-50 flex items-center justify-center shadow-xl group"
+    title="Previous (←)">
+    <i data-lucide="chevron-left" class="w-6 h-6 transition-transform duration-300 group-hover:-translate-x-0.5"></i>
+  </button>
+
+  <!-- RIGHT FLOATING ARROW -->
+  <button onclick="nextSpread()" 
+    class="absolute right-8 top-1/2 -translate-y-1/2 p-4 rounded-full bg-slate-900/40 backdrop-blur-md border border-white/10 text-white/80 hover:text-white hover:scale-115 hover:bg-slate-900/60 hover:shadow-cyan-500/10 transition-all duration-300 z-50 flex items-center justify-center shadow-xl group"
+    title="Next (→)">
+    <i data-lucide="chevron-right" class="w-6 h-6 transition-transform duration-300 group-hover:translate-x-0.5"></i>
+  </button>
+
   <div class="album-book max-w-6xl" id="fs-album-book">
     <div class="album-page">
       <img id="fs-img-left" src="<?= get_config('base_path') ?>assets/wedding.jpg" alt="Album Left">
@@ -269,14 +374,10 @@
       <div class="album-page-overlay"></div>
     </div>
   </div>
-  <div class="flex items-center gap-6 mt-8">
-    <button onclick="prevSpread()" class="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all">
-      <i data-lucide="chevron-left" class="w-5 h-5"></i>
-    </button>
+
+  <!-- Bottom glass capsule dots indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 bg-slate-900/40 backdrop-blur-md py-2 px-4 rounded-full border border-white/10 shadow-lg">
     <div id="fs-spread-dots" class="spread-dots"></div>
-    <button onclick="nextSpread()" class="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all">
-      <i data-lucide="chevron-right" class="w-5 h-5"></i>
-    </button>
   </div>
 </div>
 
@@ -286,7 +387,8 @@
     <div class="space-y-3">
       <div class="flex items-center gap-3">
         <span class="badge badge-cyan">Interactive Client Album</span>
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-[10px] font-bold uppercase">
+        <span
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-[10px] font-bold uppercase">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live Preview
         </span>
       </div>
@@ -294,7 +396,8 @@
         Your Wedding <span class="grad-cyan">Album</span>
       </h1>
       <p class="text-sm text-slate-400 max-w-xl">
-        Experience every moment in a luxury double-page flipbook. Navigate with keyboard arrows, zoom into details, or go fullscreen for the cinematic view.
+        Experience every moment in a luxury double-page flipbook. Navigate with keyboard arrows, zoom into details, or
+        go fullscreen for the cinematic view.
       </p>
       <div class="flex items-center gap-4 pt-1">
         <div class="flex items-center gap-2 text-[11px] text-slate-500">
@@ -314,18 +417,18 @@
 
     <!-- Chapter Tabs -->
     <div class="flex flex-wrap items-center gap-2">
-      <?php 
+      <?php
       $first = true;
-      foreach ($albums as $alb): 
-      ?>
+      foreach ($albums as $alb):
+        ?>
         <button onclick="switchChapter('<?= htmlspecialchars($alb['id']) ?>', this)"
           class="chapter-btn <?= $first ? 'chapter-btn-active' : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700' ?> py-2.5 px-5 rounded-full text-xs transition-all flex items-center gap-2"
           id="<?= htmlspecialchars($alb['id']) ?>">
           <i data-lucide="book-open" class="w-3.5 h-3.5"></i> <?= htmlspecialchars($alb['chapter']) ?>
         </button>
-      <?php 
+        <?php
         $first = false;
-      endforeach; 
+      endforeach;
       ?>
     </div>
   </div>
@@ -333,15 +436,21 @@
   <!-- ALBUM SPREAD VIEWER -->
   <div class="album-viewer relative" data-reveal="scale">
     <div id="album-book" class="album-book page-turning max-w-5xl mx-auto">
+      <!-- BORDER OVERLAY TO ENSURE VISIBILITY ON TOP OF IMAGES -->
+      <div class="album-border-overlay"></div>
+
       <!-- LEFT PAGE -->
       <div class="album-page" id="page-left">
         <img id="album-img-left" src="<?= get_config('base_path') ?>assets/wedding.jpg" alt="Album Spread Left Page">
         <div class="album-page-overlay"></div>
         <div class="absolute bottom-6 left-6 z-10 space-y-1.5">
           <span id="page-num-left" class="badge badge-gold text-[9px]">Page 04</span>
-          <h3 id="page-title-left" class="text-lg font-bold text-white-force font-['Outfit'] drop-shadow-lg">Sacred Fire Rituals</h3>
+          <h3 id="page-title-left" class="text-lg font-bold text-white-force font-['Outfit'] drop-shadow-lg">Sacred Fire
+            Rituals</h3>
         </div>
-        <button onclick="zoomPage('left')" class="absolute top-4 right-4 z-10 p-2 rounded-lg bg-black/40 hover:bg-black/60 text-white/70 hover:text-white transition-all opacity-0 group-hover:opacity-100" title="Zoom In">
+        <button onclick="zoomPage('left')"
+          class="absolute top-4 right-4 z-10 p-2 rounded-lg bg-black/40 hover:bg-black/60 text-white/70 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+          title="Zoom In">
           <i data-lucide="zoom-in" class="w-4 h-4"></i>
         </button>
       </div>
@@ -351,9 +460,12 @@
         <div class="album-page-overlay"></div>
         <div class="absolute bottom-6 right-6 z-10 space-y-1.5 text-right">
           <span id="page-num-right" class="badge badge-cyan text-[9px]">Page 05</span>
-          <h3 id="page-title-right" class="text-lg font-bold text-white-force font-['Outfit'] drop-shadow-lg">Aerial Venue View</h3>
+          <h3 id="page-title-right" class="text-lg font-bold text-white-force font-['Outfit'] drop-shadow-lg">Aerial
+            Venue View</h3>
         </div>
-        <button onclick="zoomPage('right')" class="absolute top-4 left-4 z-10 p-2 rounded-lg bg-black/40 hover:bg-black/60 text-white/70 hover:text-white transition-all opacity-0 group-hover:opacity-100" title="Zoom In">
+        <button onclick="zoomPage('right')"
+          class="absolute top-4 left-4 z-10 p-2 rounded-lg bg-black/40 hover:bg-black/60 text-white/70 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+          title="Zoom In">
           <i data-lucide="zoom-in" class="w-4 h-4"></i>
         </button>
       </div>
@@ -365,31 +477,40 @@
     <div class="glass-card p-4">
       <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
         <!-- Left: Brand Identifier (takes up 1/3 grid width on desktop to keep center perfectly aligned) -->
-        <div class="hidden md:flex items-center gap-2 justify-start text-xs text-gray-400 font-extrabold uppercase tracking-widest">
+        <div
+          class="hidden md:flex items-center gap-2 justify-start text-xs text-gray-400 font-extrabold uppercase tracking-widest">
           <i data-lucide="book-open" class="w-4.5 h-4.5 text-[var(--theme-accent)]"></i>
           <span>Digital Album</span>
         </div>
 
         <!-- Center: Navigation controls -->
         <div class="flex items-center justify-center gap-3">
-          <button onclick="prevSpread()" class="btn-ghost py-2.5 px-4 text-xs flex items-center gap-1.5" title="Previous (←)">
+          <button onclick="prevSpread()" class="btn-ghost py-2.5 px-4 text-xs flex items-center gap-1.5"
+            title="Previous (←)">
             <i data-lucide="chevron-left" class="w-4 h-4"></i> Prev
           </button>
           <div id="spread-dots" class="spread-dots"></div>
-          <button onclick="nextSpread()" class="btn-ghost py-2.5 px-4 text-xs flex items-center gap-1.5" title="Next (→)">
+          <button onclick="nextSpread()" class="btn-ghost py-2.5 px-4 text-xs flex items-center gap-1.5"
+            title="Next (→)">
             Next <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </button>
         </div>
 
         <!-- Right: Action items -->
         <div class="flex items-center justify-end gap-2 w-full">
-          <button onclick="toggleFavoriteSpread()" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-400 transition-all hover:scale-105" title="Favorite">
+          <button onclick="toggleFavoriteSpread()"
+            class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-400 transition-all hover:scale-105"
+            title="Favorite">
             <i data-lucide="star" class="w-4 h-4"></i>
           </button>
-          <button onclick="addRetouchNote()" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-[var(--theme-accent)] transition-all hover:scale-105" title="Add Note">
+          <button onclick="addRetouchNote()"
+            class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-[var(--theme-accent)] transition-all hover:scale-105"
+            title="Add Note">
             <i data-lucide="message-square-plus" class="w-4 h-4"></i>
           </button>
-          <button onclick="enterFullscreen()" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white transition-all hover:scale-105" title="Fullscreen (F)">
+          <button onclick="obmEnterFullscreen()"
+            class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white transition-all hover:scale-105"
+            title="Fullscreen (F)">
             <i data-lucide="maximize-2" class="w-4 h-4"></i>
           </button>
           <button onclick="downloadSpread()" class="btn-primary py-2.5 px-5 text-xs flex items-center gap-2 shrink-0">
@@ -435,7 +556,8 @@
     <!-- Album Details -->
     <div class="glass-card p-6 space-y-4">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 flex items-center justify-center text-[var(--theme-accent)]">
+        <div
+          class="w-10 h-10 rounded-xl bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 flex items-center justify-center text-[var(--theme-accent)]">
           <i data-lucide="book-open" class="w-5 h-5"></i>
         </div>
         <div>
@@ -470,7 +592,8 @@
     <!-- Retouching Notes -->
     <div class="glass-card p-6 space-y-4">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-400/20 flex items-center justify-center text-purple-400">
+        <div
+          class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-400/20 flex items-center justify-center text-purple-400">
           <i data-lucide="sparkles" class="w-5 h-5"></i>
         </div>
         <div>
@@ -479,7 +602,8 @@
         </div>
       </div>
       <div class="flex gap-2">
-        <input type="text" id="retouch-note-input" placeholder="e.g. Enhance background on Page 05..." class="flex-grow px-3 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-white text-xs placeholder-slate-500 focus:outline-none focus:border-[var(--theme-accent)] transition-colors">
+        <input type="text" id="retouch-note-input" placeholder="e.g. Enhance background on Page 05..."
+          class="flex-grow px-3 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-white text-xs placeholder-slate-500 focus:outline-none focus:border-[var(--theme-accent)] transition-colors">
         <button onclick="saveNote()" class="btn-primary text-xs py-2.5 px-4">Save</button>
       </div>
       <div id="saved-notes" class="space-y-2 max-h-32 overflow-y-auto">
@@ -490,7 +614,8 @@
     <!-- Progress -->
     <div class="glass-card p-6 space-y-4">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
+        <div
+          class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
           <i data-lucide="check-circle" class="w-5 h-5"></i>
         </div>
         <div>
@@ -605,12 +730,22 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') nextSpread();
       else if (e.key === 'ArrowLeft') prevSpread();
-      else if (e.key === 'f' || e.key === 'F') enterFullscreen();
-      else if (e.key === 'Escape') exitFullscreen();
+      else if (e.key === 'f' || e.key === 'F') obmEnterFullscreen();
+      else if (e.key === 'Escape') obmExitFullscreen();
       else if (e.key === 's' || e.key === 'S') {
         if (!e.ctrlKey && !e.metaKey) toggleFavoriteSpread();
       }
     });
+
+    // Backdrop click to exit fullscreen
+    const fsOverlay = document.getElementById('album-fullscreen');
+    if (fsOverlay) {
+      fsOverlay.addEventListener('click', (e) => {
+        if (e.target.id === 'album-fullscreen') {
+          obmExitFullscreen();
+        }
+      });
+    }
   });
 
   function getSpreads() { return chapters[currentChapter] || chapters['ch-wedding']; }
@@ -727,7 +862,7 @@
     });
   }
 
-  function enterFullscreen() {
+  function obmEnterFullscreen() {
     isFullscreen = true;
     const sp = getSpreads()[currentSpreadIndex];
     document.getElementById('fs-img-left').src = sp.left;
@@ -736,7 +871,7 @@
     document.body.style.overflow = 'hidden';
   }
 
-  function exitFullscreen() {
+  function obmExitFullscreen() {
     isFullscreen = false;
     document.getElementById('album-fullscreen').classList.remove('active');
     document.body.style.overflow = '';

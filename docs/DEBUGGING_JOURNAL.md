@@ -507,3 +507,158 @@ html.theme-light h3:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-
 }
 ```
 This forces the global remapping rules to completely ignore any heading elements assigned the `.text-white-force` class, allowing them to render in clean white (`#ffffff !important`) as designed.
+
+---
+
+## [ENTRY 19] - 2026-08-07
+### Concept: Theme-Adaptive UI Frames (Bimodal CSS selectors)
+
+#### The Problem
+The `.album-book` main container background was hardcoded to dark blue (`#0a0e18`) with dark border outlines. When switching back and forth between light mode and dark mode, the container backdrop remained dark, which clashed with the clean, white light theme background styling.
+
+#### Diagnostic Steps
+1. **Rule Audit**: Found the static `#0a0e18` background declaration in the default `.album-book` definition class.
+2. **Contrast check**: Verified that the container frame needed to adapt color structures dynamically (dark in dark theme, light in light theme) instead of staying static.
+
+#### The Fix
+Added adaptive theme overrides in [digital-album.php](file:///var/www/html/obm-new-version/htdocs/_templates/digital-album.php):
+- Default (Dark theme): Renders with background `#0a0e18` and dark transparent borders/shadows.
+- Override (`html.theme-light .album-book`): Remaps to pure white background (`#ffffff`), a soft gray border (`rgba(0, 0, 0, 0.08)`), and lighter, clean shadows. This guarantees clean contrast behavior in both themes.
+
+---
+
+## [ENTRY 20] - 2026-08-07
+### Concept: Color Contrast & Border Visibility in Light Interfaces
+
+#### The Problem
+In Light Mode, the card container outline border around the `.album-book` container was practically invisible. The original override only mapped the `border-color` to a very faint gray `rgba(0,0,0,0.08)`, which blended too closely into the light background body (`#f8fafc`).
+
+#### Diagnostic Steps
+1. **Visual Contrast Audit**: Verified that the border was not defined using full shorthand variables in the override, leaving the default dark transparency rules to compete.
+2. **Contrast Ratio Check**: Confirmed that `rgba(0,0,0,0.08)` on `#f8fafc` has low contrast visibility.
+
+#### The Fix
+Replaced the `border-color` override on the `html.theme-light .album-book` selector in [digital-album.php](file:///var/www/html/obm-new-version/htdocs/_templates/digital-album.php) with an explicit, high-contrast shorthand:
+```css
+border: 2px solid rgba(0, 0, 0, 0.12) !important;
+```
+This forces a distinct, clean, 2-pixel wide soft-charcoal border frame around the book spread, cleanly separating the white album card from the surrounding page body background.
+
+---
+
+## [ENTRY 21] - 2026-08-07
+### Concept: HTML Stacking Context & Border Clipping
+
+#### The Problem
+Even after setting a 2px solid border explicitly in the light theme overrides, no border was visible around the book frame. 
+
+#### Diagnostic Steps
+Inspected the DOM. Observed that the child pages (`.album-page` elements and their images) have `position: relative` and stretch to cover 100% width/height of the container. Because of the CSS Stacking Context, these positioned children render on top of the parent container's backgrounds and borders, completely masking the border.
+
+#### The Fix
+1. **Removed Parent Border**: Removed the border property from the parent `.album-book` styles to avoid rendering issues.
+2. **Created Border Overlay**: Inserted an absolute overlay `<div class="album-border-overlay"></div>` inside `.album-book` at the top level of the children hierarchy.
+3. **Layer Ordering**: Styled `.album-border-overlay` to sit on top of the images:
+   ```css
+   .album-border-overlay {
+     position: absolute;
+     inset: 0;
+     border-radius: 20px;
+     border: 2px solid rgba(255, 255, 255, 0.08);
+     pointer-events: none;
+     z-index: 25;
+   }
+   ```
+   Setting `pointer-events: none` ensures mouse clicks pass directly through to zoom buttons/images underneath. In light mode, this overlay's border is overridden to `rgba(0, 0, 0, 0.12)`.
+
+---
+
+## [ENTRY 22] - 2026-08-07
+### Concept: Bimodal Overlay Backdrops
+
+#### The Problem
+In Light Mode, when entering Fullscreen Showcase view, the overlay backdrop was hardcoded to solid black (`rgba(3, 4, 7, 0.98)`). The exit and navigation buttons inside it also rendered as white translucent boxes, clashing with the light theme palette.
+
+#### Diagnostic Steps
+1. **Backdrop Inspection**: Found the static `background` style in `.album-fullscreen` definition block.
+2. **Button Stacking Check**: Verified that the control buttons inside the fullscreen layer used the dark theme `.bg-white/10` and `.text-white` classes.
+
+#### The Fix
+Added adaptive theme overrides in [digital-album.php](file:///var/www/html/obm-new-version/htdocs/_templates/digital-album.php):
+- **Backdrop Overrides**: Remapped `.album-fullscreen` in Light Mode to a frosted, soft-slate white backdrop (`rgba(248, 250, 252, 0.98) !important`).
+- **Button Controls Overrides**: Remapped the `.bg-white/10` controls inside the fullscreen box to soft-slate dark overlays with charcoal text:
+  ```css
+  html.theme-light .album-fullscreen .bg-white\/10 {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #0f172a !important;
+  }
+  ```
+
+---
+
+## [ENTRY 23] - 2026-08-07
+### Concept: HTML Inline Event Scope & Browser API Name Collisions
+
+#### The Problem
+In the Fullscreen Album Showcase layout, clicking the "Exit Fullscreen" minimize button threw the console exception:
+`Uncaught (in promise) TypeError: Not in fullscreen mode`
+Additionally, the overlay remained stuck on screen, preventing the user from closing it.
+
+#### Diagnostic Steps
+1. **Scope Chain Review**: Evaluated inline event scopes. HTML elements using inline triggers like `onclick="exitFullscreen()"` search the element itself, then the parent form, then the `document` object, and finally the global `window` object.
+2. **API Collision Verification**: Confirmed that `document` has a native method called `exitFullscreen()`. The browser resolved the inline `exitFullscreen()` call to `document.exitFullscreen()` instead of our custom window function, triggering a native API check which failed because the browser was not in native fullscreen.
+
+#### The Fix
+1. **Collision-free Prefixes**: Renamed the custom functions in [digital-album.php](file:///var/www/html/obm-new-version/htdocs/_templates/digital-album.php) from `enterFullscreen` and `exitFullscreen` to `obmEnterFullscreen` and `obmExitFullscreen`.
+2. **Backdrop Exit Trigger**: Added a backdrop click handler to `#album-fullscreen` so clicking outside the images closes the overlay:
+   ```javascript
+   fsOverlay.addEventListener('click', (e) => {
+     if (e.target.id === 'album-fullscreen') {
+       obmExitFullscreen();
+     }
+   });
+   ```
+
+---
+
+## [ENTRY 24] - 2026-08-07
+### Concept: Premium Cinematic Overlays & Bimodal Glassmorphism
+
+#### The Problem
+The navigation controls and exit button inside the Fullscreen Album Showcase layout were plain, flat boxes positioned at the bottom center and top right. They lacked premium aesthetics, visual hover cues, and animations.
+
+#### Diagnostic Steps
+1. **UX Design Review**: Evaluated typical premium photo showcases (e.g. Pixieset). Conformed that placing large floating arrows on the left/right screen edges provides a much more immersive, theatrical desktop browsing experience than grouping buttons together at the bottom.
+2. **Theme Testing**: Audited how dark-glass components looked on top of the Light Mode fullscreen white background. Verified that bimodal remapping was required to shift the dark glass components to white glass controls.
+
+#### The Fix
+1. **Cinematic Floating Navigation**: Replaced the bottom navigation buttons in [digital-album.php](file:///var/www/html/obm-new-version/htdocs/_templates/digital-album.php) with large, circular glass buttons absolute-positioned at the center-left and center-right screen boundaries. Added subtle translation micro-animations on hover (`group-hover:-translate-x-0.5` and `group-hover:translate-x-0.5`).
+2. **Rotating Close Button**: Upgraded the top-right close control to a circular frosted close button with a 90-degree hover rotation transition on the `X` icon.
+3. **Capsule Dot Indicator**: Enclosed the bottom dots inside a floating glass capsule wrapper.
+4. **Light Mode CSS Overrides**: Remapped these control badges to white frosted glass panels with charcoal indicators in Light Mode:
+   ```css
+   html.theme-light .album-fullscreen .bg-slate-900\/40 {
+     background: rgba(255, 255, 255, 0.75) !important;
+     border-color: rgba(0, 0, 0, 0.08) !important;
+     color: #0f172a !important;
+   }
+   ```
+
+---
+
+## [ENTRY 25] - 2026-08-07
+### Concept: Toast Engines, Parameter Polymorphism & Layout Displacements
+
+#### The Problem
+Clicking the Favorite or Note buttons inside the Digital Album view failed to show any visible toast popups. Additionally, clicking them created an empty visual gap at the bottom of the viewport, pushing the footer layout down.
+
+#### Diagnostic Steps
+1. **Container Alignment Check**: Found that the container element inside [_toastv3.php](file:///var/www/html/obm-new-version/htdocs/_templates/core/_toastv3.php) was assigned the class `.toast-panel` instead of `.toast-container`. Since `.toast-panel` has no CSS styling, the container defaulted to `position: static` at the bottom of the body.
+2. **Markup Audit**: Audited [toastv3.js](file:///var/www/html/obm-new-version/htdocs/assets/js/toastv3.js). Observed that it generated legacy `.toast` elements instead of matching the modern `.toast-body` and `.toast-content` structure expected by [styles.css](file:///var/www/html/obm-new-version/htdocs/styles.css).
+3. **Transition Analysis**: Verified that `.toast-item` has a default opacity of `0`. Since the script did not add the `.toast-show` class on append, the items remained invisible.
+4. **Signature Discrepancy**: Noticed that the layout templates called `showToast(title, message, type)` but the script expected `showToast(type, title, message)`. This broke theme mapping and text placements.
+
+#### The Fix
+1. **Toast Container Layout**: Updated `_toastv3.php` to use classes `.toast-container` and `.toast-pos-bottom-right`. This positions the container as a fixed floating box, preventing layout displacement.
+2. **Polymorphic Parameter Normalizer**: Integrated an argument-reordering detector in [toastv3.js](file:///var/www/html/obm-new-version/htdocs/assets/js/toastv3.js) that checks if the first parameter matches a list of known style keys. If not, it automatically swaps variables to handle legacy layouts.
+3. **Engine Upgrade**: Refactored the DOM builder inside the script to create correct modern elements, trigger transition classes (`.toast-show` / `.toast-hide`), render Lucide icons, and manage the auto-dismiss timer.

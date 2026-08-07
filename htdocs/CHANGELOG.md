@@ -2,6 +2,48 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.4.9] - 2026-08-07
+
+### Fixed — Toast Notification Rendering Engine & Layout Displacement (`toastv3.js`, `_toastv3.php`)
+- **Fixed Container Positioning**: Updated the toast container class in `_toastv3.php` to use `.toast-container` and `.toast-pos-bottom-right` instead of `.toast-panel` to ensure it is fixed-positioned and doesn't push the document layout at the bottom of the page.
+- **Rewrote JS Toast Engine**: Updated `toastv3.js` to construct the exact modern HTML toast variant markup styled in `styles.css`. Integrated Lucide icon packs and handled CSS transition overrides (`.toast-show` / `.toast-hide`).
+- **Smart Parameter Switcher**: Added a smart argument format detector to `toastv3.js` so it automatically supports both `(type, title, message)` and `(title, message, type)` layout signatures.
+
+## [3.4.8] - 2026-08-07
+
+### Changed — Premium Cinematic Overlays for Fullscreen Showcase (`digital-album.php`)
+- **Cinematic Floating Navigation**: Replaced bottom navigation buttons inside the fullscreen view with large, floating, frosted glass circle buttons (`bg-slate-900/40`) absolute-positioned on the left/right screen edges with hover sliding transitions.
+- **Glass Close Badge**: Upgraded the top-right close control to a circular frosted close button with a 90-degree hover rotation animation on the `X` icon.
+- **Capsule Dots Indicator**: Wrapped the bottom spread indicators inside a floating glass capsule badge.
+- **Light Theme Compatibility**: Added color-remapping rules to switch the glass overlays to white frosted glass (`rgba(255,255,255,0.75)`) with slate arrows and borders under Light Mode.
+
+## [3.4.7] - 2026-08-07
+
+### Fixed — Specificity Conflict in HTML Inline Event Scopes & Fullscreen Exit (`digital-album.php`)
+- **Resolved Naming Collision**: Renamed `enterFullscreen` and `exitFullscreen` to `obmEnterFullscreen` and `obmExitFullscreen` to prevent browser inline event scopes from evaluating `exitFullscreen()` to `document.exitFullscreen()` (which fails when not in browser native fullscreen).
+- **Backdrop Click Event**: Attached an explicit click listener to the fullscreen overlay container background to close/exit the showcase view when clicked.
+
+## [3.4.6] - 2026-08-07
+
+### Fixed — Light Mode Overrides for Fullscreen Album Overlay (`digital-album.php`)
+- **Theme-Adaptive Fullscreen Backdrop**: Added overrides under `html.theme-light` to convert the fullscreen backdrop (`.album-fullscreen`) from solid black (`rgba(3, 4, 7, 0.98)`) to light-themed frosted slate (`rgba(248, 250, 252, 0.98)`).
+- **Light Mode Navigation Buttons**: Remapped utility controls (Exit, Prev, Next buttons) inside the fullscreen overlay to render as dark-glassmorphic buttons (`bg-black/5` with charcoal text) instead of white overlays when Light Mode is active.
+
+## [3.4.5] - 2026-08-07
+
+### Fixed — Stacking Context Border Overlay for Album Cover (`digital-album.php`)
+- **Stretched Border Overlay**: Inserted an absolute `.album-border-overlay` inside the album book wrapper. Since the child images have relative positioning and would overlap container borders, mapping the border to a high-z-index (`z-index: 25`) pointer-events-free overlay ensures the border is drawn clearly on top of the photographs in both themes.
+
+## [3.4.4] - 2026-08-07
+
+### Fixed — Explicit Visible Border for Adaptive Album Frame (`digital-album.php`)
+- **Explicit Border Declaration**: Updated `.album-book` light-theme override to use `border: 2px solid rgba(0, 0, 0, 0.12) !important`, rendering a clearly visible, premium outline that distinguishes the white album card from the light theme page body.
+
+## [3.4.3] - 2026-08-07
+
+### Changed — Adaptive Album Book Frame Theme Overrides (`digital-album.php`)
+- **Theme-Adaptive Album Frame**: Added light mode style overrides for `.album-book` and `.album-book:hover`, switching the book container background to solid white, outline border to soft gray, and shadows to a subtle dark tint. This ensures the frame transitions cleanly across light/dark themes.
+
 ## [3.4.2] - 2026-08-07
 
 ### Fixed — Typography Exclusion Filter for Force White Elements (`styles.css`)
