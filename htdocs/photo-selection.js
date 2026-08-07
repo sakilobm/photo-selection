@@ -259,6 +259,7 @@ function loadClientWorkspace(email, username, forceShowLoader = false) {
     let apiPhotos = [];
     let apiPortal = null;
     let loadError = null;
+    let fetchDone = false;
 
     // Check if already analyzed in this session to skip loader entirely
     const alreadyAnalyzed = sessionStorage.getItem('obm_portal_analyzed') === 'true';
@@ -272,15 +273,17 @@ function loadClientWorkspace(email, username, forceShowLoader = false) {
             } else {
                 loadError = res.message || 'Unauthorized';
             }
+            fetchDone = true;
         })
         .catch(err => {
             loadError = 'Failed to connect to API.';
+            fetchDone = true;
         });
 
     if (alreadyAnalyzed && !forceShowLoader) {
         // Skip loader animation: wait for fetch to complete, then transition instantly
         const checkDone = setInterval(() => {
-            if (apiPhotos.length > 0 || loadError) {
+            if (fetchDone) {
                 clearInterval(checkDone);
                 if (loadError) {
                     showToast('alert', 'Portal Sync Failed', loadError);

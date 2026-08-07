@@ -2,6 +2,11 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.3.5] - 2026-08-07
+
+### Changed — Zero-Photo Workspace Restoration Fix (`photo-selection.js`)
+- **Completion-Based Loader Bypassing**: Replaced the unsafe `apiPhotos.length > 0` condition in the session restoration wait loops with an explicit API request completion flag (`fetchDone`), preventing the client portal view from hanging indefinitely and rendering a blank screen when restoring workspaces that do not contain any uploaded photos.
+
 ## [3.3.4] - 2026-08-07
 
 ### Changed — Homepage Portal Login Modal Refactoring (`_master.php`, `_footer.php`, `portfolio.js`)

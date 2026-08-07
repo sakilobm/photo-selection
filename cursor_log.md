@@ -98,3 +98,9 @@ Tests:
 - Homepage login submission retrieves both fields and queries the API: **PASS**
 - Mock login submissions block inside portfolio.js is safely removed: **PASS**
 - Auto-fill helper populates both test email and passcode: **PASS**
+
+### Zero-Photo Workspace Restoration
+We validated session recovery for empty client portals.
+Tests:
+- API completion flag (fetchDone) tracks get_client_photos request termination: **PASS**
+- Empty workspaces render successfully without loop hanging on page reload: **PASS**

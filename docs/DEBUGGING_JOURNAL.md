@@ -334,3 +334,33 @@ The email verification check was not integrated into the authentication API cont
    - Refactored [_footer.php](file:///var/www/html/obm-new-version/htdocs/_templates/core/_footer.php) to insert an "Email Address" input field before the passcode input.
    - Updated the submission logic in [_master.php](file:///var/www/html/obm-new-version/htdocs/_templates/_master.php) to extract the email input value and transmit it along with the passcode.
    - Cleaned up [portfolio.js](file:///var/www/html/obm-new-version/htdocs/portfolio.js) by removing its redundant mock form submission handler and updated its testing auto-fill buttons to populate both the test email and passcode.
+
+---
+
+## [ENTRY 11] - 2026-08-07
+### Concept: Infinite Loop/Stall Conditions inside State Verification Listeners
+
+#### The Problem
+After logging in with a new client portal that contains zero uploaded photos, refreshing the page with F5 causes the page to render completely blank, with only the background gradient and footer navigation bar visible.
+
+#### Diagnostic Steps
+1. **Verification Checks**: Inspected page load recovery triggers inside `photo-selection.js` (`bypassLoginForTesting` -> `loadClientWorkspace`).
+2. **Interval Audits**: Observed that when `alreadyAnalyzed` session storage flag is active, the initialization routine uses an interval check to verify if the photo retrieval API call is complete before fading out the loader. The condition was checking for `apiPhotos.length > 0`:
+   ```javascript
+   if (apiPhotos.length > 0 || loadError) { ... }
+   ```
+
+#### Why it occurred (Root Cause)
+If a portal database record contains exactly 0 mapped photos, `apiPhotos.length` is `0`, and `loadError` is `null` (since the fetch successfully resolved an empty dataset). The bypass interval loops indefinitely, preventing state initialization and leaving the container views hidden.
+
+#### The Fix
+Replaced the array-length check with an explicit request status completion boolean flag (`fetchDone`):
+1. **API Callback Flagging**: Modified the `get_client_photos` API fetch promise handlers to toggle `fetchDone = true` on both success and error responses.
+2. **Safe Bypassing Checks**: Updated the interval check to verify `fetchDone` instead of array elements:
+   ```javascript
+   if (fetchDone) {
+       clearInterval(checkDone);
+       ...
+   }
+   ```
+This guarantees the page initializes and displays the selection dashboard correctly even if the database has no photos allocated yet.
