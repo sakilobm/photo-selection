@@ -14,8 +14,9 @@ $client_login = function () {
     // Read request parameters and JSON body
     $data = array_merge($this->_request, $this->getJsonPayload());
     $code = $data['code'] ?? null;
+    $email = $data['email'] ?? null;
 
-    if ($code) {
+    if ($code && $email) {
         $portal = ClientPortal::findByCode($code);
         if ($portal) {
             // Check if blocked
@@ -24,6 +25,14 @@ $client_login = function () {
                     'success' => false,
                     'message' => 'Your portal access has been revoked. Please contact OBM Studio.'
                 ]), 403);
+            }
+
+            // Verify email matches the portal email address case-insensitively
+            if (strcasecmp(trim($portal->getEmail()), trim($email)) !== 0) {
+                $this->response($this->json([
+                    'success' => false,
+                    'message' => 'The email address does not match this passcode.'
+                ]), 401);
             }
 
             // Set Client session parameters
@@ -47,7 +56,7 @@ $client_login = function () {
     } else {
         $this->response($this->json([
             'success' => false,
-            'message' => 'Passcode / Portal Key is required.'
+            'message' => 'Both email address and passcode are required.'
         ]), 400);
     }
 };

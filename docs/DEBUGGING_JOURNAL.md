@@ -303,3 +303,34 @@ html.theme-light .obm-modal-container {
 }
 ```
 This allows the dialog container to correctly render as white/translucent in light mode.
+
+---
+
+## [ENTRY 10] - 2026-08-07
+### Concept: UI-API Data Discrepancy & Validation Consistency (Mismatched Inputs)
+
+#### The Problem
+The Client Portal login form required both an email address and a passcode. However, the backend validation script only checked the passcode against the database, completely ignoring the email input value. This meant clients could type any arbitrary email alongside a valid passcode and still unlock access, creating a security gap.
+
+#### Diagnostic Steps
+1. **API Parameter Audit**: Inspected `/api/auth/client_login` request handler. Observed that it only read `code` and called `ClientPortal::findByCode($code)`.
+2. **Payload Verification**: Checked the fetch payload in `photo-selection.js` and confirmed that only `code` was sent in the body.
+
+#### Why it occurred (Root Cause)
+The email verification check was not integrated into the authentication API controller or sent in the client-side payload, resulting in a mismatch between UI input expectations and backend validation rules.
+
+#### The Fix
+1. **API Validation Extension**: Modified [client_login.php](file:///var/www/html/obm-new-version/htdocs/libs/api/auth/client_login.php) to extract the email from the payload and run a case-insensitive match against the registered client portal email:
+   ```php
+   if (strcasecmp(trim($portal->getEmail()), trim($email)) !== 0) {
+       // Return 401 error
+   }
+   ```
+2. **Frontend Payload Update**: Updated the authentication fetch call in [photo-selection.js](file:///var/www/html/obm-new-version/htdocs/photo-selection.js) to pass both the email and passcode parameters:
+   ```javascript
+   body: JSON.stringify({ email: emailInput, code: codeInput })
+   ```
+3. **Homepage Modal Alignment**:
+   - Refactored [_footer.php](file:///var/www/html/obm-new-version/htdocs/_templates/core/_footer.php) to insert an "Email Address" input field before the passcode input.
+   - Updated the submission logic in [_master.php](file:///var/www/html/obm-new-version/htdocs/_templates/_master.php) to extract the email input value and transmit it along with the passcode.
+   - Cleaned up [portfolio.js](file:///var/www/html/obm-new-version/htdocs/portfolio.js) by removing its redundant mock form submission handler and updated its testing auto-fill buttons to populate both the test email and passcode.

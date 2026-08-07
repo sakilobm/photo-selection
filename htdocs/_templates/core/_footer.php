@@ -35,12 +35,16 @@
             </div>
             <div>
                 <h3 class="text-2xl font-black text-white font-['Outfit']">Client Photo Selection</h3>
-                <p class="text-xs text-slate-400 mt-2 leading-relaxed">Enter your unique Event Passcode to access your private high-resolution photo gallery and make your album selections.</p>
+                <p class="text-xs text-slate-400 mt-2 leading-relaxed">Enter your registered email and passcode to access your private high-resolution photo gallery and make your album selections.</p>
             </div>
             <form id="client-login-form" class="space-y-4">
                 <div>
+                    <label for="client-email" class="block text-xs font-bold uppercase text-slate-300 mb-2 tracking-wider">Email Address</label>
+                    <input type="email" id="client-email" required placeholder="e.g. vikram@example.com" class="w-full px-4 py-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors text-sm">
+                </div>
+                <div>
                     <label for="event-passcode" class="block text-xs font-bold uppercase text-slate-300 mb-2 tracking-wider">Event Passcode</label>
-                    <input type="text" id="event-passcode" placeholder="e.g. DEMO2026" class="w-full px-4 py-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors uppercase font-mono tracking-widest text-sm">
+                    <input type="text" id="event-passcode" required placeholder="e.g. DEMO2026" class="w-full px-4 py-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors uppercase font-mono tracking-widest text-sm">
                 </div>
                 <div id="passcode-error" class="hidden text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg p-2.5"></div>
                 <button type="submit" class="btn-primary w-full justify-center py-4">

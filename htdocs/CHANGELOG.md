@@ -2,6 +2,18 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.3.4] - 2026-08-07
+
+### Changed — Homepage Portal Login Modal Refactoring (`_master.php`, `_footer.php`, `portfolio.js`)
+- **Email Input Integration**: Added the "Email Address" field to the homepage's client portal login modal form in the page footer, aligning credential inputs with the new backend validation standards.
+- **Autofill and Submit Synchronization**: Updated the homepage modal scripts to collect both the email and passcode parameters, querying the live backend validator. Configured the "Auto-fill DEMO2026" testing shortcut to populate the mock credentials for both inputs.
+- **Redundant Mock Handler Removal**: Removed the mock client-side login form event listener from `portfolio.js` to prevent conflicts and double-firing alongside the unified master layout submit listener.
+
+## [3.3.3] - 2026-08-07
+
+### Changed — Dual-Factor Authentication Validation (`client_login.php`, `photo-selection.js`)
+- **Required Email Matching**: Updated the client login handler API to require and validate both the passcode (`code`) and client email address (`email`), matching the input email case-insensitively with the registered database record, resolving the discrepancy where the UI email input field was not validated.
+
 ## [3.3.2] - 2026-08-07
 
 ### Changed — Light Theme Confirmation Dialog Color Fix (`photo-selection.css`)

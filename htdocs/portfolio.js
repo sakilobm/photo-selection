@@ -96,41 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
   demoBt?.addEventListener('click', () => {
+    const emailInput = document.getElementById('client-email');
+    if (emailInput) emailInput.value = 'vikram@example.com';
     document.getElementById('event-passcode').value = 'DEMO2026';
-    showToast('Demo Code Applied', 'Click "Unlock Photo Portal" to continue', 'gold', { duration: 3000, icon: '🔑' });
-  });
-
-  loginForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const code = document.getElementById('event-passcode').value.trim().toUpperCase();
-    errorBox.classList.add('hidden');
-
-    if (!code) {
-      errorBox.textContent = 'Please enter your event passcode.';
-      errorBox.classList.remove('hidden');
-      return;
-    }
-
-    const submitBtn = loginForm.querySelector('button[type="submit"]');
-    const originalHtml = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Verifying...';
-    submitBtn.disabled = true;
-
-    await new Promise(r => setTimeout(r, 900)); // simulate
-
-    if (code === 'DEMO2026') {
-      showToast('✅ Access Granted!', 'Welcome to your OBM Studio photo gallery', 'success', { duration: 3500 });
-      closeModal();
-      setTimeout(() => {
-        window.location.href = 'photo-selection?token=DEMO2026';
-      }, 1200);
-    } else {
-      errorBox.textContent = 'Invalid passcode. Please contact your photographer for your unique event code.';
-      errorBox.classList.remove('hidden');
-      showToast('Access Denied', 'The event passcode is incorrect', 'error', { duration: 4000 });
-      submitBtn.innerHTML = originalHtml;
-      submitBtn.disabled = false;
-    }
+    showToast('Demo Credentials Applied', 'Click "Unlock Photo Portal" to continue', 'gold', { duration: 3000, icon: '🔑' });
   });
 
   // ── GALLERY CATEGORY FILTERS

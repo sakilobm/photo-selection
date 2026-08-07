@@ -83,3 +83,18 @@ We validated modal dialog style changes in light mode.
 Tests:
 - Selector mismatch is corrected (.obm-modal-card -> .obm-modal-container): **PASS**
 - Dialog container background is properly overridden to light white/translucent: **PASS**
+
+### Dual Email & Passcode Validation
+We validated dual email-passcode verification.
+Tests:
+- Login payload in JavaScript transmits both email and code parameters: **PASS**
+- client_login.php checks case-insensitive match on portal email address: **PASS**
+- Mismatched email values trigger validation warnings: **PASS**
+
+### Homepage Portal Login Modal Integration
+We validated the homepage login modal credentials and API integrations.
+Tests:
+- Email Address input field added to footer modal form structure: **PASS**
+- Homepage login submission retrieves both fields and queries the API: **PASS**
+- Mock login submissions block inside portfolio.js is safely removed: **PASS**
+- Auto-fill helper populates both test email and passcode: **PASS**

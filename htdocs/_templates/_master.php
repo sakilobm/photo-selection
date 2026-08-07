@@ -67,9 +67,11 @@
             });
         }
 
-        if (demoCodeBtn && eventPasscodeInput) {
+        if (demoCodeBtn) {
             demoCodeBtn.addEventListener('click', () => {
-                eventPasscodeInput.value = 'DEMO2026';
+                const emailInput = document.getElementById('client-email');
+                if (emailInput) emailInput.value = 'vikram@example.com';
+                if (eventPasscodeInput) eventPasscodeInput.value = 'DEMO2026';
             });
         }
 
@@ -80,8 +82,10 @@
         if (clientLoginForm) {
             clientLoginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const code = eventPasscodeInput.value.trim().toUpperCase();
-                if (!code) return;
+                const emailInput = document.getElementById('client-email');
+                const email = emailInput ? emailInput.value.trim() : '';
+                const code = eventPasscodeInput ? eventPasscodeInput.value.trim().toUpperCase() : '';
+                if (!code || !email) return;
 
                 if (passcodeError) passcodeError.classList.add('hidden');
 
@@ -89,7 +93,7 @@
                     const response = await fetch('<?= get_config('base_path') ?>api/auth/client_login', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ code })
+                        body: JSON.stringify({ email, code })
                     });
                     const result = await response.json();
 
@@ -98,7 +102,7 @@
                         window.location.href = '<?= Session::url("photo-selection") ?>';
                     } else {
                         if (passcodeError) {
-                            passcodeError.innerText = result.message || 'Invalid passcode. Please try again.';
+                            passcodeError.innerText = result.message || 'Invalid passcode or email. Please try again.';
                             passcodeError.classList.remove('hidden');
                         }
                     }
@@ -106,10 +110,10 @@
                     if (passcodeError) {
                         passcodeError.innerText = 'Network error occurred. Please try again.';
                         passcodeError.classList.remove('hidden');
-                    }
-                }
-            });
-        }
+                      }
+                  }
+              });
+          }
 
         // Client exit trigger
         function logoutClient() {

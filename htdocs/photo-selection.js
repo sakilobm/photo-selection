@@ -767,7 +767,7 @@ async function handleAuth(event) {
         const response = await fetch('/api/auth/client_login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: codeInput })
+            body: JSON.stringify({ email: emailInput, code: codeInput })
         });
         const res = await response.json();
         if (res.success) {
