@@ -2,6 +2,26 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.3.0] - 2026-08-07
+
+### Added — Public Client Workspace Registration Endpoint (`client_signup.php`)
+- **Public Signup API Controller**: Created the endpoint `htdocs/libs/api/auth/client_signup.php` which allows new clients to register their name, email, and desired passcode to request a new selection portal database record without requiring administrator authorization.
+
+### Changed — Client Authentication Toast Feedback (`photo-selection.js`)
+- **Login Toast Messages**: Integrated dynamic feedback triggers inside the login handler to show connecting status indicators ("Validating access passcode...") and detailed success/failure toast cards based on API outcomes.
+- **Signup Request Form Routing**: Programmed the client portal registration tab to query the public `/api/auth/client_signup` endpoint upon form submission, resetting fields and auto-switching back to the login tab upon successful registrations.
+
+## [3.2.7] - 2026-08-07
+
+### Changed — High-Resolution Image Loading in Lightbox (`photo-selection.php`, `photo-selection.js`)
+- **Dynamic HD Image Swapping**: Created a `getHighResUrl` utility inside `photo-selection.js` to dynamically swap the source URL's thumbnail width parameter `w=500` with `w=1600` on the fly when loading image previews inside the lightbox.
+- **Fluid Layout Stretch Enforcement**: Added `w-full` class to `#lightboxImage` to ensure the image tag scales up fluidly to match the container width, allowing wide landscape captures to fill the screen landscape area in full resolution.
+
+## [3.2.6] - 2026-08-07
+
+### Changed — Lightbox Preview Dimensions Upgrade (`photo-selection.php`)
+- **Expanded Lightbox Image View**: Increased the preview image maximum dimensions from `max-w-4xl` (896px width) and `max-h-[75vh]` (75% viewport height) to `max-w-[85vw]` (85% viewport width) and `max-h-[80vh]` (80% viewport height), allowing high-resolution landscape and couple portrait captures to display larger and clearer on widescreen displays.
+
 ## [3.2.5] - 2026-08-06
 
 ### Changed — Contrast & Accessibility Tweak (`photo-selection.php`)

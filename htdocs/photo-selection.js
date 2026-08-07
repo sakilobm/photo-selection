@@ -783,29 +783,57 @@ function switchAuthTab(mode) {
 
 async function handleAuth(event) {
     event.preventDefault();
-    const nameInput = document.getElementById('authName').value || 'Premium Client';
-    const emailInput = document.getElementById('authEmail').value || 'client@example.com';
-    const codeInput = document.getElementById('authCode').value;
+    const nameInput = document.getElementById('authName').value.trim();
+    const emailInput = document.getElementById('authEmail').value.trim();
+    const codeInput = document.getElementById('authCode').value.trim();
 
     const submitBtn = event.target.querySelector('button[type="submit"]');
     if (submitBtn) submitBtn.disabled = true;
 
-    try {
-        const response = await fetch('/api/auth/client_login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: codeInput })
-        });
-        const res = await response.json();
-        if (res.success) {
-            loadClientWorkspace(res.email || emailInput, res.name || nameInput, true);
-        } else {
-            showToast('alert', 'Access Denied', res.message || 'Invalid passcode.');
+    if (currentAuthMode === 'login') {
+        showToast('info', 'Connecting', 'Validating access passcode...');
+        try {
+            const response = await fetch('/api/auth/client_login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: codeInput })
+            });
+            const res = await response.json();
+            if (res.success) {
+                showToast('success', 'Access Granted', res.message || 'Logged in successfully!');
+                loadClientWorkspace(res.email || emailInput, res.name || nameInput, true);
+            } else {
+                showToast('alert', 'Access Denied', res.message || 'Invalid passcode.');
+            }
+        } catch (err) {
+            showToast('alert', 'Connection Failed', 'Unable to reach authentication server.');
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
         }
-    } catch (err) {
-        showToast('alert', 'Error', 'Server connection failed.');
-    } finally {
-        if (submitBtn) submitBtn.disabled = false;
+    } else {
+        showToast('info', 'Submitting', 'Initializing secure workspace...');
+        try {
+            const response = await fetch('/api/auth/client_signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: nameInput, email: emailInput, code: codeInput })
+            });
+            const res = await response.json();
+            if (res.success) {
+                showToast('success', 'Workspace Registered', res.message || 'Secure portal registered!');
+                // Auto-switch to login tab and populate fields
+                document.getElementById('authForm').reset();
+                document.getElementById('authEmail').value = emailInput;
+                document.getElementById('authCode').value = codeInput;
+                switchAuthTab('login');
+            } else {
+                showToast('alert', 'Registration Failed', res.message || 'Check your registration details.');
+            }
+        } catch (err) {
+            showToast('alert', 'Connection Failed', 'Unable to reach registration server.');
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
+        }
     }
 }
 
@@ -1297,6 +1325,14 @@ async function triggerResetGallery() {
 // ==========================================
 // LIQUID LIGHTBOX & SWIPE SYSTEM
 // ==========================================
+function getHighResUrl(url) {
+    if (!url) return '';
+    if (url.includes('unsplash.com') && url.includes('w=500')) {
+        return url.replace('w=500', 'w=1600');
+    }
+    return url;
+}
+
 function openLightbox(photoId) {
     const index = photoDatabase.findIndex(p => p.id === photoId);
     if (index === -1) return;
@@ -1311,7 +1347,7 @@ function openLightbox(photoId) {
     document.body.style.overflow = 'hidden';
 
     // Populate visual track
-    document.getElementById('lightboxImage').src = photo.url;
+    document.getElementById('lightboxImage').src = getHighResUrl(photo.url);
     document.getElementById('lightboxFilename').innerText = photo.name;
 
     updateLightboxControls(photoId);
@@ -1386,7 +1422,7 @@ function jumpLightboxTo(index, direction = 1) {
     imgNode.style.opacity = '0';
 
     setTimeout(() => {
-        imgNode.src = photo.url;
+        imgNode.src = getHighResUrl(photo.url);
         document.getElementById('lightboxFilename').innerText = photo.name;
 
         updateLightboxControls(photo.id);

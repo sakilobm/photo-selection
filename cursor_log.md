@@ -62,3 +62,17 @@ We validated button color overrides in light mode.
 Tests:
 - Finalize counter button text and icon are forced white (text-white-force): **PASS**
 - Lightbox select/finalize button text and icon are forced white (text-white-force): **PASS**
+
+### Lightbox Preview Dimensions
+We validated preview image sizes on desktop viewports.
+Tests:
+- Lightbox container expands horizontally to fit widescreen layout (max-w-[85vw]): **PASS**
+- Lightbox container expands vertically to utilize screen space (max-h-[80vh]): **PASS**
+- Unsplash width query parameters are swapped dynamically to load HD sources in lightbox (w=1600): **PASS**
+
+### Client Signup API & Toast Feedback
+We validated the self-registration workflow and loader toast triggers.
+Tests:
+- /api/auth/client_signup registers new portals in database: **PASS**
+- Signup submissions show info state toasts and auto-switch back to login: **PASS**
+- Login submissions show connecting state toasts and success/error feedbacks: **PASS**

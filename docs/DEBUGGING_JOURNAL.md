@@ -210,3 +210,47 @@ The master layout always renders the global header `floating-nav-container`, whi
        <i data-lucide="home" class="w-5 h-5"></i>
    </a>
    ```
+
+---
+
+## [ENTRY 6] - 2026-08-07
+### Concept: Aspect Ratio Restrictions in Fluid CSS Layouts (Viewport-Relative Dimensions)
+
+#### The Problem
+High-resolution photos displayed in the lightbox selection slider were appearing very small on widescreen/desktop monitors. Landscape-oriented photos left substantial empty spaces at the margins.
+
+#### Diagnostic Steps
+1. **Dimension Inspections**: Checked the layout classes on `#lightboxTrack` and `#lightboxImage`.
+2. **Constraint Check**: Observed that `#lightboxTrack` was capped at `max-w-4xl` (896px). Since the images maintain aspect ratios dynamically, a strict width restriction causes the height to scale down proportionally, rendering the image as a small block in the middle of a large viewport.
+
+#### Why it occurred (Root Cause)
+Using pixel-based max-width constraints (like `max-w-4xl`) limits fluid scaling on large viewports, preventing wide landscape photos from utilizing available screen width.
+
+#### The Fix
+1. **Viewport Relative Styling**: Replaced static max-width boundaries with viewport-relative units (`vw`) and expanded the vertical boundaries (`vh`) inside [photo-selection.php](file:///var/www/html/obm-new-version/htdocs/_templates/photo-selection.php):
+   - **Track**: `max-w-4xl max-h-[75vh]` -> `max-w-[85vw] max-h-[80vh]`
+   - **Image**: `max-w-full max-h-[75vh]` -> `w-full max-w-full max-h-[80vh]` (Added `w-full` to force the tag to stretch to fill the horizontal track).
+2. **Resolution Upgrades**: Created a `getHighResUrl(url)` utility inside `photo-selection.js` to swap the Unsplash query width parameter `w=500` (thumbnail) with `w=1600` (high resolution) on the fly before setting the image source. This ensures that landscape photographs have enough resolution to scale up and look crisp rather than remaining constrained to thumbnail dimensions.
+
+---
+
+## [ENTRY 7] - 2026-08-07
+### Concept: Dynamic Route Dispatching & Asynchronous Toast Notifications (State-Driven Client Feedback)
+
+#### The Problem
+The Client Portal authentication screen had two tabs: "Client Login" and "New Account" (Signup). However:
+1. Submitting either form executed the exact same login routing sequence (calling `/api/auth/client_login`), meaning signups were stubs that failed to initialize new client portal workspace records.
+2. Clicking "Unlock My Gallery" or "Create Client Portal" provided no interactive visual states during processing, leaving users in the dark on connection states or server response details.
+
+#### Diagnostic Steps
+1. **Script Validation**: Audited the form submit handler `handleAuth` inside `photo-selection.js`. We observed that it collected inputs and hardcoded a POST call to `client_login` unconditionally.
+2. **Directory Architecture Audit**: Checked `htdocs/libs/api/auth/` and verified that no public client registration controller existed.
+
+#### Why it occurred (Root Cause)
+The client self-registration flow was not completed on the API gateway controller layers or in the frontend dispatch logic, resulting in duplicated behavior on both form views.
+
+#### The Fix
+1. **Public Registration API Controller**: Created the endpoint [client_signup.php](file:///var/www/html/obm-new-version/htdocs/libs/api/auth/client_signup.php) inside the public auth namespace directory. This controller validates inputs, runs passcode uniqueness checks via `ClientPortal::findByCode`, and registers new workspace slots in the MySQL database.
+2. **State-Driven Routing**: Updated `handleAuth` inside [photo-selection.js](file:///var/www/html/obm-new-version/htdocs/photo-selection.js) to inspect `currentAuthMode` and dynamically route requests:
+   - **`login`**: Shows an information toast ("Connecting..."), queries `/api/auth/client_login`, and triggers success/error notifications accordingly.
+   - **`signup`**: Shows an information toast ("Submitting..."), queries `/api/auth/client_signup`, displays success toast, resets the inputs, and automatically switches the view back to the login tab.

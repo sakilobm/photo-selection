@@ -319,8 +319,8 @@ $clientCode = Session::get('client_code', '');
     </button>
 
     <!-- Slide Content Zone -->
-    <div id="lightboxTrack" class="w-full max-w-4xl max-h-[75vh] flex items-center justify-center z-10 cursor-grab active:cursor-grabbing slider-wrapper">
-        <img id="lightboxImage" src="" alt="Zoomed view" class="max-w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl border border-white/10 slider-img transition-transform duration-300 select-none">
+    <div id="lightboxTrack" class="w-full max-w-[85vw] max-h-[80vh] flex items-center justify-center z-10 cursor-grab active:cursor-grabbing slider-wrapper">
+        <img id="lightboxImage" src="" alt="Zoomed view" class="w-full max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl border border-white/10 slider-img transition-transform duration-300 select-none">
     </div>
 
     <!-- Thumbnails bar -->
