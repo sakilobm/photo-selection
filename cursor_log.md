@@ -114,3 +114,15 @@ Tests:
 - Polished empty state with glassmorphic cards, timeline, glows, and hover lifts: **PASS**
 - Remapped dark overlay elements (.bg-black/40 and .bg-black/50) in Light Mode to soft translucent structures: **PASS**
 - Overrode .text-gray-500 typography color in Light Mode to guarantee high legibility: **PASS**
+
+### Digital Album Navigation Toolbar & Keyboard Legend
+We validated centering alignments and styling overrides inside the digital album.
+Tests:
+- Centered Prev/Next navigation block horizontally in the controls toolbar using 3-column CSS grid: **PASS**
+- Added left branding block to balance centered layout elements: **PASS**
+- Remapped inactive spread dots to soft charcoal overlays in Light Mode: **PASS**
+- Remapped keyboard shortcut keys (.kbd) to light-bordered gray badges: **PASS**
+- Remapped dark action buttons (.bg-slate-800/80) to glassmorphic controls: **PASS**
+- Replaced text-white with text-white-force on page-title overlays to preserve color contrast: **PASS**
+- Increased CSS specificity of .text-white-force to override global light mode heading overrides: **PASS**
+- Added :not(.text-white-force) filters to styles.css light theme overrides to exclude force white targets: **PASS**

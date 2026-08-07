@@ -2,6 +2,28 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.4.2] - 2026-08-07
+
+### Fixed — Typography Exclusion Filter for Force White Elements (`styles.css`)
+- **Exclusion Filters**: Appended `:not(.text-white-force)` to the light mode heading and text-white remapping rules in `styles.css`, completely protecting force-white elements from being targeted by global color overrides.
+
+## [3.4.1] - 2026-08-07
+
+### Fixed — Specificity Conflict Resolution for Overlay Titles (`photo-selection.css`, `digital-album.php`)
+- **Overrode Title Selector Specificity**: Defined high-specificity selectors for `.text-white-force` (`html.theme-light h3.text-white-force`) globally and locally, forcing overlays on top of dark photo layouts to remain bright white under Light Mode.
+
+## [3.4.0] - 2026-08-07
+
+### Fixed — Digital Album Mathematical Grid Centering & Text Contrast Overrides (`digital-album.php`)
+- **True Mathematical Grid Centering**: Refactored the toolbar row layout into a CSS Grid (`grid-cols-3` on desktop), ensuring that the navigation block (Prev, Dots, Next) is mathematically placed in the exact center of the page.
+- **Title Overlay Contrast Override**: Changed the `.text-white` utility on left/right page title overlay tags (`#page-title-left` and `#page-title-right`) to `.text-white-force` to prevent the labels from remapping to dark slate in Light Mode, keeping them readable on top of the photographs.
+
+## [3.3.9] - 2026-08-07
+
+### Changed — Digital Album Navigation Toolbar Alignments & Light Mode Styles (`digital-album.php`)
+- **Center-Aligned Navigation Controls**: Centered the navigation block (Prev, Dots, Next) inside the toolbar by structuring the elements in a three-column layout (Left: branding label, Center: navigation block, Right: action buttons).
+- **Light Theme Styles**: Remapped inactive dots (`.spread-dot`) to soft charcoal overlays, keyboard badge classes (`.kbd`) to light-bordered badges, and action buttons (`bg-slate-800/80`) to translucent glass controls under light mode.
+
 ## [3.3.8] - 2026-08-07
 
 ### Fixed — Light Mode Color Contrast Overrides (`photo-selection.css`)

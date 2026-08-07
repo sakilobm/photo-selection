@@ -546,11 +546,11 @@ html.theme-light body {
 }
 
 /* ── Typography & Text Contrast ── */
-html.theme-light h1:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story),
-html.theme-light h2:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story),
-html.theme-light h3:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story),
-html.theme-light h4:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story),
-html.theme-light .text-white:not(.btn-primary *):not(.btn-primary) {
+html.theme-light h1:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story):not(.text-white-force),
+html.theme-light h2:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story):not(.text-white-force),
+html.theme-light h3:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story):not(.text-white-force),
+html.theme-light h4:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story):not(.text-white-force),
+html.theme-light .text-white:not(.btn-primary *):not(.btn-primary):not(.text-white-force) {
   color: #0f172a !important;
 }
 

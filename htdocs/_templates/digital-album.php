@@ -181,6 +181,39 @@
     font-size: 9px;
   }
 
+  /* Light mode theme remapping overrides for digital-album indicators and buttons */
+  html.theme-light .spread-dot {
+    background: rgba(0, 0, 0, 0.15) !important;
+  }
+
+  html.theme-light .kbd {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    color: #475569 !important;
+  }
+
+  html.theme-light .bg-slate-800\/80 {
+    background: rgba(0, 0, 0, 0.03) !important;
+    color: #0f172a !important;
+  }
+
+  html.theme-light .bg-slate-800\/80:hover {
+    background: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  html.theme-light .bg-slate-800\/80.text-amber-400 {
+    color: #d97706 !important;
+  }
+
+  html.theme-light .bg-slate-800\/80.text-\[var\(--theme-accent\)\] {
+    color: var(--theme-accent) !important;
+  }
+
+  /* Force white text on image overlays in light mode */
+  html.theme-light h3.text-white-force {
+    color: #ffffff !important;
+  }
+
   .album-fullscreen {
     position: fixed;
     inset: 0;
@@ -306,7 +339,7 @@
         <div class="album-page-overlay"></div>
         <div class="absolute bottom-6 left-6 z-10 space-y-1.5">
           <span id="page-num-left" class="badge badge-gold text-[9px]">Page 04</span>
-          <h3 id="page-title-left" class="text-lg font-bold text-white font-['Outfit'] drop-shadow-lg">Sacred Fire Rituals</h3>
+          <h3 id="page-title-left" class="text-lg font-bold text-white-force font-['Outfit'] drop-shadow-lg">Sacred Fire Rituals</h3>
         </div>
         <button onclick="zoomPage('left')" class="absolute top-4 right-4 z-10 p-2 rounded-lg bg-black/40 hover:bg-black/60 text-white/70 hover:text-white transition-all opacity-0 group-hover:opacity-100" title="Zoom In">
           <i data-lucide="zoom-in" class="w-4 h-4"></i>
@@ -318,7 +351,7 @@
         <div class="album-page-overlay"></div>
         <div class="absolute bottom-6 right-6 z-10 space-y-1.5 text-right">
           <span id="page-num-right" class="badge badge-cyan text-[9px]">Page 05</span>
-          <h3 id="page-title-right" class="text-lg font-bold text-white font-['Outfit'] drop-shadow-lg">Aerial Venue View</h3>
+          <h3 id="page-title-right" class="text-lg font-bold text-white-force font-['Outfit'] drop-shadow-lg">Aerial Venue View</h3>
         </div>
         <button onclick="zoomPage('right')" class="absolute top-4 left-4 z-10 p-2 rounded-lg bg-black/40 hover:bg-black/60 text-white/70 hover:text-white transition-all opacity-0 group-hover:opacity-100" title="Zoom In">
           <i data-lucide="zoom-in" class="w-4 h-4"></i>
@@ -330,8 +363,15 @@
   <!-- ALBUM CONTROLS TOOLBAR -->
   <div class="max-w-5xl mx-auto mt-5" data-reveal>
     <div class="glass-card p-4">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
+      <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+        <!-- Left: Brand Identifier (takes up 1/3 grid width on desktop to keep center perfectly aligned) -->
+        <div class="hidden md:flex items-center gap-2 justify-start text-xs text-gray-400 font-extrabold uppercase tracking-widest">
+          <i data-lucide="book-open" class="w-4.5 h-4.5 text-[var(--theme-accent)]"></i>
+          <span>Digital Album</span>
+        </div>
+
+        <!-- Center: Navigation controls -->
+        <div class="flex items-center justify-center gap-3">
           <button onclick="prevSpread()" class="btn-ghost py-2.5 px-4 text-xs flex items-center gap-1.5" title="Previous (←)">
             <i data-lucide="chevron-left" class="w-4 h-4"></i> Prev
           </button>
@@ -340,7 +380,9 @@
             Next <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </button>
         </div>
-        <div class="flex items-center gap-2">
+
+        <!-- Right: Action items -->
+        <div class="flex items-center justify-end gap-2 w-full">
           <button onclick="toggleFavoriteSpread()" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-400 transition-all hover:scale-105" title="Favorite">
             <i data-lucide="star" class="w-4 h-4"></i>
           </button>
@@ -350,7 +392,7 @@
           <button onclick="enterFullscreen()" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white transition-all hover:scale-105" title="Fullscreen (F)">
             <i data-lucide="maximize-2" class="w-4 h-4"></i>
           </button>
-          <button onclick="downloadSpread()" class="btn-primary py-2.5 px-5 text-xs flex items-center gap-2">
+          <button onclick="downloadSpread()" class="btn-primary py-2.5 px-5 text-xs flex items-center gap-2 shrink-0">
             <i data-lucide="download" class="w-4 h-4"></i> Download
           </button>
         </div>

@@ -423,3 +423,87 @@ html.theme-light .text-gray-500 {
 }
 ```
 This forces the timeline card container to render as a soft light-gray translucent box, creating optimal readability for dark text.
+
+---
+
+## [ENTRY 15] - 2026-08-07
+### Concept: Layout Alignment Centering & Local Style Scope Remappings
+
+#### The Problem
+In the Digital Album view, the bottom toolbar layout had two major issues:
+1. **Misaligned Centering**: The navigation block (Prev button, dots list, Next button) was forced to the far left of the page layout, rendering it out-of-balance on screen.
+2. **Invisible Indicators**: Under Light Mode, the inactive progress dots (`.spread-dot`) and keyboard key badge labels (`.kbd`) were rendered in dark mode styling (translucent white borders/text on top of a white card container), making them completely invisible/unreadable. The action buttons kept their dark background (`bg-slate-800/80`), which looked out-of-place.
+
+#### Diagnostic Steps
+1. **Layout Audit**: Analyzed the flex directions inside `digital-album.php`. Confirmed that the row items used `justify-between` and only had two children, pushing navigation left and actions right.
+2. **Contrast Checks**: Inspected the local CSS block. Verified that `.kbd` and `.spread-dot` definitions did not contain light theme selectors.
+
+#### The Fix
+1. **Center-Balanced Flex Row**: Replaced the controls container row with a three-column layout (Left: brand identifier, Center: centered navigation controls, Right: action buttons). Assigned `flex-1` to the left and right containers on desktop to keep the center navigation perfectly centered.
+2. **Light Theme Local Overrides**: Added CSS overrides inside the local `<style>` block in [digital-album.php](file:///var/www/html/obm-new-version/htdocs/_templates/digital-album.php):
+   - Overrode inactive `.spread-dot` elements to soft gray overlays in light mode.
+   - Remapped `.kbd` key labels to light bordered indicators.
+   - Restyled `.bg-slate-800/80` buttons to light-glassmorphic blocks.
+
+---
+
+## [ENTRY 16] - 2026-08-07
+### Concept: CSS Grid Centering and Force Color Overlays
+
+#### The Problem
+1. **Misaligned Centering**: The navigation controls block was still slightly offset on desktop/tablet views because the action buttons container on the right was naturally wider than the branding text on the left, shifting the center layout.
+2. **Invisible Image Text overlays**: In Light Mode, the text descriptions overlaying the album spread page photographs (such as "Sacred Fire Rituals" and "Aerial Venue View") turned dark slate (due to `html.theme-light .text-white` rules). Since the background behind the text remained dark (the image spread shadow backdrop), this made the text illegible.
+
+#### Diagnostic Steps
+1. **Grid Audits**: Evaluated flex configurations. Confirmed that unequal column widths broke the center balance of the row items.
+2. **Color Inspection**: Found that page titles used `.text-white` which was remapped to `#0f172a` in Light Mode.
+
+#### The Fix
+1. **True CSS Grid Centering**: Refactored the flex controls row in [digital-album.php](file:///var/www/html/obm-new-version/htdocs/_templates/digital-album.php) into a three-column CSS Grid (`grid grid-cols-1 md:grid-cols-3`). This forces each column to occupy exactly 33.33% of the desktop toolbar container, centering the middle navigation block mathematically.
+2. **Title Overlay Color Override**: Replaced the `.text-white` utility classes on `#page-title-left` and `#page-title-right` elements with `.text-white-force` so they remain bright white on top of the dark image overlays in all theme modes.
+
+---
+
+## [ENTRY 17] - 2026-08-07
+### Concept: CSS Specificity Precedence (Override Tags vs Classes)
+
+#### The Problem
+Even after applying `.text-white-force` (`color: #fff !important`), the page title text overlays on top of the album photographs still rendered as black in Light Mode.
+
+#### Diagnostic Steps
+Inspected style calculations in the browser. Observed that the global light mode override selector `html.theme-light h3` (specificity `021`) took precedence over the single class selector `.text-white-force` (specificity `010`).
+
+#### The Fix
+Added high-specificity selectors to target `.text-white-force` when assigned to heading elements under the light theme class:
+```css
+.text-white-force,
+html.theme-light .text-white-force,
+html.theme-light h3.text-white-force {
+    color: #ffffff !important;
+}
+```
+This increases the override specificity to `031`, ensuring it takes precedence and keeps the text white against dark photo overlays.
+
+---
+
+## [ENTRY 18] - 2026-08-07
+### Concept: CSS Selector Exclusion Filters (Pseudoclass chain specificity)
+
+#### The Problem
+In Light Mode, overlay titles inside the album spread still rendered as black (#0f172a) despite high-specificity override declarations (`html.theme-light h3.text-white-force` - specificity `031`).
+
+#### Diagnostic Steps
+Inspected the active CSS selectors in the browser's developer console. Found that a rule in [styles.css](file:///var/www/html/obm-new-version/htdocs/styles.css) at line 549 contained a chained list of exclusions:
+```css
+html.theme-light h3:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story) { ... }
+```
+Because CSS pseudo-classes `:not()` accumulate the specificity of their arguments, the selector's total specificity resolved to `051` (5 classes + 1 element), allowing it to take precedence over the specificity of the override class (`031`).
+
+#### The Fix
+Appended `:not(.text-white-force)` to the exclusions list in the global light mode typography rules inside [styles.css](file:///var/www/html/obm-new-version/htdocs/styles.css):
+```css
+html.theme-light h3:not(.grad-cyan):not(.grad-gold):not(.grad-aurora):not(.grad-story):not(.text-white-force) {
+    color: #0f172a !important;
+}
+```
+This forces the global remapping rules to completely ignore any heading elements assigned the `.text-white-force` class, allowing them to render in clean white (`#ffffff !important`) as designed.

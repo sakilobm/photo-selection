@@ -325,7 +325,12 @@ h6 {
     box-shadow: 0 4px 14px rgba(var(--theme-accent-rgb), 0.3);
 }
 
-.text-white-force {
+.text-white-force,
+html.theme-light .text-white-force,
+html.theme-light h1.text-white-force,
+html.theme-light h2.text-white-force,
+html.theme-light h3.text-white-force,
+html.theme-light h4.text-white-force {
     color: #ffffff !important;
 }
 
