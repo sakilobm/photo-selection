@@ -48,7 +48,7 @@
 
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="<?= get_config('base_path') ?>assets/js/toastv3.js"></script>
+    <script src="<?= get_config('base_path') ?>assets/js/toastv3.js?v=3.5.5"></script>
     <script src="<?= get_config('base_path') ?>assets/js/admin_dashboard.js"></script>
     <script src="<?= get_config('base_path') ?>assets/js/apis.js"></script>
 

@@ -52,6 +52,64 @@ $clientCode = Session::get('client_code', '');
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+
+    /* ═══ LIGHT MODE OVERRIDES ═══ */
+    html.theme-light body {
+        background-color: #f8fafc !important;
+        color: #0f172a !important;
+    }
+    html.theme-light .glass-panel {
+        background: rgba(255, 255, 255, 0.88) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.07) !important;
+    }
+    html.theme-light .glass-input {
+        background: #ffffff !important;
+        border: 1px solid rgba(0, 0, 0, 0.15) !important;
+        color: #0f172a !important;
+    }
+    html.theme-light .glass-input::placeholder {
+        color: #94a3b8 !important;
+    }
+    html.theme-light label {
+        color: #334155 !important;
+    }
+    html.theme-light h1:not(.grad-cyan),
+    html.theme-light h2:not(.grad-cyan),
+    html.theme-light h3:not(.grad-cyan) {
+        color: #0f172a !important;
+    }
+    html.theme-light p,
+    html.theme-light span:not(.text-white-force) {
+        color: #475569 !important;
+    }
+    html.theme-light .photo-card {
+        background: #ffffff !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    }
+    html.theme-light .category-btn {
+        background: rgba(0, 0, 0, 0.04) !important;
+        color: #334155 !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    }
+    html.theme-light .category-btn.active {
+        background: var(--theme-accent, #00d2ff) !important;
+        color: #ffffff !important;
+        border-color: transparent !important;
+    }
+    html.theme-light .stat-card {
+        background: rgba(255, 255, 255, 0.85) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    }
+    html.theme-light .stat-card h3 {
+        color: #0f172a !important;
+    }
+    html.theme-light .modal-content {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    }
 </style>
 
 <!-- Theme Ripple Wave Effect Container -->

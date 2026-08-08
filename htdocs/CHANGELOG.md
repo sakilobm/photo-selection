@@ -2,6 +2,49 @@
 
 All notable changes to the `obm-new-version` project will be documented in this file.
 
+## [3.6.0] - 2026-08-08
+
+### Fixed — Modern Structured Client Directory Card Layout & Labeled Action Capsules (`admin.php`)
+- **3-Section Card Architecture**: Redesigned Client Directory cards into a clean 3-section layout:
+  1. **Identity & Status**: Squircle gradient initial avatar badge (`w-12 h-12 rounded-2xl shadow-md`), bold Outfit typography title, email address with mail icon, and status badge (`COMPLETED`, `UNASSIGNED`, `PENDING`, `BLOCKED`) with pulsing status dots.
+  2. **Metric Stat Pills**: Mini frosted glass pills displaying Allocated Photos count (`image` icon), Selected Photos count (`heart` icon), and Access Code (`key-round` icon).
+  3. **Labeled Action Capsules**: Labeled interactive action capsule buttons (`Mark Done` / `Completed`, `Block` / `Blocked`, trash action).
+- **Elevated Card Container**: Applied `.client-card-modern` container styling with 20px rounded corners (`rounded-2xl`), subtle border accent lines, smooth hover translation (`hover:-translate-y-1`), and crisp contrast in both Light and Dark themes.
+
+## [3.5.9] - 2026-08-08
+
+### Fixed — Light Mode Card Color Accents, Status Borders & Gradient Parity (`admin.php`)
+- **Client Directory Card Status Colors**: Added explicit Light Mode rules (`html.theme-light`) for `.client-card-completed` (emerald `#059669`), `.client-card-unassigned` (indigo `#4f46e5`), `.client-card-pending` (cyan `#0891b2`), `.client-card-flagged` (amber `#d97706`), and `.client-card-blocked` (rose `#e11d48`).
+- **Accent Borders & Soft Pastel Gradients**: Injected 5px left accent borders, soft status-tinted pastel background fills (`linear-gradient(135deg, rgba(...) 0%, #ffffff 100%)`), and glowing status shadows (`box-shadow: 0 10px 30px -10px rgba(...)`) under Light Mode to ensure 1-to-1 visual parity with Dark Mode cards.
+- **Package & KPI Card Styling**: Added status-tinted Light Mode card overrides for Silver (royal blue), Gold (amber), Platinum (purple), Imperial (cyan), and KPI Overview cards.
+
+## [3.5.8] - 2026-08-08
+
+### Fixed — Admin Button System, Top Bar Theme Pill & Highlight Scrollbars (`admin.php`)
+- **Modern Stylish Button System**: Styled `.btn-primary` and `.btn-gold` with rich gradient fills, 12px rounded corners, glowing box shadows (`shadow-lg shadow-cyan-500/25`), bold white text (`#ffffff !important`), and smooth hover translation scaling across all 6 tabs (`Save Package Details`, `Save Broadcast Configurations`, `Dispatch to Client Portal`, `Add Client Portal`).
+- **Sleek Theme Capsule Pills**: Styled `.theme-mode-toggle` and `.mode-toggle-btn` with frosted glass pill containers (`border-radius: 9999px`) and active cyan/blue capsule indicators, replacing raw rectangular buttons.
+- **Scrollbar & Layout Refinement**: Custom thin scrollbars (`width: 4px`) applied to package feature lists (`#pkg-features-list-*`) and added `shrink-0` to trash buttons to eliminate dark vertical bleed lines.
+
+## [3.5.7] - 2026-08-08
+
+### Fixed — Auth Pages Redesign & Site-Wide Theme Engine Delegation (`login.php`, `signup.php`, `theme.js`, `photo-selection.php`, `live-event.php`)
+- **Authentication Pages Redesign**: Upgraded `login.php` and `signup.php` with Outfit & Inter typography, Tailwind CSS, Lucide icons, glassmorphism cards, ambient aurora mesh backdrops, and floating bimodal theme toggle pills.
+- **Global Theme Delegation**: Updated `theme.js` to attach global delegated click event listeners for `.mode-toggle-btn` (`data-mode` / `data-mode-val`) and `.theme-switcher-dot` (`data-theme` / `data-accent`) so theme switches trigger instantly across dynamically loaded nodes.
+- **Light Theme Styles**: Injected deep `html.theme-light` CSS overrides into `photo-selection.php` (photo cards, category filters, stat cards, modals) and `live-event.php` (passcode key inputs, chat bubbles, control panels) for high-contrast legibility.
+
+## [3.5.6] - 2026-08-08
+
+### Fixed — Standalone Pure Vanilla JavaScript Toast Engine & Cache Buster (`toastv3.js`)
+- **Vanilla DOM Refactor**: Rewrote `htdocs/assets/js/toastv3.js` to pure Vanilla JavaScript (`document.createElement`, `document.getElementById`, `element.appendChild`), removing all dependencies on external jQuery (`$`) syntax.
+- **Cache-Busting Asset Versioning**: Appended `?v=3.5.5` version query string to all `toastv3.js` script tags across `admin.php`, `_masterForAdmin.php`, `_master.php`, `login.php`, and `signup.php` to force browsers to reload updated Toast assets.
+- **Live Browser Verification**: Tested live web forms on `https://obmstudio.in/admin` (Save Package Details, Save Broadcast Configurations) via interactive browser testing. Verified toast notifications display on screen with zero errors.
+
+## [3.5.5] - 2026-08-07
+
+### Verified — Multi-Template PHP Compilation & Final UI Verification
+- **Full Suite Compilation Check**: Validated all primary route and view templates (`admin.php`, `_templates/admin.php`, `digital-album.php`, `photo-selection.php`, `login.php`, `signup.php`) with zero syntax errors.
+- **Site-Wide Theme Adaptivity**: Confirmed global theme engine initialization, asset loading, typography mappings, modal overlays, and button states operate seamlessly across Light Mode and Dark Mode.
+
 ## [3.5.4] - 2026-08-07
 
 ### Fixed — Vibrant Light Mode Accent Color Mapping (`admin.php`)

@@ -147,3 +147,9 @@ Tests:
 - Added full CSS overlay rules for #obmModal to eliminate unstyled modal text at the bottom left: **PASS**
 - Audited all 6 dashboard tabs and added deep Light Mode overrides for selects, options, textareas, transparent inputs, and dropzones: **PASS**
 - Remapped Tailwind accent colors (300/400 shades) to vibrant 600/700 shades under Light Mode for punchy legibility: **PASS**
+- Ran full PHP CLI compilation suite across admin.php, digital-album.php, photo-selection.php, login.php, signup.php: **PASS (0 syntax errors)**
+- Refactored toastv3.js to pure Vanilla JS & verified live form save toast notifications on obmstudio.in/admin: **PASS**
+- Redesigned login & signup templates, added global theme delegation to theme.js, and injected Light Mode CSS into photo-selection & live-event: **PASS**
+- Polished admin button system (.btn-primary, .btn-gold), header capsule pills (.theme-mode-toggle), and highlight scrollbars: **PASS**
+- Injected vibrant status colors, left accent borders, and soft pastel gradients for Client, Package, and KPI cards in Light Mode: **PASS**
+- Redesigned Client Directory cards into a modern 3-section layout with squircle avatars, metric pills, and labeled action capsules: **PASS**

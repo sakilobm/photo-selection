@@ -1,12 +1,13 @@
 /**
- * toastv3.js — Toast Notification System
- * ========================================
- * Creates animated, auto-dismissing toast messages matching styles.css specifications.
- *
- * Requires: jQuery, Lucide Icons
+ * toastv3.js — Universal Standalone Toast Notification System
+ * ============================================================
+ * Creates animated, auto-dismissing toast messages matching styles.css.
+ * Pure Vanilla JavaScript implementation (Zero external dependencies).
  */
 
-function showToast(type, title, message, duration = 4000) {
+function showToast(type, title, message, duration) {
+    if (!duration) duration = 4000;
+
     var knownTypes = ['success', 'error', 'warning', 'info', 'help', 'sapphire', 'gold', 'purple', 'alert', 'action'];
     
     // Smart parameter format detector for backward compatibility:
@@ -22,13 +23,15 @@ function showToast(type, title, message, duration = 4000) {
     }
 
     var lowerType = type ? type.toLowerCase() : 'info';
-    // Map 'help' to 'sapphire'
     if (lowerType === 'help') lowerType = 'sapphire';
 
-    var $panel = $('#toast-container');
-    if (!$panel.length) {
-        console.warn('toastv3: #toast-container not found in DOM.');
-        return;
+    var container = document.getElementById('toast-container');
+    if (!container) {
+        // Auto-create toast container if not found in DOM
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container toast-pos-bottom-right';
+        document.body.appendChild(container);
     }
 
     // Map variant type to appropriate Lucide icon name
@@ -40,49 +43,55 @@ function showToast(type, title, message, duration = 4000) {
     else if (lowerType === 'gold') iconName = 'star';
     else if (lowerType === 'purple') iconName = 'message-square';
 
-    // Generate toast item with modern styling classes matching styles.css
-    var $item = $('<div class="toast-item toast-theme-' + lowerType + '"></div>');
-    var $toast = $(
+    // Generate toast element using Vanilla DOM
+    var item = document.createElement('div');
+    item.className = 'toast-item toast-theme-' + lowerType;
+    
+    item.innerHTML = 
         '<div class="toast-body">' +
         '  <div class="toast-icon-box">' +
         '    <i data-lucide="' + iconName + '" class="w-5 h-5"></i>' +
         '  </div>' +
         '  <div class="toast-content">' +
-        '    <h4 class="toast-title">' + title + '</h4>' +
-        '    <p class="toast-msg">' + message + '</p>' +
+        '    <h4 class="toast-title">' + (title || '') + '</h4>' +
+        '    <p class="toast-msg">' + (message || '') + '</p>' +
         '  </div>' +
         '  <button class="toast-close-btn" title="Dismiss">&times;</button>' +
         '</div>' +
-        '<div class="toast-progress-bar" style="animation-duration: ' + duration + 'ms"></div>'
-    );
+        '<div class="toast-progress-bar" style="animation-duration: ' + duration + 'ms"></div>';
 
-    $item.append($toast);
-    $panel.append($item);
+    container.appendChild(item);
 
     // Reinitialize Lucide icons inside the new toast
     if (window.lucide) {
         lucide.createIcons();
     }
 
-    // Trigger the slide-in transition animation
+    // Trigger slide-in transition animation
     setTimeout(function () {
-        $item.addClass('toast-show');
+        item.classList.add('toast-show');
     }, 15);
 
-    // Close function helper
+    // Close helper function
     function closeToast() {
-        $item.removeClass('toast-show').addClass('toast-hide');
+        item.classList.remove('toast-show');
+        item.classList.add('toast-hide');
         setTimeout(function () {
-            $item.remove();
+            if (item.parentNode) {
+                item.parentNode.removeChild(item);
+            }
         }, 350);
     }
 
     // Close button trigger
-    $item.find('.toast-close-btn').on('click', closeToast);
+    var closeBtn = item.querySelector('.toast-close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeToast);
+    }
 
-    // Auto-dismiss trigger
+    // Auto-dismiss timer
     setTimeout(function () {
-        if ($item.parent().length) {
+        if (item.parentNode) {
             closeToast();
         }
     }, duration);

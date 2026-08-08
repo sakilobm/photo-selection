@@ -40,7 +40,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <!-- Workspace JS -->
-    <script src="<?= get_config('base_path') ?>assets/js/toastv3.js"></script>
+    <script src="<?= get_config('base_path') ?>assets/js/toastv3.js?v=3.5.5"></script>
     <script src="<?= get_config('base_path') ?>assets/js/ball.js"></script>
     
     <!-- Portal Login and Utility Scripts -->

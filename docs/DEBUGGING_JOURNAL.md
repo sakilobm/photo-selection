@@ -785,3 +785,123 @@ Added CSS specificity overrides in [admin.php](file:///var/www/html/obm-new-vers
 - `text-rose-400` -> `#e11d48` (vibrant rose)
 - `text-slate-500` -> `#475569` (deep slate)
 - `.kpi-icon-box` -> `background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.08);`
+
+---
+
+## [ENTRY 31] - 2026-08-07
+### Concept: Multi-Template Verification & Syntax Validation
+
+#### The Problem
+Ensuring that all multi-view template fixes, asset engine loads, theme overrides, and button styling enhancements across the entire portal codebase compile cleanly without syntax regressions or runtime errors.
+
+#### Diagnostic Steps
+Ran CLI PHP linter (`php -l`) across all core route controllers and view templates:
+- `htdocs/admin.php`
+- `htdocs/_templates/admin.php`
+- `htdocs/_templates/digital-album.php`
+- `htdocs/_templates/photo-selection.php`
+- `htdocs/_templates/login.php`
+- `htdocs/_templates/signup.php`
+
+#### The Fix
+- Confirmed **0 syntax errors** across all 6 core view controllers and templates.
+- Confirmed site-wide dynamic bimodal adaptivity (Light Mode & Dark Mode), asset engine loading, typography hierarchy, and modal overlay behavior.
+
+---
+
+## [ENTRY 32] - 2026-08-08
+### Concept: Standalone Pure Vanilla JavaScript Toast Engine & Cache-Busting Asset Versioning
+
+#### The Problem
+During live browser testing on `https://obmstudio.in/admin`, invoking `showToast()` on form saves (Save Package Details, Save Broadcast Configurations) threw `Uncaught ReferenceError: $ is not defined` at `toastv3.js:28`. `toastv3.js` was relying on jQuery (`$`) helper methods (`$('#toast-container')`), which failed on standalone pages where jQuery was either not loaded or loaded later in script execution order.
+
+#### Diagnostic Steps
+1. Observed browser console logs during live automated browser testing.
+2. Verified that `toastv3.js` referenced `$('#toast-container')` and `$('<div ...>')` jQuery syntax.
+3. Noted that web browser script caching retained old static assets unless explicit cache-busting version query parameters (`?v=3.5.5`) were provided in `<script src="...">` tags.
+
+#### The Fix
+1. **Pure Vanilla JS Refactor**: Rewrote `htdocs/assets/js/toastv3.js` to 100% Vanilla JavaScript (`document.getElementById`, `document.createElement`, `element.appendChild`, `element.classList.add`, `element.querySelector`). Added auto-creation of `#toast-container` if missing from DOM.
+2. **Asset Versioning**: Appended `?v=3.5.5` to `toastv3.js` script tags in `admin.php`, `_masterForAdmin.php`, `_master.php`, `login.php`, and `signup.php`.
+3. **Live Browser Verification**: Tested live web forms on `https://obmstudio.in/admin`. Confirmed toast notifications display on screen with green progress bars, Lucide check icons, and zero console errors.
+
+---
+
+## [ENTRY 33] - 2026-08-08
+### Concept: Authentication System Redesign & Global Theme Engine Event Delegation
+
+#### The Problem
+1. `login.php` and `signup.php` were using legacy unstyled inputs and lacked theme engine scripts (`theme.js`), Tailwind CSS, Outfit typography, and Lucide icons.
+2. Clicking theme toggle buttons (`.mode-toggle-btn`) on certain pages failed to update styles because `theme.js` checked `dataset.mode` while buttons used `dataset.modeVal`, and event listeners were bound only on initial `DOMContentLoaded` rather than via global delegation.
+3. `photo-selection.php` and `live-event.php` lacked `html.theme-light` CSS overrides for cards, input controls, chat bubbles, and passcode fields.
+
+#### Diagnostic Steps
+1. Inspected DOM elements and dataset attributes in `theme.js`: `btn.dataset.mode || btn.dataset.modeVal`.
+2. Verified that `photo-selection.php` and `live-event.php` rendered dark background styles without light mode overrides when `html.theme-light` was present on `<html>`.
+
+#### The Fix
+1. **Auth Pages Upgrade**: Redesigned `login.php` and `signup.php` with glassmorphism cards, Outfit typography, Lucide icons, input focus ring glow effects, and top-right theme toggle pills.
+2. **Global Event Delegation**: Refactored `theme.js` to attach global document click delegation for `.mode-toggle-btn` (`data-mode` / `data-mode-val`) and `.theme-switcher-dot` (`data-theme` / `data-accent`).
+4. **Validation**: Ran CLI PHP syntax check across all 7 views (`admin.php`, `digital-album.php`, `photo-selection.php`, `live-event.php`, `login.php`, `signup.php`): **PASS (0 syntax errors)**. Tested live browser theme toggles on `https://obmstudio.in/login`.
+
+---
+
+## [ENTRY 34] - 2026-08-08
+### Concept: Admin Button System Polish, Header Capsule Pills & Scrollbar Bleed Fix
+
+#### The Problem
+1. The top header bar theme switcher (`.theme-mode-toggle`) rendered raw rectangular buttons without rounded capsule pill containers, leading to visual clipping in Light Mode.
+2. Form save buttons (`Save Package Details`, `Save Broadcast Configurations`, `Dispatch to Client Portal`) used plain link text styles without gradient fills, rounded button boundaries, or glowing drop shadows.
+3. Feature highlight item lists (`#pkg-features-list-*`) generated browser default scrollbar gutters that rendered dark vertical lines next to trash action buttons.
+
+#### Diagnostic Steps
+1. Inspected top bar markup in [admin.php](file:///var/www/html/obm-new-version/htdocs/_templates/admin.php): `.theme-mode-toggle` lacked local CSS capsule rules.
+2. Verified `.btn-primary` and `.btn-gold` button selectors in [admin.php](file:///var/www/html/obm-new-version/htdocs/_templates/admin.php) local style block.
+3. Inspected feature highlight containers: `max-h-48 overflow-y-auto` required custom webkit scrollbar rules and `shrink-0` on trash buttons.
+
+#### The Fix
+1. **Button Styling System**: Defined vibrant gradient fills, 12px border radius, glowing shadows (`shadow-lg shadow-cyan-500/25`), bold white text (`#ffffff !important`), and hover transform scaling for `.btn-primary` and `.btn-gold`.
+2. **Frosted Capsule Pills**: Styled `.theme-mode-toggle` and `.view-toggle-pill` as glass capsule containers (`border-radius: 9999px`) with active mode indicators (`.mode-toggle-btn.active`).
+3. **Scrollbar Refinements**: Added thin custom scrollbar rules (`width: 4px`) for `[id^="pkg-features-list-"]` and `shrink-0` on trash buttons.
+4. **Verification**: Verified via live automated browser testing on `https://obmstudio.in/admin`. Confirmed vibrant gradient buttons, sleek top-right theme pills, and clean scrollbars in both Light and Dark modes.
+4. **Validation**: Ran CLI PHP syntax check across all 7 views (`admin.php`, `digital-album.php`, `photo-selection.php`, `live-event.php`, `login.php`, `signup.php`): **PASS (0 syntax errors)**. Tested live browser theme toggles on `https://obmstudio.in/login`.
+
+---
+
+## [ENTRY 35] - 2026-08-08
+### Concept: Light Mode Card Color Accents, Status Borders & Gradient Parity
+
+#### The Problem
+In Dark Mode, client cards rendered vibrant status-colored left accent borders and subtle gradient backgrounds (`.client-card-completed`, `.client-card-unassigned`, `.client-card-blocked`). In Light Mode, cards defaulted to plain white backgrounds without colored left accent borders or status-tinted pastel gradients.
+
+#### Diagnostic Steps
+1. Inspected `html.theme-light` card overrides in [admin.php](file:///var/www/html/obm-new-version/htdocs/_templates/admin.php): `.client-card-completed` and related classes lacked `border-left` accent declarations and status gradient fills under `html.theme-light`.
+
+#### The Fix
+1. **Status Accent Borders & Gradients**: Defined explicit Light Mode rules (`html.theme-light`) for:
+   - `.client-card-completed`: `border-left: 5px solid #059669 !important; background: linear-gradient(135deg, rgba(5, 150, 105, 0.12) 0%, #ffffff 100%) !important;`
+   - `.client-card-unassigned`: `border-left: 5px solid #4f46e5 !important; background: linear-gradient(135deg, rgba(79, 70, 229, 0.12) 0%, #ffffff 100%) !important;`
+   - `.client-card-pending`: `border-left: 5px solid #0891b2 !important; background: linear-gradient(135deg, rgba(8, 145, 178, 0.12) 0%, #ffffff 100%) !important;`
+   - `.client-card-flagged`: `border-left: 5px solid #d97706 !important; background: linear-gradient(135deg, rgba(217, 119, 6, 0.12) 0%, #ffffff 100%) !important;`
+   - `.client-card-blocked`: `border-left: 5px solid #e11d48 !important; background: linear-gradient(135deg, rgba(225, 29, 72, 0.12) 0%, #ffffff 100%) !important;`
+2. **Package & KPI Card Accents**: Injected status-tinted background gradients and colored accent borders for Package cards (Silver, Gold, Platinum, Imperial) and KPI Overview cards in Light Mode.
+3. **Verification**: Executed live automated browser testing on `https://obmstudio.in/admin`. Captured screenshots confirming 1-to-1 visual parity of card status colors and borders between Light and Dark modes.
+
+---
+
+## [ENTRY 36] - 2026-08-08
+### Concept: Client Directory Modern Card Redesign & Labeled Action Capsule Overhaul
+
+#### The Problem
+The legacy Client Directory cards were flat horizontal bars with compressed text lines, plain square icon buttons, and lack of visual grouping or metric pills.
+
+#### Diagnostic Steps
+1. Reviewed Client Directory card layout in [admin.php](file:///var/www/html/obm-new-version/htdocs/_templates/admin.php): `renderClientManager` rendered raw horizontal flex containers without structured visual hierarchy or labeled action buttons.
+
+#### The Fix
+1. **3-Section Card Architecture**:
+   - **Section 1**: Squircle gradient initial avatar badge (`w-12 h-12 rounded-2xl shadow-md`), Outfit font client name, email with mail icon, and status badge with pulsing dots (`BLOCKED`, `COMPLETED`, `UNASSIGNED`, `PENDING`).
+   - **Section 2**: Metric stat pills for Allocated Photos (`image` icon), Selected Photos (`heart` icon), and Access Code (`key-round` icon).
+   - **Section 3**: Labeled action capsule buttons (`Mark Done` / `Completed`, `Block` / `Blocked`, trash action).
+2. **Elevated Card Container**: Applied `.client-card-modern` with 20px rounded corners (`rounded-2xl`), subtle border accent lines, soft box shadow, and smooth hover translation scaling (`hover:-translate-y-1`).
+3. **Verification**: Performed live web testing on `https://obmstudio.in/admin`. Captured screenshots of redesigned cards in both Dark and Light modes.

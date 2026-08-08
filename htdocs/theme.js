@@ -76,7 +76,7 @@
       dark: {
         accent: '#ffb703', accent2: '#fb8500', accentRGB: '255,183,3',
         blob1: 'rgba(255,183,3,0.2)', blob2: 'rgba(251,133,0,0.15)',
-        blob3: 'rgba(244,63,94,0.08)', blob4: 'rgba(167,139,250,0.07)',
+        blob3: 'rgba(244,63,94,0.1)', blob4: 'rgba(16,185,129,0.07)',
         selectionBg: '#ffb703', bgBase: '#080500'
       },
       light: {
@@ -146,13 +146,13 @@
 
     // Update Mode Toggle UI Buttons
     document.querySelectorAll('.mode-toggle-btn').forEach(btn => {
-      const bMode = btn.dataset.mode;
+      const bMode = btn.dataset.mode || btn.dataset.modeVal;
       btn.classList.toggle('active', bMode === mode);
     });
 
     // Update Color Dots UI
     document.querySelectorAll('.theme-switcher-dot').forEach(dot => {
-      const dAccent = dot.dataset.theme;
+      const dAccent = dot.dataset.theme || dot.dataset.accent;
       const isSelected = (dAccent === accent);
       dot.classList.toggle('ring-2', isSelected);
       dot.classList.toggle('ring-white', isSelected);
@@ -183,6 +183,24 @@
       setAccent(name);
     }
   }
+
+  // Global Delegated Event Listener
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.mode-toggle-btn');
+    if (btn) {
+      const mode = btn.dataset.mode || btn.dataset.modeVal;
+      if (mode) {
+        setMode(mode);
+      }
+    }
+    const dot = e.target.closest('.theme-switcher-dot');
+    if (dot) {
+      const accent = dot.dataset.theme || dot.dataset.accent;
+      if (accent) {
+        setAccent(accent);
+      }
+    }
+  });
 
   function init() {
     apply(getMode(), getAccent());

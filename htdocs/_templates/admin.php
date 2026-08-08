@@ -357,25 +357,37 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
 
   /* Status Border Highlights */
   .client-card-completed {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
-    border-left: 5px solid #10b981 !important;
+  /* ═══ MODERN STRUCTURED CLIENT CARD CONTAINER ═══ */
+  .client-card-modern {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
-  .client-card-flagged {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
-    border-left: 5px solid #f59e0b !important;
+  .client-card-modern:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
   }
-  .client-card-pending {
-    background: linear-gradient(135deg, rgba(56, 189, 248, 0.06) 0%, rgba(15, 23, 42, 0.5) 100%) !important;
-    border-left: 5px solid #0284c7 !important;
+
+  .client-card-completed { border-left: 5px solid #10b981 !important; }
+  .client-card-flagged { border-left: 5px solid #f59e0b !important; }
+  .client-card-pending { border-left: 5px solid #0284c7 !important; }
+  .client-card-unassigned { border-left: 5px solid #6366f1 !important; }
+  .client-card-blocked { border-left: 5px solid #f43f5e !important; }
+
+  html.theme-light .client-card-modern {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
   }
-  .client-card-unassigned {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
-    border-left: 5px solid #6366f1 !important;
-  }
-  .client-card-blocked {
-    background: linear-gradient(135deg, rgba(244, 63, 94, 0.12) 0%, rgba(15, 23, 42, 0.65) 100%) !important;
-    border-left: 5px solid #f43f5e !important;
-    opacity: 0.88;
+  html.theme-light .client-card-modern:hover {
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.09) !important;
+    border-color: rgba(0, 0, 0, 0.15) !important;
   }
 
   /* Tab pane visibility */
@@ -478,21 +490,25 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
     color: #475569 !important;
   }
 
+  html.theme-light .theme-mode-toggle {
+    background: rgba(241, 245, 249, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
   html.theme-light .mode-toggle-btn {
-    background: rgba(0, 0, 0, 0.03) !important;
-    border-color: rgba(0, 0, 0, 0.08) !important;
-    color: #475569 !important;
+    color: #64748b !important;
   }
 
   html.theme-light .mode-toggle-btn:hover {
-    background: rgba(0, 0, 0, 0.06) !important;
     color: #0f172a !important;
+    background: rgba(0, 0, 0, 0.05) !important;
   }
 
   html.theme-light .mode-toggle-btn.active {
-    background: var(--theme-accent, #3b82f6) !important;
+    background: linear-gradient(135deg, var(--theme-accent, #0284c7) 0%, #2563eb 100%) !important;
     color: #ffffff !important;
-    border-color: transparent !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4) !important;
   }
 
   html.theme-light .cm-filter-pill {
@@ -543,20 +559,79 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.15) !important;
   }
 
+  /* ═══ VIBRANT LIGHT MODE CARD COLOR ACCENTS & BORDERS ═══ */
   html.theme-light .client-card-completed {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.04) 0%, #ffffff 100%) !important;
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.12) 0%, #ffffff 100%) !important;
+    border-left: 5px solid #059669 !important;
+    box-shadow: 0 10px 30px -10px rgba(5, 150, 105, 0.15) !important;
   }
   html.theme-light .client-card-flagged {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, #ffffff 100%) !important;
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.12) 0%, #ffffff 100%) !important;
+    border-left: 5px solid #d97706 !important;
+    box-shadow: 0 10px 30px -10px rgba(217, 119, 6, 0.15) !important;
   }
   html.theme-light .client-card-pending {
-    background: linear-gradient(135deg, rgba(56, 189, 248, 0.04) 0%, #ffffff 100%) !important;
+    background: linear-gradient(135deg, rgba(8, 145, 178, 0.12) 0%, #ffffff 100%) !important;
+    border-left: 5px solid #0891b2 !important;
+    box-shadow: 0 10px 30px -10px rgba(8, 145, 178, 0.15) !important;
   }
   html.theme-light .client-card-unassigned {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.04) 0%, #ffffff 100%) !important;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.12) 0%, #ffffff 100%) !important;
+    border-left: 5px solid #4f46e5 !important;
+    box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.15) !important;
   }
   html.theme-light .client-card-blocked {
-    background: linear-gradient(135deg, rgba(244, 63, 94, 0.05) 0%, #ffffff 100%) !important;
+    background: linear-gradient(135deg, rgba(225, 29, 72, 0.12) 0%, #ffffff 100%) !important;
+    border-left: 5px solid #e11d48 !important;
+    box-shadow: 0 10px 30px -10px rgba(225, 29, 72, 0.15) !important;
+  }
+
+  /* Light Theme Package Cards */
+  html.theme-light .glass-panel-card.border-blue-500\/30 {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, #ffffff 100%) !important;
+    border-left: 5px solid #2563eb !important;
+    border-color: rgba(37, 99, 235, 0.25) !important;
+    box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.12) !important;
+  }
+  html.theme-light .glass-panel-card.border-amber-500\/30 {
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.1) 0%, #ffffff 100%) !important;
+    border-left: 5px solid #d97706 !important;
+    border-color: rgba(217, 119, 6, 0.25) !important;
+    box-shadow: 0 10px 30px -10px rgba(217, 119, 6, 0.12) !important;
+  }
+  html.theme-light .glass-panel-card.border-purple-500\/30 {
+    background: linear-gradient(135deg, rgba(126, 34, 206, 0.08) 0%, #ffffff 100%) !important;
+    border-left: 5px solid #7e22ce !important;
+    border-color: rgba(126, 34, 206, 0.25) !important;
+    box-shadow: 0 10px 30px -10px rgba(126, 34, 206, 0.12) !important;
+  }
+  html.theme-light .glass-panel-card.border-cyan-500\/30 {
+    background: linear-gradient(135deg, rgba(8, 145, 178, 0.08) 0%, #ffffff 100%) !important;
+    border-left: 5px solid #0891b2 !important;
+    border-color: rgba(8, 145, 178, 0.25) !important;
+    box-shadow: 0 10px 30px -10px rgba(8, 145, 178, 0.12) !important;
+  }
+
+  /* Light Theme KPI Overview Cards */
+  html.theme-light .kpi-card:nth-child(1) {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, #ffffff 100%) !important;
+    border-left: 4px solid #2563eb !important;
+    box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.12) !important;
+  }
+  html.theme-light .kpi-card:nth-child(2) {
+    background: linear-gradient(135deg, rgba(126, 34, 206, 0.08) 0%, #ffffff 100%) !important;
+    border-left: 4px solid #7e22ce !important;
+    box-shadow: 0 10px 30px -10px rgba(126, 34, 206, 0.12) !important;
+  }
+  html.theme-light .kpi-card:nth-child(3) {
+    background: linear-gradient(135deg, rgba(225, 29, 72, 0.08) 0%, #ffffff 100%) !important;
+    border-left: 4px solid #e11d48 !important;
+    box-shadow: 0 10px 30px -10px rgba(225, 29, 72, 0.12) !important;
+  }
+  html.theme-light .kpi-card:nth-child(4) {
+    background: linear-gradient(135deg, rgba(8, 145, 178, 0.08) 0%, #ffffff 100%) !important;
+    border-left: 4px solid #0891b2 !important;
+    box-shadow: 0 10px 30px -10px rgba(8, 145, 178, 0.12) !important;
   }
 
   /* ═══ REUSABLE MODAL DIALOG STYLES ═══ */
@@ -746,23 +821,149 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
     background: rgba(0, 0, 0, 0.06) !important;
   }
 
-  html.theme-light .theme-mode-toggle {
-    background: rgba(0, 0, 0, 0.05) !important;
-    border-color: rgba(0, 0, 0, 0.08) !important;
-  }
-
-  html.theme-light .view-toggle-pill {
-    background: rgba(0, 0, 0, 0.04) !important;
-    border-color: rgba(0, 0, 0, 0.08) !important;
-  }
-
-  html.theme-light .view-toggle-btn {
-    color: #475569 !important;
-  }
-
-  html.theme-light .view-toggle-btn.active {
-    background: var(--theme-accent, #3b82f6) !important;
+  /* ═══ MODERN STYLISH BUTTON SYSTEM ═══ */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--theme-accent, #0284c7) 0%, #2563eb 100%) !important;
     color: #ffffff !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px -4px rgba(2, 132, 199, 0.35) !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: none !important;
+    cursor: pointer !important;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 28px -2px rgba(2, 132, 199, 0.5) !important;
+    filter: brightness(1.05) !important;
+  }
+  .btn-primary:active {
+    transform: translateY(0) scale(0.98) !important;
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 24px -4px rgba(217, 119, 6, 0.35) !important;
+  }
+  .btn-gold:hover {
+    box-shadow: 0 12px 28px -2px rgba(217, 119, 6, 0.5) !important;
+  }
+
+  /* Header Theme Mode Toggle Pill */
+  .global-theme-switcher {
+    display: inline-flex;
+    align-items: center;
+  }
+  .theme-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px;
+    border-radius: 9999px;
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(16px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .mode-toggle-btn {
+    padding: 6px 16px !important;
+    border-radius: 9999px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    outline: none !important;
+  }
+
+  .mode-toggle-btn:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .mode-toggle-btn.active {
+    background: linear-gradient(135deg, var(--theme-accent, #0284c7) 0%, #2563eb 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.5) !important;
+    font-weight: 900 !important;
+  }
+
+  /* Header View Switcher Pill */
+  .view-toggle-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+  }
+  .view-toggle-btn {
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.65);
+    transition: all 0.25s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .view-toggle-btn.active {
+    background: var(--theme-accent, #0284c7) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  }
+
+  /* Highlight Scrollbar Styling */
+  [id^="pkg-features-list-"]::-webkit-scrollbar {
+    width: 4px;
+  }
+  [id^="pkg-features-list-"]::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  [id^="pkg-features-list-"]::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.25);
+    border-radius: 9999px;
+  }
+  html.theme-light [id^="pkg-features-list-"]::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+  }
+
+  /* Light Theme Specific Overrides for Controls */
+  html.theme-light .theme-mode-toggle {
+    background: rgba(0, 0, 0, 0.06) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+  }
+  html.theme-light .mode-toggle-btn {
+    color: #64748b !important;
+  }
+  html.theme-light .mode-toggle-btn.active {
+    background: var(--theme-accent, #0284c7) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3) !important;
+  }
+  html.theme-light .view-toggle-pill {
+    background: rgba(0, 0, 0, 0.06) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+  }
+  html.theme-light .view-toggle-btn {
+    color: #64748b !important;
+  }
+  html.theme-light .view-toggle-btn.active {
+    background: var(--theme-accent, #0284c7) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3) !important;
   }
 
   /* ═══ ALL TABS COMPLETE DEEP LIGHT MODE OVERRIDES ═══ */
@@ -1272,7 +1473,7 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
       </div>
 
       <!-- Upload Button -->
-      <button id="upload-dispatch-btn" onclick="dispatchUpload()" class="w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 transition-all disabled:opacity-40 disabled:cursor-not-allowed" style="background: var(--theme-accent); color: #ffffff !important;" disabled>
+      <button id="upload-dispatch-btn" onclick="dispatchUpload()" class="btn-primary w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3 transition-all disabled:opacity-40 disabled:cursor-not-allowed" disabled>
         <i data-lucide="rocket" class="w-5 h-5"></i> Dispatch to Client Portal
       </button>
     </div>
@@ -1305,7 +1506,8 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
   </div>
 </div>
 
-<script src="<?= get_config('base_path') ?>assets/js/toastv3.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="<?= get_config('base_path') ?>assets/js/toastv3.js?v=3.5.5"></script>
 <script>
   let uploadQueue = [];
   let cmCurrentFilter = 'all';
@@ -1445,10 +1647,10 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
   }
 
   function getStatusBadge(client) {
-      if (client.blocked) return '<span class="px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-400/30 text-rose-400 text-[9px] font-extrabold uppercase tracking-wider">BLOCKED</span>';
-      if (client.flagged) return '<span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 text-[9px] font-extrabold uppercase tracking-wider">COMPLETED</span>';
-      if (client.totalPhotos === 0) return '<span class="px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-400/30 text-indigo-400 text-[9px] font-extrabold uppercase tracking-wider">UNASSIGNED</span>';
-      return '<span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-400 text-[9px] font-extrabold uppercase tracking-wider">PENDING</span>';
+      if (client.blocked) return '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 text-[10px] font-black uppercase tracking-wider shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> BLOCKED</span>';
+      if (client.flagged) return '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-black uppercase tracking-wider shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> COMPLETED</span>';
+      if (client.totalPhotos === 0) return '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-[10px] font-black uppercase tracking-wider shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> UNASSIGNED</span>';
+      return '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 text-[10px] font-black uppercase tracking-wider shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> PENDING</span>';
   }
 
   function getAvatarColor(name) {
@@ -1459,10 +1661,10 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
   }
 
   function getClientCardClass(p) {
-      if (p.blocked) return 'client-card-blocked border-l-4 border-l-rose-500';
-      if (p.flagged) return 'client-card-completed border-l-4 border-l-emerald-400';
-      if (p.totalPhotos === 0) return 'client-card-unassigned border-l-4 border-l-indigo-400';
-      return 'client-card-pending border-l-4 border-l-sky-400';
+      if (p.blocked) return 'client-card-modern client-card-blocked';
+      if (p.flagged) return 'client-card-modern client-card-completed';
+      if (p.totalPhotos === 0) return 'client-card-modern client-card-unassigned';
+      return 'client-card-modern client-card-pending';
   }
 
   function setCMFilter(filter, btn) {
@@ -1496,41 +1698,57 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
           const selected = p.selectedPhotos;
           const cardClass = getClientCardClass(p);
 
-          const actionButtons = `
-              <button onclick="cmToggleFlag('${p.code}')" class="w-9 h-9 rounded-xl ${p.flagged ? 'bg-yellow-500/20 border-yellow-400/50 text-yellow-300' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'} border flex items-center justify-center transition-colors" title="${p.flagged ? 'Mark Pending' : 'Mark Completed'}">
-                <i data-lucide="flag" class="w-4 h-4"></i>
-              </button>
-              <button onclick="cmToggleBlock('${p.code}')" class="w-9 h-9 rounded-xl ${p.blocked ? 'bg-rose-500/20 border-rose-400/50 text-rose-300' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'} border flex items-center justify-center transition-colors" title="${p.blocked ? 'Unblock Client' : 'Block Access'}">
-                <i data-lucide="ban" class="w-4 h-4"></i>
-              </button>
-              <button onclick="cmDeleteClient('${p.code}')" class="w-9 h-9 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 flex items-center justify-center text-rose-400 transition-colors" title="Delete Client">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-          `;
-
           return `
-            <div class="glass-panel-card ${cardClass} transition-all hover:border-white/30">
-              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="flex items-center gap-4">
-                  <div class="w-11 h-11 rounded-full bg-gradient-to-tr ${avatarGradient} flex items-center justify-center text-slate-950 font-black text-lg shrink-0 shadow-lg">
+            <div class="${cardClass}">
+              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                
+                <!-- Left Section: Avatar + Name + Badge + Email -->
+                <div class="flex items-start sm:items-center gap-4">
+                  <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr ${avatarGradient} flex items-center justify-center text-slate-950 font-black text-xl shrink-0 shadow-md">
                     ${initial}
                   </div>
-                  <div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                      <span class="text-sm font-black text-white">${p.clientName}</span>
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-3 flex-wrap">
+                      <h3 class="text-base font-black font-['Outfit'] text-white tracking-tight">${p.clientName}</h3>
                       ${getStatusBadge(p)}
                     </div>
-                    <p class="text-xs text-slate-400 mt-0.5">${p.email}</p>
-                    <div class="flex items-center gap-3 mt-1 text-[10px] text-slate-500">
-                      <span class="flex items-center gap-1"><i data-lucide="image" class="w-3 h-3"></i> ${allocated} allocated</span>
-                      <span class="flex items-center gap-1"><i data-lucide="heart" class="w-3 h-3"></i> ${selected} selected</span>
-                      <span class="flex items-center gap-1"><i data-lucide="key" class="w-3 h-3"></i> Code: <strong>${p.code}</strong></span>
-                    </div>
+                    <p class="text-xs font-medium text-slate-400 flex items-center gap-1.5">
+                      <i data-lucide="mail" class="w-3.5 h-3.5 opacity-70"></i> ${p.email}
+                    </p>
                   </div>
                 </div>
-                <div class="flex items-center gap-2 shrink-0">
-                  ${actionButtons}
+
+                <!-- Middle Section: Metric Stat Pills -->
+                <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                  <div class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-xs font-bold text-slate-300">
+                    <i data-lucide="image" class="w-4 h-4 text-cyan-400"></i>
+                    <span>${allocated} Photos</span>
+                  </div>
+                  <div class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-xs font-bold text-slate-300">
+                    <i data-lucide="heart" class="w-4 h-4 text-rose-400"></i>
+                    <span>${selected} Selected</span>
+                  </div>
+                  <div class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-xs font-bold text-slate-300 font-mono" title="Access Code">
+                    <i data-lucide="key-round" class="w-4 h-4 text-amber-400"></i>
+                    <span>${p.code}</span>
+                  </div>
                 </div>
+
+                <!-- Right Section: Action Capsule Buttons -->
+                <div class="flex items-center gap-2 shrink-0 pt-3 lg:pt-0 border-t border-white/5 lg:border-t-0">
+                  <button onclick="cmToggleFlag('${p.code}')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all ${p.flagged ? 'bg-emerald-500/20 border border-emerald-400/40 text-emerald-300' : 'bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300'}" title="${p.flagged ? 'Mark Pending' : 'Mark Completed'}">
+                    <i data-lucide="${p.flagged ? 'check-circle-2' : 'flag'}" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">${p.flagged ? 'Completed' : 'Mark Done'}</span>
+                  </button>
+                  <button onclick="cmToggleBlock('${p.code}')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all ${p.blocked ? 'bg-rose-500/20 border border-rose-400/40 text-rose-300' : 'bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300'}" title="${p.blocked ? 'Unblock Client' : 'Block Access'}">
+                    <i data-lucide="${p.blocked ? 'shield-alert' : 'ban'}" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">${p.blocked ? 'Blocked' : 'Block'}</span>
+                  </button>
+                  <button onclick="cmDeleteClient('${p.code}')" class="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 transition-colors" title="Delete Client">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
+
               </div>
             </div>`;
       }).join('');
@@ -1715,7 +1933,7 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
           const featuresHtml = (p.features || []).map((feat, fIdx) => `
             <div class="flex items-center gap-2" id="feat-container-${p.id}-${fIdx}">
               <input type="text" class="dash-input text-xs flex-1 pkg-feature-input" data-pkg-id="${p.id}" value="${escapeHtml(feat)}" placeholder="Highlight item...">
-              <button type="button" onclick="removeFeatureItem('${p.id}', ${fIdx})" class="p-2.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors" title="Delete Highlight">
+              <button type="button" onclick="removeFeatureItem('${p.id}', ${fIdx})" class="p-2.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors shrink-0" title="Delete Highlight">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
             </div>
@@ -1785,7 +2003,7 @@ $eventDetails = $activeEvent ? $activeEvent->getDetails() : [
       itemDiv.id = `feat-container-${pkgId}-${newIndex}`;
       itemDiv.innerHTML = `
         <input type="text" class="dash-input text-xs flex-1 pkg-feature-input" data-pkg-id="${pkgId}" value="" placeholder="New highlight item...">
-        <button type="button" onclick="removeFeatureItem('${pkgId}', ${newIndex})" class="p-2.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors" title="Delete Highlight">
+        <button type="button" onclick="removeFeatureItem('${pkgId}', ${newIndex})" class="p-2.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors shrink-0" title="Delete Highlight">
           <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
         </button>
       `;
